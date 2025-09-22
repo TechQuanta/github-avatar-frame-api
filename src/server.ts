@@ -6,19 +6,18 @@ import fs from "fs";
 
 const app = express();
 const PORT = 3000;
-//root route(server check)
-app.get("/",(req:Request,res:Response)=>{
-  res.send("API is running");
-});
+
 /**
  * GET /api/framed-avatar/:username
- * Example: /api/framed-avatar/octocat?theme=classic&size=256
+ * Example: /api/framed-avatar/octocat?theme=base&size=256
  */
 app.get("/api/framed-avatar/:username", async (req: Request, res: Response) => {
   try {
     const username = req.params.username;
-    const theme = (req.query.theme as string) || "classic";
-    const size = Number(req.query.size ?? 256);
+    const theme = (req.query.theme as string) || "base"; // Default to base theme for testing
+    const size = Math.max(64, Math.min(Number(req.query.size ?? 256), 1024)); // Limit size between 64 and 1024
+
+    console.log(`Fetching avatar for username=${username}, theme=${theme}, size=${size}`);
 
     if (isNaN(size) || size <= 0 || size > 1024) {
       return res.status(400).json({ error: "Invalid size parameter" });
