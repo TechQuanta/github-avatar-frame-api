@@ -6,7 +6,10 @@ import fs from "fs";
 
 const app = express();
 const PORT = 3000;
-
+//root route(server check)
+app.get("/",(req:Request,res:Response)=>{
+  res.send("API is running");
+});
 /**
  * GET /api/framed-avatar/:username
  * Example: /api/framed-avatar/octocat?theme=classic&size=256
