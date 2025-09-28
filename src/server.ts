@@ -1,5 +1,3 @@
-// src/server.ts
-
 import express, { Request, Response } from "express";
 import axios from "axios";
 import sharp from "sharp";
@@ -9,6 +7,11 @@ import fs from "fs";
 const app = express();
 const PORT = 3000;
 
+// Health check route (optional)
+app.get("/", (req, res) => {
+  res.send("API is running");
+});
+
 /**
  * GET /api/framed-avatar/:username
  * Example: /api/framed-avatar/octocat?theme=base&size=256
@@ -16,119 +19,62 @@ const PORT = 3000;
 app.get("/api/framed-avatar/:username", async (req: Request, res: Response) => {
   try {
     const username = req.params.username;
-    const theme = (req.query.theme as string) || "base";
-
-    // --- START OF MODIFICATIONS ---
-
-    // 1. Get the 'size' parameter as a string, with a default value.
-    const sizeStr = (req.query.size as string) ?? "256";
-
-    // 2. Validate the string to ensure it only contains digits.
-    if (!/^\d+$/.test(sizeStr)) {
-      return res.status(400).json({
-        error: "Bad Request",
-        message: "The 'size' parameter must be a valid integer.",
-      });
-    }
-
-    // 3. Safely parse the string to a number and clamp it to the allowed range.
-    const size = Math.max(64, Math.min(parseInt(sizeStr, 10), 1024));
-
-    // --- END OF MODIFICATIONS ---
+    const theme = (req.query.theme as string) || "base"; // Default to base theme for testing
+    const size = Math.max(64, Math.min(Number(req.query.size ?? 256), 1024)); // Limit size between 64 and 1024
 
     console.log(`Fetching avatar for username=${username}, theme=${theme}, size=${size}`);
 
-    // 1. Fetch GitHub avatar
+    // Fetch GitHub avatar
     const avatarUrl = `https://github.com/${username}.png?size=${size}`;
     const avatarResponse = await axios.get(avatarUrl, { responseType: "arraybuffer" });
     const avatarBuffer = Buffer.from(avatarResponse.data);
 
-    // 2. Load and validate frame
-    const framePath = path.join(__dirname, "..", "public", "frames", theme, "frame.png");
-    if (!fs.existsSync(framePath)) {
-      return res.status(404).json({ error: `Theme '${theme}' not found.` });
+    // Locate theme frame
+    const themePath = path.join(__dirname, "..", "public", "frames", theme, "frame.png");
+    if (!fs.existsSync(themePath)) {
+      return res.status(404).json({ error: `Theme '${theme}' not found` });
     }
-    const frameBuffer = fs.readFileSync(framePath);
+    const frameBuffer = fs.readFileSync(themePath);
 
-    // 3. Resize avatar to match requested size
-    const avatarResized = await sharp(avatarBuffer)
-      .resize(size, size)
-      .png()
-      .toBuffer();
+    // Resize and overlay
+    const avatarResized = await sharp(avatarBuffer).resize(size, size).png().toBuffer();
+    const frameResized = await sharp(frameBuffer).resize(size, size).png().toBuffer();
 
-    // 4. Pad frame to square (if needed) and resize
-    const frameMetadata = await sharp(frameBuffer).metadata();
-    const maxSide = Math.max(frameMetadata.width!, frameMetadata.height!);
-
-    const paddedFrame = await sharp(frameBuffer)
-      .resize({
-        width: maxSide,
-        height: maxSide,
-        fit: "contain",
-        background: { r: 0, g: 0, b: 0, alpha: 0 }, // Transparent background
-      })
-      .resize(size, size)
-      .png()
-      .toBuffer();
-
-    // 5. Compose avatar + frame on transparent canvas
-    const finalImage = await sharp({
-      create: {
-        width: size,
-        height: size,
-        channels: 4,
-        background: { r: 0, g: 0, b: 0, alpha: 0 },
-      },
-    })
-      .composite([
-        { input: avatarResized, gravity: "center" },
-        { input: paddedFrame, gravity: "center" },
-      ])
+    const finalImage = await sharp(avatarResized)
+      .composite([{ input: frameResized, gravity: "center" }])
       .png()
       .toBuffer();
 
     res.set("Content-Type", "image/png");
     res.send(finalImage);
   } catch (error) {
-    console.error("Error creating framed avatar:", error);
-    // Add a check for specific errors, like user not found from GitHub
-    if (axios.isAxiosError(error) && error.response?.status === 404) {
-      return res.status(404).json({ error: `GitHub user '${req.params.username}' not found.` });
-    }
+    console.error(error);
     res.status(500).json({ error: "Something went wrong." });
   }
 });
-
 
 /**
  * GET /api/themes
  * Lists all available themes + metadata
  */
 app.get("/api/themes", (req: Request, res: Response) => {
-  try {
-    const framesDir = path.join(__dirname, "..", "public", "frames");
-    const themes = fs.readdirSync(framesDir).filter(folder =>
-      fs.existsSync(path.join(framesDir, folder, "frame.png"))
-    );
+  const framesDir = path.join(__dirname, "..", "public", "frames");
+  const themes = fs.readdirSync(framesDir).filter(folder =>
+    fs.existsSync(path.join(framesDir, folder, "frame.png"))
+  );
 
-    const result = themes.map(theme => {
-      const metadataPath = path.join(framesDir, theme, "metadata.json");
-      let metadata = {};
-      if (fs.existsSync(metadataPath)) {
-        metadata = JSON.parse(fs.readFileSync(metadataPath, "utf-8"));
-      }
-      return { theme, ...metadata };
-    });
+  const result = themes.map(theme => {
+    const metadataPath = path.join(framesDir, theme, "metadata.json");
+    let metadata = {};
+    if (fs.existsSync(metadataPath)) {
+      metadata = JSON.parse(fs.readFileSync(metadataPath, "utf-8"));
+    }
+    return { theme, ...metadata };
+  });
 
-    res.json(result);
-  } catch (error) {
-    console.error("Error listing themes:", error);
-    res.status(500).json({ error: "Failed to load themes." });
-  }
+  res.json(result);
 });
 
-
-// Start server
 app.listen(PORT, () => {
   console.log(`🚀 Server running at http://localhost:${PORT}`);
 });
