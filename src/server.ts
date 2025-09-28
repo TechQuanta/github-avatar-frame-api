@@ -9,7 +9,7 @@ const PORT = 3000;
 
 // Health check route (optional)
 app.get("/", (req, res) => {
-  res.send("Server is running");
+  res.send("API is running");
 });
 
 /**
