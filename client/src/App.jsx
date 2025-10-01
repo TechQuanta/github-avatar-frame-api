@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Frame, Download, AlertCircle, Loader2, Github, Sparkles, Zap, Copy, Check, ChevronRight } from 'lucide-react';
 
-const API_BASE_URL = 'http://localhost:3000';
+const API_BASE_URL =
+  process.env.NODE_ENV === 'production'
+    ? 'https://github-avatar-frame-api.onrender.com'
+    : 'http://localhost:3000';
+
 
 function App() {
   const [username, setUsername] = useState('');
