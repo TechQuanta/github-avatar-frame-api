@@ -11,6 +11,24 @@
   <img src="public/assets/gssoc.png" alt="GSSOC" width="80%" style="border-radius: 15px; box-shadow: 0px 5px 15px rgba(0,0,0,0.2);">
 </div>
 
+<br> 
+
+🌟 **Exciting News...**
+
+🚀 This project is now an official part of GirlScript Summer of Code – GSSoC'25! 🎉💻 We're thrilled to welcome contributors from all over India and beyond to collaborate, build, and grow *github-avatar-frame-api!* Let’s make learning and career development smarter – together! 🌟
+
+👩‍💻 GSSoC is one of India’s **largest 3-month-long open-source programs** that encourages developers of all levels to contribute to real-world projects 🌍 while learning, collaborating, and growing together. 🌱
+
+🌈 With **mentorship, community support**, and **collaborative coding**, it's the perfect platform for developers to:
+
+- ✨ Improve their skills
+- 🤝 Contribute to impactful projects
+- 🏆 Get recognized for their work
+- 📜 Receive certificates and swag!
+
+🎉 **I can’t wait to welcome new contributors** from GSSoC 2025 to this github-avatar-frame-api project family! Let's build, learn, and grow together — one commit at a time. 🔥
+
+  
 <br>
 
 <h2 align="center" style="color:#ff5722;">📊 Project Insights</h2>
