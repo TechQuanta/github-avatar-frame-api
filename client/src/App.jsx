@@ -3,6 +3,7 @@ import {
   Frame, Download, AlertCircle, Loader2, Github, Sparkles, Zap, Copy, Check,
   ChevronRight, Circle, Square, Sun, Moon, Users, X
 } from 'lucide-react';
+import './App.css';
 
 // NOTE: Replace with your actual API URL or environment variable
 const API_BASE_URL =
@@ -94,7 +95,7 @@ const CommunityModal = ({ isOpen, onClose, colors }) => {
                 <div style={{ textAlign: 'center', marginBottom: '24px' }}>
                     <Users size={48} color={colors.accentPrimary} style={{ marginBottom: '12px' }} />
                     <h3 style={{ fontSize: '24px', fontWeight: 'bold', color: colors.textPrimary, margin: 0 }}>
-                        Join the 𝕆𝕡𝕖𝕟 ℂ𝕠𝕞𝕞𝕦𝕟𝕚𝕥𝕪
+                        Join the Open Community
                     </h3>
                 </div>
                 
@@ -102,9 +103,9 @@ const CommunityModal = ({ isOpen, onClose, colors }) => {
                     This is where you'd find hundreds of custom themes, share your creations, and collaborate on new frame designs!
                 </p>
 
-                <a 
-                    href="https://github.com/TechQuanta/github-avatar-frame-api" // Mock link
-                    target="_blank" 
+                <a
+                    href="https://github.com/TechQuanta/github-avatar-frame-api"
+                    target="_blank"
                     rel="noopener noreferrer"
                     onClick={onClose}
                     style={{
@@ -149,6 +150,7 @@ function App() {
   const [copied, setCopied] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
   const [isCommunityModalOpen, setIsCommunityModalOpen] = useState(false);
+  const [showHome, setShowHome] = useState(true);
 
   // System Theme State
   const [isDark, setIsDark] = useState(false);
@@ -318,12 +320,470 @@ function App() {
       background: colors.bgBody,
       padding: '24px 16px',
       color: colors.textPrimary,
+      '--accent-bg': isDark ? colors.accentDark : `linear-gradient(135deg, ${colors.accentPrimary} 0%, ${colors.accentSecondary} 100%)`,
+      '--scroll-track': isDark ? '#374151' : '#f3f4f6',
+      '--accent-primary': colors.accentPrimary,
+      '--accent-secondary': colors.accentSecondary,
     }}>
-      <div style={{
-        maxWidth: '1200px',
-        margin: '0 auto',
-      }}>
-        {/* --- 1. Top Bar: Title + Community Button --- */}
+      {showHome ? (
+        // --- Home Page ---
+        <div style={{
+          maxWidth: '1200px',
+          margin: '0 auto',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          minHeight: '80vh',
+          textAlign: 'center',
+        }}>
+          {/* Hero Section */}
+          <div style={{ marginBottom: '48px' }}>
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '16px',
+              marginBottom: '16px',
+            }}>
+              <div style={{ position: 'relative', display: 'inline-block' }}>
+                <Frame size={64} color={colors.accentPrimary} strokeWidth={2.5} />
+                <Sparkles size={24} color={colors.accentSecondary} className="pulse-icon" style={{
+                  position: 'absolute',
+                  top: '-6px',
+                  right: '-6px',
+                }} />
+              </div>
+              <h1 style={{
+                fontSize: '56px',
+                fontWeight: '900',
+                fontFamily: 'Georgia, Times New Roman, Times, serif',
+                fontStyle: 'italic',
+                background: 'linear-gradient(to right, #7c3aed, #a855f7, #ec4899)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+                margin: 0,
+              }}>
+                𝕲𝖎𝖙𝕳𝖚𝖇 𝔸𝕧𝕒𝕥𝕒𝕣 𝕱𝖗𝖆𝖒𝖊𝖘
+              </h1>
+            </div>
+            <p style={{
+              fontSize: '20px',
+              color: colors.textSecondary,
+              margin: '0 0 32px 0',
+              maxWidth: '600px',
+            }}>
+              Create stunning, customized framed avatars for your GitHub profile in seconds. Choose from multiple themes, adjust settings, and download instantly.
+            </p>
+            <button
+              onClick={() => setShowHome(false)}
+              style={{
+                background: 'linear-gradient(to right, #7c3aed, #a855f7)',
+                color: 'white',
+                padding: '16px 32px',
+                borderRadius: '12px',
+                border: 'none',
+                fontWeight: '700',
+                fontSize: '18px',
+                cursor: 'pointer',
+                transition: 'all 0.3s',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '12px',
+                boxShadow: '0 8px 16px -4px rgba(0, 0, 0, 0.2)',
+              }}
+              onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-2px)'}
+              onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+            >
+              <Sparkles size={24} />
+              Get Started
+            </button>
+          </div>
+
+          {/* Features Section */}
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+            gap: '32px',
+            maxWidth: '900px',
+            width: '100%',
+          }}>
+            <div style={{
+              background: colors.bgCard,
+              borderRadius: '12px',
+              padding: '24px',
+              border: `1px solid ${colors.border}`,
+              textAlign: 'center',
+            }}>
+              <div style={{
+                background: `linear-gradient(135deg, ${colors.accentPrimary} 0%, ${colors.accentSecondary} 100%)`,
+                padding: '12px',
+                borderRadius: '8px',
+                display: 'inline-block',
+                marginBottom: '16px',
+              }}>
+                <Sparkles size={32} color="white" />
+              </div>
+              <h3 style={{
+                fontSize: '18px',
+                fontWeight: 'bold',
+                color: colors.textPrimary,
+                margin: '0 0 8px 0',
+              }}>Multiple Themes</h3>
+              <p style={{
+                fontSize: '14px',
+                color: colors.textSecondary,
+                margin: 0,
+              }}>
+                Choose from a variety of beautiful frame themes including classic, neon, starry, and more.
+              </p>
+            </div>
+
+            <div style={{
+              background: colors.bgCard,
+              borderRadius: '12px',
+              padding: '24px',
+              border: `1px solid ${colors.border}`,
+              textAlign: 'center',
+            }}>
+              <div style={{
+                background: `linear-gradient(135deg, ${colors.accentSecondary} 0%, #ec4899 100%)`,
+                padding: '12px',
+                borderRadius: '8px',
+                display: 'inline-block',
+                marginBottom: '16px',
+              }}>
+                <Zap size={32} color="white" />
+              </div>
+              <h3 style={{
+                fontSize: '18px',
+                fontWeight: 'bold',
+                color: colors.textPrimary,
+                margin: '0 0 8px 0',
+              }}>Customizable Settings</h3>
+              <p style={{
+                fontSize: '14px',
+                color: colors.textSecondary,
+                margin: 0,
+              }}>
+                Adjust size, shape, canvas background, and corner radius to perfectly match your style.
+              </p>
+            </div>
+
+            <div style={{
+              background: colors.bgCard,
+              borderRadius: '12px',
+              padding: '24px',
+              border: `1px solid ${colors.border}`,
+              textAlign: 'center',
+            }}>
+              <div style={{
+                background: `linear-gradient(135deg, #16a34a 0%, #059669 100%)`,
+                padding: '12px',
+                borderRadius: '8px',
+                display: 'inline-block',
+                marginBottom: '16px',
+              }}>
+                <Download size={32} color="white" />
+              </div>
+              <h3 style={{
+                fontSize: '18px',
+                fontWeight: 'bold',
+                color: colors.textPrimary,
+                margin: '0 0 8px 0',
+              }}>Instant Download</h3>
+              <p style={{
+                fontSize: '14px',
+                color: colors.textSecondary,
+                margin: 0,
+              }}>
+                Generate and download your framed avatar instantly. Also get API URLs for badges and READMEs.
+              </p>
+            </div>
+          </div>
+
+          {/* Why Use Section */}
+          <div style={{
+            marginTop: '48px',
+            maxWidth: '900px',
+            width: '100%',
+            background: colors.bgCard,
+            borderRadius: '12px',
+            padding: '32px',
+            border: `1px solid ${colors.border}`,
+            textAlign: 'center',
+          }}>
+            <h2 style={{
+              fontSize: '28px',
+              fontWeight: 'bold',
+              color: colors.textPrimary,
+              marginBottom: '24px',
+            }}>
+              Why Use GitHub Avatar Frames?
+            </h2>
+            <p style={{
+              fontSize: '16px',
+              color: colors.textSecondary,
+              maxWidth: '700px',
+              margin: '0 auto 16px auto',
+              lineHeight: '1.6',
+            }}>
+              Enhance your GitHub profile with unique, customizable avatar frames that make your profile stand out.
+            </p>
+            <p style={{
+              fontSize: '16px',
+              color: colors.textSecondary,
+              maxWidth: '700px',
+              margin: '0 auto 16px auto',
+              lineHeight: '1.6',
+            }}>
+              Easily create and download framed avatars with multiple themes and adjustable settings — no design skills required.
+            </p>
+            <p style={{
+              fontSize: '16px',
+              color: colors.textSecondary,
+              maxWidth: '700px',
+              margin: '0 auto',
+              lineHeight: '1.6',
+            }}>
+              Use the API URLs to embed your framed avatar in READMEs, blogs, or social media for a professional and personalized touch.
+            </p>
+          </div>
+
+          {/* How to Use Section */}
+          <div style={{
+            marginTop: '48px',
+            maxWidth: '900px',
+            width: '100%',
+            background: colors.bgCard,
+            borderRadius: '12px',
+            padding: '32px',
+            border: `1px solid ${colors.border}`,
+            textAlign: 'center',
+          }}>
+            <h2 style={{
+              fontSize: '28px',
+              fontWeight: 'bold',
+              color: colors.textPrimary,
+              marginBottom: '24px',
+            }}>
+              How to Use GitHub Avatar Frames
+            </h2>
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+              gap: '24px',
+              maxWidth: '800px',
+              margin: '0 auto',
+            }}>
+              <div style={{
+                background: `linear-gradient(135deg, ${colors.accentPrimary} 0%, ${colors.accentSecondary} 100%)`,
+                color: 'white',
+                borderRadius: '8px',
+                padding: '20px',
+                textAlign: 'center',
+              }}>
+                <div style={{
+                  fontSize: '32px',
+                  fontWeight: 'bold',
+                  marginBottom: '8px',
+                }}>1</div>
+                <h3 style={{
+                  fontSize: '18px',
+                  fontWeight: 'bold',
+                  margin: '0 0 8px 0',
+                }}>Enter Username</h3>
+                <p style={{
+                  fontSize: '14px',
+                  margin: 0,
+                  lineHeight: '1.5',
+                }}>
+                  Type your GitHub username to fetch your avatar.
+                </p>
+              </div>
+              <div style={{
+                background: `linear-gradient(135deg, ${colors.accentSecondary} 0%, #ec4899 100%)`,
+                color: 'white',
+                borderRadius: '8px',
+                padding: '20px',
+                textAlign: 'center',
+              }}>
+                <div style={{
+                  fontSize: '32px',
+                  fontWeight: 'bold',
+                  marginBottom: '8px',
+                }}>2</div>
+                <h3 style={{
+                  fontSize: '18px',
+                  fontWeight: 'bold',
+                  margin: '0 0 8px 0',
+                }}>Choose Theme</h3>
+                <p style={{
+                  fontSize: '14px',
+                  margin: 0,
+                  lineHeight: '1.5',
+                }}>
+                  Select from multiple beautiful frame themes.
+                </p>
+              </div>
+              <div style={{
+                background: `linear-gradient(135deg, #16a34a 0%, #059669 100%)`,
+                color: 'white',
+                borderRadius: '8px',
+                padding: '20px',
+                textAlign: 'center',
+              }}>
+                <div style={{
+                  fontSize: '32px',
+                  fontWeight: 'bold',
+                  marginBottom: '8px',
+                }}>3</div>
+                <h3 style={{
+                  fontSize: '18px',
+                  fontWeight: 'bold',
+                  margin: '0 0 8px 0',
+                }}>Adjust Settings</h3>
+                <p style={{
+                  fontSize: '14px',
+                  margin: 0,
+                  lineHeight: '1.5',
+                }}>
+                  Customize size, shape, canvas, and more.
+                </p>
+              </div>
+              <div style={{
+                background: `linear-gradient(135deg, #f59e0b 0%, #d97706 100%)`,
+                color: 'white',
+                borderRadius: '8px',
+                padding: '20px',
+                textAlign: 'center',
+              }}>
+                <div style={{
+                  fontSize: '32px',
+                  fontWeight: 'bold',
+                  marginBottom: '8px',
+                }}>4</div>
+                <h3 style={{
+                  fontSize: '18px',
+                  fontWeight: 'bold',
+                  margin: '0 0 8px 0',
+                }}>Generate & Download</h3>
+                <p style={{
+                  fontSize: '14px',
+                  margin: 0,
+                  lineHeight: '1.5',
+                }}>
+                  Click generate and download your framed avatar.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Footer */}
+          <footer style={{
+            marginTop: '64px',
+            padding: '32px 0',
+            borderTop: `1px solid ${colors.border}`,
+            textAlign: 'center',
+            color: colors.textSecondary,
+            fontSize: '14px',
+          }}>
+            <div style={{
+              maxWidth: '900px',
+              margin: '0 auto',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: '16px',
+            }}>
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+              }}>
+                <Frame size={24} color={colors.accentPrimary} />
+                <span style={{
+                  fontWeight: 'bold',
+                  color: colors.textPrimary,
+                }}>GitHub Avatar Frames</span>
+              </div>
+              <p style={{
+                margin: 0,
+                lineHeight: '1.5',
+              }}>
+                Built with ❤️ for the open-source community. Contribute on{' '}
+                <a
+                  href="https://github.com/TechQuanta/github-avatar-frame-api"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    color: colors.accentPrimary,
+                    textDecoration: 'none',
+                  }}
+                >
+                  GitHub
+                </a>.
+              </p>
+              <div style={{
+                display: 'flex',
+                gap: '16px',
+                flexWrap: 'wrap',
+                justifyContent: 'center',
+              }}>
+                <a
+                  href="https://github.com/TechQuanta/github-avatar-frame-api"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    color: colors.textSecondary,
+                    textDecoration: 'none',
+                    transition: 'color 0.2s',
+                  }}
+                  onMouseEnter={(e) => e.currentTarget.style.color = colors.accentPrimary}
+                  onMouseLeave={(e) => e.currentTarget.style.color = colors.textSecondary}
+                >
+                  Repository
+                </a>
+                <a
+                  href="https://github.com/TechQuanta/github-avatar-frame-api/issues"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    color: colors.textSecondary,
+                    textDecoration: 'none',
+                    transition: 'color 0.2s',
+                  }}
+                  onMouseEnter={(e) => e.currentTarget.style.color = colors.accentPrimary}
+                  onMouseLeave={(e) => e.currentTarget.style.color = colors.textSecondary}
+                >
+                  Issues
+                </a>
+                <a
+                  href="https://github.com/TechQuanta/github-avatar-frame-api/blob/main/LICENSE"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    color: colors.textSecondary,
+                    textDecoration: 'none',
+                    transition: 'color 0.2s',
+                  }}
+                  onMouseEnter={(e) => e.currentTarget.style.color = colors.accentPrimary}
+                  onMouseLeave={(e) => e.currentTarget.style.color = colors.textSecondary}
+                >
+                  License
+                </a>
+              </div>
+            </div>
+          </footer>
+        </div>
+      ) : (
+        // --- Generator Page ---
+        <div style={{
+          maxWidth: '1200px',
+          margin: '0 auto',
+        }}>
+        {/* --- 1. Top Bar: Home Button + Title + Community Button --- */}
         <div style={{
             display: 'flex',
             justifyContent: 'space-between',
@@ -332,10 +792,40 @@ function App() {
             flexWrap: 'wrap',
             gap: '16px',
         }} className="header-container">
+            {/* Home Button (Top Left) */}
+            <button
+                onClick={() => setShowHome(true)}
+                style={{
+                    padding: '10px 20px',
+                    borderRadius: '8px',
+                    background: isDark ? '#374151' : '#f0f4f8',
+                    border: `2px solid ${isDark ? colors.accentDark : colors.accentPrimary}`,
+                    color: isDark ? colors.accentDark : colors.accentPrimary,
+                    fontWeight: '800',
+                    fontSize: '14px',
+                    cursor: 'pointer',
+                    transition: 'all 0.3s',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+                }}
+                onMouseEnter={(e) => {
+                    e.currentTarget.style.background = isDark ? '#475569' : colors.accentPrimary;
+                    e.currentTarget.style.color = isDark ? 'white' : 'white';
+                }}
+                onMouseLeave={(e) => {
+                    e.currentTarget.style.background = isDark ? '#374151' : '#f0f4f8';
+                    e.currentTarget.style.color = isDark ? colors.accentDark : colors.accentPrimary;
+                }}
+            >
+                <span style={{ fontFamily: 'Times New Roman, serif' }}>𝐇𝐨𝐦𝐞</span>
+            </button>
+
             {/* Center Title Block */}
-            <div style={{ 
-                flexGrow: 1, 
-                textAlign: 'center', 
+            <div style={{
+                flexGrow: 1,
+                textAlign: 'center',
                 minWidth: '200px',
                 order: 1,
                 width: '100%',
@@ -396,7 +886,6 @@ function App() {
                     alignItems: 'center',
                     gap: '8px',
                     boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-                    marginLeft: 'auto', 
                 }}
                 onMouseEnter={(e) => {
                     e.currentTarget.style.background = isDark ? '#475569' : colors.accentPrimary;
@@ -955,112 +1444,9 @@ function App() {
         </div>
       </div>
       
-      {/* Community Modal Injection */}
-      <CommunityModal 
-        isOpen={isCommunityModalOpen} 
-        onClose={() => setIsCommunityModalOpen(false)} 
-        colors={colors}
-      />
+      )}
 
-      <style>{`
-        /* Global Reset to ensure no fixed width/padding causes overflow */
-        *, ::before, ::after {
-            box-sizing: border-box;
-        }
-        /* Using a standard font like Inter/system-ui for overall text, but inputs use monospace */
-        body, html, #root {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-            margin: 0;
-            padding: 0;
-            overflow-x: hidden !important; 
-            width: 100%;
-        }
-        
-        /* General Utilities & Animations */
-        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        @keyframes pulse-anim { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
-        .spinner { animation: spin 1s linear infinite; }
-        .pulse-text { animation: pulse-anim 2s infinite; }
-        .error-shake { animation: shake 0.4s ease-out; }
-
-        /* Customizing the range slider thumb (using injected colors) */
-        .range-slider::-webkit-slider-thumb {
-          -webkit-appearance: none; appearance: none; width: 20px; height: 20px; border-radius: 50%;
-          background: ${isDark ? colors.accentDark : `linear-gradient(135deg, ${colors.accentPrimary} 0%, ${colors.accentSecondary} 100%)`};
-          cursor: pointer; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        }
-        .range-slider::-moz-range-thumb {
-          width: 20px; height: 20px; border-radius: 50%; border: none;
-          background: ${isDark ? colors.accentDark : `linear-gradient(135deg, ${colors.accentPrimary} 0%, ${colors.accentSecondary} 100%)`};
-          cursor: pointer; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        }
-        
-        /* Theme Scroll Container Styling */
-        .themes-scroll-container {
-            -ms-overflow-style: none; scrollbar-width: none;
-        }
-        .themes-scroll-container::-webkit-scrollbar { height: 8px; }
-        .themes-scroll-container::-webkit-scrollbar-track { background: ${isDark ? '#374151' : '#f3f4f6'}; border-radius: 4px; }
-        .themes-scroll-container::-webkit-scrollbar-thumb { background: ${colors.accentPrimary}; border-radius: 4px; }
-        .themes-scroll-container::-webkit-scrollbar-thumb:hover { background: ${colors.accentSecondary}; }
-
-
-        /* --- RESPONSIVE LAYOUT RULES --- */
-        
-        /* Default: Mobile-First Single Column */
-        .main-grid-container {
-            grid-template-columns: 1fr; 
-        }
-
-        @media (max-width: 768px) {
-            /* Header and Button Layout: Stack title and community button */
-            .header-container {
-                flex-direction: column;
-                align-items: center !important;
-                gap: 24px !important;
-                width: 100%;
-                max-width: 100%;
-            }
-            .header-container > div:first-child {
-                order: 1 !important;
-                width: 100%;
-            }
-            .community-button {
-                order: 2 !important; 
-                width: 100%;
-                margin-left: 0 !important;
-            }
-
-            /* Title Size Reduction for Mobile */
-            .main-title {
-                font-size: 36px !important;
-            }
-            
-            /* Control Group (Canvas/Shape) : Force stacking columns */
-            .control-group {
-                flex-direction: column;
-                gap: 16px !important;
-                width: 100%;
-            }
-            /* IMPORTANT: Ensure sub-flex containers (the button sets) can wrap if content is too wide */
-            .control-button-set {
-                flex-wrap: wrap; 
-            }
-            /* IMPORTANT: Ensure the two sub-columns take full width */
-            .control-group > div {
-                width: 100%;
-            }
-            
-        }
-
-        /* Desktop Layout: Apply 50%/50% split above 769px */
-        @media (min-width: 769px) {
-            .main-grid-container {
-                grid-template-columns: 50% 50%; 
-            }
-        }
-      `}</style>
+      {/* Community Modal */}
     </div>
   );
 }
