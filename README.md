@@ -244,6 +244,14 @@ https://github-avatar-frame-api.onrender.com/api/framed-avatar/{username}?theme=
 </ul>
 
 ---
+## ✨ Contributors
+
+#### Thanks to all the wonderful contributors 💖
+
+[![Contributors](https://contrib.rocks/image?repo=TechQuanta/github-avatar-frame-api)](https://github.com/TechQuanta/github-avatar-frame-api/graphs/contributors)
+
+---
+
 
 <h2 style="color:#009688;">📜 License</h2>
 <p style="font-size:1.05em;">MIT License</p>
