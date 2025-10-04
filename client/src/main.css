@@ -1,3 +1,16 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.share-buttons {
+  @apply flex gap-3 mt-3; /* flex layout with spacing between buttons */
+}
+
+.share-buttons button {
+  @apply bg-blue-500 text-white px-3 py-1 rounded hover:opacity-80;
+  /* bg-blue-500 → blue background
+     text-white → white text
+     px-3 py-1 → padding
+     rounded → rounded corners
+     hover:opacity-80 → slight fade on hover */
+}
