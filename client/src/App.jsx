@@ -312,6 +312,31 @@ function App() {
 
   const finalRadiusForDisplay = shape === 'circle' ? maxRadius : radius;
 
+  // ----- NEW FUNCTION FOR SHARING -----
+  const shareAvatar = (platform) => {
+    if (!framedAvatarUrl) return;
+    const encodedUrl = encodeURIComponent(framedAvatarUrl);
+
+    let shareUrl = '';
+    switch(platform) {
+      case 'facebook':
+        shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`;
+        break;
+      case 'twitter':
+        shareUrl = `https://twitter.com/intent/tweet?url=${encodedUrl}&text=Check+out+my+GitHub+Avatar!`;
+        break;
+      case 'whatsapp':
+        shareUrl = `https://api.whatsapp.com/send?text=Check+out+my+GitHub+Avatar! ${encodedUrl}`;
+        break;
+      case 'linkedin':
+        shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`;
+        break;
+      default:
+        return;
+    }
+    window.open(shareUrl, '_blank');
+  };
+
   return (
     <div style={{
       minHeight: '100vh',
@@ -880,6 +905,14 @@ function App() {
                       <Download size={20} />
                       Download Image
                     </button>
+
+                    {/* Social Media Share Buttons - NEW */}
+                  <div className="share-buttons" style={{ display: 'flex', gap: '8px', marginBottom: '16px' }}>
+                    <button onClick={() => shareAvatar('facebook')} style={{ flex: 1, background: '#1877f2', color: 'white', borderRadius: '6px', padding: '10px', fontWeight: '600', cursor: 'pointer' }}>Facebook</button>
+                    <button onClick={() => shareAvatar('twitter')} style={{ flex: 1, background: '#1da1f2', color: 'white', borderRadius: '6px', padding: '10px', fontWeight: '600', cursor: 'pointer' }}>Twitter</button>
+                    <button onClick={() => shareAvatar('whatsapp')} style={{ flex: 1, background: '#25d366', color: 'white', borderRadius: '6px', padding: '10px', fontWeight: '600', cursor: 'pointer' }}>WhatsApp</button>
+                    <button onClick={() => shareAvatar('linkedin')} style={{ flex: 1, background: '#0a66c2', color: 'white', borderRadius: '6px', padding: '10px', fontWeight: '600', cursor: 'pointer' }}>LinkedIn</button>
+                  </div>
 
                     {/* API URL Section (Monospace Font Applied Here) */}
                     <div style={{
