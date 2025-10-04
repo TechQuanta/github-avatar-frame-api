@@ -2,3 +2,29 @@ body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
 }
+
+/* 🔹 NEW: Social media share buttons container */
+.share-buttons {
+  display: flex;        /* Arrange buttons horizontally */
+  gap: 10px;            /* Space between buttons */
+  margin-top: 15px;     /* Space above the buttons */
+  flex-wrap: wrap;      /* Wrap to next line on small screens */
+}
+
+/* 🔹 NEW: Individual share buttons */
+.share-buttons button {
+  background-color: #007bff;   /* Blue color for buttons */
+  color: white;                /* Text color */
+  border: none;                /* Remove default border */
+  padding: 8px 14px;           /* Button padding */
+  border-radius: 6px;          /* Rounded corners */
+  cursor: pointer;             /* Pointer on hover */
+  font-size: 14px;             /* Text size */
+  transition: all 0.2s ease;  /* Smooth hover effect */
+}
+
+/* 🔹 NEW: Hover effect for buttons */
+.share-buttons button:hover {
+  opacity: 0.85;               /* Slightly transparent on hover */
+  transform: scale(1.05);      /* Slightly enlarge on hover */
+}
