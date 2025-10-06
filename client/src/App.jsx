@@ -1,4 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import AOS from 'aos';
+import 'aos/dist/aos.css';
+
 import {
   Frame, Download, AlertCircle, Loader2, Github, Sparkles, Zap, Copy, Check,
   ChevronRight, Circle, Square, Sun, Moon, Users, X
@@ -133,6 +136,13 @@ const CommunityModal = ({ isOpen, onClose, colors }) => {
 
 // --- Main App Component ---
 function App() {
+  useEffect(() => {
+    AOS.init({
+      duration: 1000, 
+      easing: "ease-in-out",
+      once: true, 
+    });
+  }, []);
   const [username, setUsername] = useState('');
   const [themes, setThemes] = useState([]);
   const [selectedTheme, setSelectedTheme] = useState('base');
@@ -337,74 +347,99 @@ function App() {
     window.open(shareUrl, '_blank');
   };
 
-  return (
-    <div style={{
-      minHeight: '100vh',
+return (
+  <div
+    style={{
+      minHeight: "100vh",
       background: colors.bgBody,
-      padding: '24px 16px',
+      padding: "24px 16px",
       color: colors.textPrimary,
-    }}>
-      <div style={{
-        maxWidth: '1200px',
-        margin: '0 auto',
-      }}>
-        {/* --- 1. Top Bar: Title + Community Button --- */}
-        <div style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            marginBottom: '32px',
-            flexWrap: 'wrap',
-            gap: '16px',
-        }} className="header-container">
-            {/* Center Title Block */}
-            <div style={{ 
-                flexGrow: 1, 
-                textAlign: 'center', 
-                minWidth: '200px',
-                order: 1,
-                width: '100%',
-            }}>
-                <div style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: '12px',
-                    marginBottom: '8px',
-                }}>
-                    <div style={{ position: 'relative', display: 'inline-block' }}>
-                        <Frame size={48} color={colors.accentPrimary} strokeWidth={2.5} />
-                        <Sparkles size={20} color={colors.accentSecondary} className="pulse-icon" style={{
-                            position: 'absolute',
-                            top: '-4px',
-                            right: '-4px',
-                        }} />
-                    </div>
-                    <h1 className="main-title" style={{
-                        fontSize: '48px',
-                        fontWeight: '900',
-                        fontFamily: 'Georgia, Times New Roman, Times, serif',
-                        fontStyle: 'italic',
-                        background: 'linear-gradient(to right, #7c3aed, #a855f7, #ec4899)',
-                        WebkitBackgroundClip: 'text',
-                        WebkitTextFillColor: 'transparent',
-                        backgroundClip: 'text',
-                        margin: 0,
-                    }}>
-                        𝕲𝖎𝖙𝕳𝖚𝖇 𝔸𝕧𝕒𝕥𝕒𝕣 𝕱𝖗𝖆𝖒𝖊𝖘
-                    </h1>
-                </div>
-                <p style={{
-                    color: colors.textSecondary,
-                    fontSize: '16px',
-                    margin: '0',
-                }}>
-                    ↤↤↤↤↤ 𝐶𝑟𝑒𝑎𝑡𝑒 𝑠𝑡𝑢𝑛𝑛𝑖𝑛𝑔 𝑓𝑟𝑎𝑚𝑒𝑑 𝑎𝑣𝑎𝑡𝑎𝑟𝑠 𝑓𝑜𝑟 𝑦𝑜𝑢𝑟 𝐺𝑖𝑡𝐻𝑢𝑏 𝑝𝑟𝑜𝑓𝑖𝑙𝑒 𝑖𝑛 𝑠𝑒𝑐𝑜𝑛𝑑𝑠 ↦↦↦↦↦
-                </p>
+    }}
+  >
+    <div
+      style={{
+        maxWidth: "1200px",
+        margin: "0 auto",
+      }}
+    >
+      {/* --- 1. Top Bar: Title + Community Button --- */}
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginBottom: "32px",
+          flexWrap: "wrap",
+          gap: "16px",
+        }}
+        className="header-container"
+        data-aos="fade-down"
+      >
+        {/* Center Title Block */}
+        <div
+          style={{
+            flexGrow: 1,
+            textAlign: "center",
+            minWidth: "200px",
+            order: 1,
+            width: "100%",
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "12px",
+              marginBottom: "8px",
+            }}
+          >
+            <div style={{ position: "relative", display: "inline-block" }}>
+              <Frame size={48} color={colors.accentPrimary} strokeWidth={2.5} />
+              <Sparkles
+                size={20}
+                color={colors.accentSecondary}
+                className="pulse-icon"
+                style={{
+                  position: "absolute",
+                  top: "-4px",
+                  right: "-4px",
+                }}
+              />
             </div>
+            <h1
+              className="main-title"
+              style={{
+                fontSize: "48px",
+                fontWeight: "900",
+                fontFamily: "Georgia, Times New Roman, Times, serif",
+                fontStyle: "italic",
+                background:
+                  "linear-gradient(to right, #7c3aed, #a855f7, #ec4899)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+                margin: 0,
+              }}
+              data-aos="zoom-in"
+            >
+              𝕲𝖎𝖙𝕳𝖚𝖇 𝔸𝕧𝕒𝕥𝕒𝕣 𝕱𝖗𝖆𝖒𝖊𝖘
+            </h1>
+          </div>
+          <p
+            style={{
+              color: colors.textSecondary,
+              fontSize: "16px",
+              margin: "0",
+            }}
+            data-aos="fade-right"
+          >
+            ↤↤↤↤↤ 𝐶𝑟𝑒𝑎𝑡𝑒 𝑠𝑡𝑢𝑛𝑛𝑖𝑛𝑔 𝑓𝑟𝑎𝑚𝑒𝑑 𝑎𝑣𝑎𝑡𝑎𝑟𝑠 𝑓𝑜𝑟 𝑦𝑜𝑢𝑟 𝐺𝑖𝑡𝐻𝑢𝑏 𝑝𝑟𝑜𝑓𝑖𝑙𝑒 𝑖𝑛 𝑠𝑒𝑐𝑜𝑛𝑑𝑠 ↦↦↦↦↦
+          </p>
+        </div>
 
-            {/* Open Community Button (Top Right) */}
-            <button
+        {/* Open Community Button (Top Right) */}
+            <button data-aos="fade-right"
                 onClick={() => setIsCommunityModalOpen(true)}
                 className="community-button"
                 style={{
@@ -438,7 +473,7 @@ function App() {
         </div>
 
         {/* --- 2. Progress Steps --- */}
-        <div style={{ marginBottom: '32px' }}>
+        <div data-aos="fade-right" style={{ marginBottom: '32px' }}>
           <div style={{
             background: colors.bgCard,
             borderRadius: '12px',
@@ -510,7 +545,7 @@ function App() {
         </div>
 
         {/* --- 3. Main Left/Right Container (50/50 Split Desktop, Column Mobile) --- */}
-        <div 
+        <div
           className="main-grid-container"
           style={{
             display: 'grid',
@@ -518,7 +553,7 @@ function App() {
           }}
         >
           {/* Left: Configuration Panel (50%) */}
-          <div style={{
+          <div data-aos="flip-right" style={{
             background: colors.bgCard,
             borderRadius: '12px',
             border: `1px solid ${colors.border}`,
@@ -527,7 +562,7 @@ function App() {
             minWidth: '0', /* Critical for layout flexibility */
           }}>
 
-            <div style={{
+            <div data-aos="fade-right" style={{
               display: 'flex',
               alignItems: 'center',
               gap: '12px',
@@ -753,7 +788,7 @@ function App() {
             )}
 
             {/* Generate Button */}
-            <button
+            <button 
               onClick={generateFramedAvatar}
               disabled={loading || !username.trim()}
               style={{
@@ -815,7 +850,7 @@ function App() {
           </div>
 
           {/* Right: Preview Panel (50%) */}
-          <div style={{
+          <div data-aos="flip-left" style={{
             background: colors.bgCard,
             borderRadius: '12px',
             border: `1px solid ${colors.border}`,

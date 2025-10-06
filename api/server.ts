@@ -4,6 +4,9 @@ import sharp from "sharp";
 import cors from "cors";
 import path from "path";
 import fs from "fs";
+import { fileURLToPath } from "url";
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 
@@ -13,7 +16,9 @@ const PORT = process.env.PORT || 3000;
 
 // Helper to determine the base directory for assets, reliable across compilation (dist)
 // Assumes 'public' is located one level up from the compiled script location.
-const ASSET_BASE_PATH = path.join(__dirname, '..');
+
+const ASSET_BASE_PATH = path.join(__dirname, "..");
+
 
 /**
  * GET /api/framed-avatar/:username
