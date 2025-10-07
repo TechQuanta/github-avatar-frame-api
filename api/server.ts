@@ -91,45 +91,42 @@ app.get("/api/framed-avatar/:username", async (req: Request, res: Response) => {
       return res.status(404).json({ error: `Theme '${theme}' not found.` });
     }
 
-    // Fetch avatar with better error handling
+    // --- MODIFICATION START ---
+    // Fetch avatar or use fallback if user not found
+    let avatarBuffer: Buffer;
     const avatarUrl = `https://github.com/${username}.png?size=${size}`;
-    let avatarResponse;
 
     try {
-      avatarResponse = await axios.get(avatarUrl, {
+      const avatarResponse = await axios.get(avatarUrl, {
         responseType: "arraybuffer",
-        timeout: 30000, // Increased to 30 seconds
+        timeout: 30000,
         validateStatus: (status) => status === 200,
         headers: {
           "User-Agent": "GitHub-Avatar-Frame-API/1.0.0",
         },
       });
+      avatarBuffer = Buffer.from(avatarResponse.data);
     } catch (axiosError) {
-      if (axios.isAxiosError(axiosError)) {
-        if (axiosError.response?.status === 404) {
+      if (axios.isAxiosError(axiosError) && axiosError.response?.status === 404) {
+        // User not found, so we load the fallback placeholder image
+        const fallbackAvatarPath = path.join(
+          ASSET_BASE_PATH,
+          "public",
+          "not-found.png"
+        );
+        if (!fs.existsSync(fallbackAvatarPath)) {
+          console.error("Fallback avatar not-found.png is missing!");
           return res
-            .status(404)
-            .json({ error: `GitHub user '${username}' not found.` });
+            .status(500)
+            .json({ error: "Internal Server Error: Fallback image is missing." });
         }
-        if (
-          axiosError.code === "ECONNRESET" ||
-          axiosError.code === "ETIMEDOUT"
-        ) {
-          return res.status(503).json({
-            error: "Service temporarily unavailable. Please try again later.",
-          });
-        }
+        avatarBuffer = fs.readFileSync(fallbackAvatarPath);
+      } else {
+        // For other network errors, let the outer catch block handle it
+        throw axiosError;
       }
-      throw axiosError;
     }
-
-    const contentType = avatarResponse.headers["content-type"] || "";
-    if (!contentType.startsWith("image/")) {
-      return res
-        .status(404)
-        .json({ error: `GitHub user '${username}' avatar not found.` });
-    }
-    const avatarBuffer = Buffer.from(avatarResponse.data);
+    // --- MODIFICATION END ---
 
     // Load frame
     const frameBuffer = fs.readFileSync(framePath);
@@ -189,10 +186,15 @@ app.get("/api/framed-avatar/:username", async (req: Request, res: Response) => {
     res.send(finalImage);
   } catch (error) {
     console.error("Error creating framed avatar:", error);
-    if (axios.isAxiosError(error) && error.response?.status === 404) {
-      return res
-        .status(404)
-        .json({ error: `GitHub user '${req.params.username}' not found.` });
+    if (axios.isAxiosError(error)) {
+        if (
+            error.code === "ECONNRESET" ||
+            error.code === "ETIMEDOUT"
+        ) {
+            return res.status(503).json({
+                error: "Service temporarily unavailable. Please try again later.",
+            });
+        }
     }
     res
       .status(500)
@@ -206,7 +208,6 @@ app.get("/api/framed-avatar/:username", async (req: Request, res: Response) => {
  */
 app.get("/api/themes", (req: Request, res: Response) => {
   try {
-    // Use ASSET_BASE_PATH for reliable path resolution
     const framesDir = path.join(ASSET_BASE_PATH, "public", "frames");
 
     if (!fs.existsSync(framesDir)) {
@@ -216,8 +217,9 @@ app.get("/api/themes", (req: Request, res: Response) => {
     }
 
     const themes = fs.readdirSync(framesDir).filter((folder) => {
-      const framePath = path.join(framesDir, folder, "frame.png");
-      return fs.existsSync(framePath) && fs.statSync(framesDir).isDirectory();
+      const themeDir = path.join(framesDir, folder);
+      const framePath = path.join(themeDir, "frame.png");
+      return fs.existsSync(themeDir) && fs.statSync(themeDir).isDirectory() && fs.existsSync(framePath);
     });
 
     const result = themes.map((theme) => {
