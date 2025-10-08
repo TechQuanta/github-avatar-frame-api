@@ -9,6 +9,8 @@ import { fileURLToPath } from "url";
 const app = express();
 
 app.use(cors());
+
+
 // Use environment PORT for hosting environments like Render, default to 3000 for local dev
 const PORT = process.env.PORT || 3000;
 
@@ -18,6 +20,8 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const ASSET_BASE_PATH = path.join(__dirname, "..");
 
+//serve static files 
+app.use(express.static(path.join(ASSET_BASE_PATH,"public")));
 /**
  * GET /api/framed-avatar/:username
  * Example: /api/framed-avatar/octocat?theme=base&size=256

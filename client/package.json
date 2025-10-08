@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "aos": "^2.3.4",
     "cors": "^2.8.5",
     "aos":"^19.2.0",
     "lucide-react": "^0.544.0",
