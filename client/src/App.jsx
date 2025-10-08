@@ -30,7 +30,7 @@ const API_BASE_URL =
 const ControlButton = ({ onClick, isSelected, children, isDark }) => (
   <button
     onClick={onClick}
-    isSelected={isSelected} // Pass isSelected as prop for internal styling
+    //isSelected={isSelected} // Pass isSelected as prop for internal styling
     style={{
       padding: "10px 16px",
       borderRadius: "8px",
@@ -196,6 +196,7 @@ function App() {
   const [canvas, setCanvas] = useState("light");
   const [shape, setShape] = useState("circle");
   const [radius, setRadius] = useState(38);
+  const [frameStyle, setFrameStyle] = useState("default");
 
   const [loading, setLoading] = useState(false);
   const [themesLoading, setThemesLoading] = useState(true);
@@ -307,7 +308,7 @@ function App() {
   };
 
   const copyApiUrl = () => {
-    const apiUrl = `${API_BASE_URL}/api/framed-avatar/${username}?theme=${selectedTheme}&size=${size}&canvas=${canvas}&shape=${shape}&radius=${finalRadiusForDisplay}`;
+    const apiUrl = `${API_BASE_URL}/api/framed-avatar/${username}?theme=${selectedTheme}&size=${size}&canvas=${canvas}&shape=${shape}&radius=${finalRadiusForDisplay}&style=${frameStyle}`;
     try {
       // Use document.execCommand('copy') for better compatibility in iframe environments
       const tempInput = document.createElement("textarea");
@@ -338,7 +339,7 @@ function App() {
     try {
       const finalRadius = shape === "circle" ? maxRadius : radius;
 
-      const url = `${API_BASE_URL}/api/framed-avatar/${username}?theme=${selectedTheme}&size=${size}&canvas=${canvas}&shape=${shape}&radius=${finalRadius}`;
+      const url = `${API_BASE_URL}/api/framed-avatar/${username}?theme=${selectedTheme}&size=${size}&canvas=${canvas}&shape=${shape}&radius=${finalRadius}&style=${frameStyle}`;
 
       // Create AbortController for timeout
       const controller = new AbortController();
@@ -817,6 +818,13 @@ function App() {
                     isDark={isDark}>
                     <Moon size={18} /> Dark
                   </ControlButton>
+                  {/*Transparent Button */}
+                  <ControlButton
+                    onClick={()=> setCanvas("transparent")}
+                    isSelected={canvas === "transparent"}
+                    isDark={isDark}>
+                      <Sparkles size={18}/> Tranparent
+                    </ControlButton>
                 </div>
               </div>
               <div style={{ flex: 1 }}>
@@ -847,6 +855,37 @@ function App() {
                   </ControlButton>
                 </div>
               </div>
+            </div>
+            {/* Frame Style Control Group(Border Focus) */}
+            <div style={{marginBottom: "24px"}}>
+              <label
+                style={{
+                  display: "block",
+                  fontSize: "14px",
+                  fontWeight: "600",
+                  color: colors.textPrimary,
+                  marginBottom: "8px",
+                }}>
+                  Frame Style (Param : `style`)
+                </label>
+                <div style={{maxWidth: "fit-content"}}>
+                <div 
+                  className='control-button-set'
+                  style={{display: "flex", gap: "12px"}}>
+                    <ControlButton
+                    onClick={() => setFrameStyle("default")}
+                    isSelected={frameStyle === "default"}
+                    isDark={isDark}>
+                      Default
+                  </ControlButton>
+                  <ControlButton
+                    onClick={() => setFrameStyle("border-focus")}
+                    isSelected={frameStyle === "border-focus"}
+                    isDark={isDark}>
+                    Border Focus
+                  </ControlButton>
+                  </div>
+            </div>
             </div>
 
             {/* Size Slider */}
