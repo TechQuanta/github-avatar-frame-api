@@ -206,6 +206,7 @@ function App() {
   const [copied, setCopied] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
   const [isCommunityModalOpen, setIsCommunityModalOpen] = useState(false);
+  const [showHome, setShowHome] = useState(true);
 
   // System Theme State
   const [isDark, setIsDark] = useState(false);
@@ -1367,13 +1368,7 @@ function App() {
             
         }
 
-        /* Desktop Layout: Apply 50%/50% split above 769px */
-        @media (min-width: 769px) {
-            .main-grid-container {
-                grid-template-columns: 50% 50%; 
-            }
-        }
-      `}</style>
+      {/* Community Modal */}
     </div>
   );
 }
