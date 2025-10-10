@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import AOS from 'aos';
 import 'aos/dist/aos.css';
+import './App.css';
 import {
   Frame,
   Download,
@@ -206,7 +207,7 @@ function App() {
   const [copied, setCopied] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
   const [isCommunityModalOpen, setIsCommunityModalOpen] = useState(false);
-  const [showHome, setShowHome] = useState(true);
+  // Removed unused showHome state
 
   // System Theme State
   const [isDark, setIsDark] = useState(false);
@@ -1367,7 +1368,7 @@ function App() {
             }
             
         }
-
+      `}</style>
       {/* Community Modal */}
     </div>
   );
