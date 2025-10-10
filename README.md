@@ -62,7 +62,7 @@ https://github-avatar-frame-api.onrender.com/api/framed-avatar/{username}?theme=
 </pre>
 
 <h3 style="color:#009688;" align=center>Query Parameters:</h3>
-<div align=right>
+<div align=center>
 <table style="width:100%; border-collapse:collapse; font-size:1.05em;">
 <thead style="background-color:#f5f5f5; text-align:center;">
 <tr>
@@ -142,7 +142,7 @@ https://github-avatar-frame-api.onrender.com/api/framed-avatar/{username}?theme=
 
 <h3 style="color:#ff4081;">Live Examples by Theme</h3>
 
-<table style="width:100%; border-collapse:collapse; font-size:1.05em; text-align:center;">
+<table style="width:100%; border-collapse:collapse; font-size:1.05em; text-align:center;" align=center>
 <thead style="background-color:#f5f5f5;">
 <tr>
 <th>Theme</th>
@@ -193,7 +193,7 @@ https://github-avatar-frame-api.onrender.com/api/framed-avatar/{username}?theme=
 
 <br>
 
-<h3 style="color:#3f51b5;" align=right>Embed in README</h3>
+<h3 style="color:#3f51b5;" align=left>Embed in README</h3>
 
 <pre style="background-color:#f0f0f0; padding:10px; border-radius:10px;">
 ![My Avatar](https://github-avatar-frame-api.onrender.com/api/framed-avatar/your-username?theme=flamingo&size=256&canvas=dark&shape=rounded&radius=20)

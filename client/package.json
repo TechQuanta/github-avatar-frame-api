@@ -10,8 +10,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "aos": "^2.3.4",
     "cors": "^2.8.5",
     "lucide-react": "^0.544.0",
+    "pnpm": "^10.18.1",
     "react": "^19.1.1",
     "react-dom": "^19.1.1"
   },
