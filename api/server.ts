@@ -22,6 +22,100 @@ const ASSET_BASE_PATH = path.join(__dirname, "..");
 
 //serve static files 
 app.use(express.static(path.join(ASSET_BASE_PATH,"public")));
+
+// Helper function to create text overlay
+async function createTextOverlay(text: string, textColor: string, textSize: number, textPosition: string, canvasSize: number): Promise<Buffer | null> {
+  if (!text || text.trim() === "") return null;
+  
+  // Create SVG for text overlay
+  const svg = `
+    <svg width="${canvasSize}" height="${canvasSize}" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <filter id="textShadow" x="-50%" y="-50%" width="200%" height="200%">
+          <feDropShadow dx="1" dy="1" stdDeviation="1" flood-color="rgba(0,0,0,0.5)"/>
+        </filter>
+      </defs>
+      <text 
+        x="50%" 
+        y="${textPosition === 'top' ? textSize + 10 : textPosition === 'bottom' ? canvasSize - 10 : canvasSize / 2 + textSize / 2}" 
+        text-anchor="middle" 
+        dominant-baseline="${textPosition === 'top' ? 'hanging' : textPosition === 'bottom' ? 'baseline' : 'middle'}"
+        font-family="Arial, sans-serif" 
+        font-size="${textSize}" 
+        font-weight="bold"
+        fill="${textColor}"
+        filter="url(#textShadow)"
+      >
+        ${text}
+      </text>
+    </svg>
+  `;
+  
+  return Buffer.from(svg);
+}
+
+// Helper function to create emoji overlay
+async function createEmojiOverlay(emojis: string, emojiSize: number, emojiPosition: string, canvasSize: number): Promise<Buffer | null> {
+  if (!emojis || emojis.trim() === "") return null;
+  
+  const emojiList = emojis.split(',').map(e => e.trim()).filter(e => e.length > 0);
+  if (emojiList.length === 0) return null;
+  
+  let emojiElements = '';
+  const spacing = emojiSize + 10;
+  
+  if (emojiPosition === 'corners' && emojiList.length >= 4) {
+    // Place emojis in corners
+    const positions = [
+      { x: emojiSize/2 + 5, y: emojiSize/2 + 5 }, // top-left
+      { x: canvasSize - emojiSize/2 - 5, y: emojiSize/2 + 5 }, // top-right
+      { x: emojiSize/2 + 5, y: canvasSize - emojiSize/2 - 5 }, // bottom-left
+      { x: canvasSize - emojiSize/2 - 5, y: canvasSize - emojiSize/2 - 5 } // bottom-right
+    ];
+    
+    emojiList.slice(0, 4).forEach((emoji, index) => {
+      emojiElements += `
+        <text 
+          x="${positions[index].x}" 
+          y="${positions[index].y}" 
+          text-anchor="middle" 
+          dominant-baseline="middle"
+          font-size="${emojiSize}"
+        >
+          ${emoji}
+        </text>
+      `;
+    });
+  } else {
+    // Place emojis in a row at top or bottom
+    const y = emojiPosition === 'top' ? emojiSize + 5 : canvasSize - 5;
+    const totalWidth = emojiList.length * spacing;
+    const startX = (canvasSize - totalWidth) / 2 + emojiSize / 2;
+    
+    emojiList.forEach((emoji, index) => {
+      const x = startX + index * spacing;
+      emojiElements += `
+        <text 
+          x="${x}" 
+          y="${y}" 
+          text-anchor="middle" 
+          dominant-baseline="middle"
+          font-size="${emojiSize}"
+        >
+          ${emoji}
+        </text>
+      `;
+    });
+  }
+  
+  const svg = `
+    <svg width="${canvasSize}" height="${canvasSize}" xmlns="http://www.w3.org/2000/svg">
+      ${emojiElements}
+    </svg>
+  `;
+  
+  return Buffer.from(svg);
+}
 /**
  * GET /api/framed-avatar/:username
  * Example: /api/framed-avatar/octocat?theme=base&size=256&accentColor=%23ff6b6b
@@ -33,6 +127,13 @@ app.use(express.static(path.join(ASSET_BASE_PATH,"public")));
  * - radius: Corner radius for rounded/rect shapes
  * - canvas: "light", "dark", or "transparent" (default: "light")
  * - accentColor: Custom color for frame tinting (hex format, e.g., "#ff6b6b")
+ * - text: Custom text to display (e.g., "Darshan Parmar")
+ * - textColor: Color of text in HEX or keyword (default: #ffffff)
+ * - textSize: Size of text in pixels (default: 20)
+ * - textPosition: Position of text — top | bottom | center (default: bottom)
+ * - emojis: Comma-separated list of emojis (e.g., 🚀,💻,🔥)
+ * - emojiSize: Size of emojis in pixels (default: 40)
+ * - emojiPosition: Position of emojis — top | bottom | corners (default: top)
  */
 app.get("/api/framed-avatar/:username", async (req: Request, res: Response) => {
   try {
@@ -43,6 +144,17 @@ app.get("/api/framed-avatar/:username", async (req: Request, res: Response) => {
     const radiusStr = req.query.radius as string | undefined;
     const canvasParam = (req.query.canvas as string)?.toLowerCase() || "light"; // "dark" or "light"
     const accentColor = req.query.accentColor as string | undefined;
+    
+    // Text overlay parameters
+    const text = req.query.text as string | undefined;
+    const textColor = (req.query.textColor as string) || "#ffffff";
+    const textSizeStr = (req.query.textSize as string) || "20";
+    const textPosition = ((req.query.textPosition as string) || "bottom").toLowerCase();
+    
+    // Emoji overlay parameters
+    const emojis = req.query.emojis as string | undefined;
+    const emojiSizeStr = (req.query.emojiSize as string) || "40";
+    const emojiPosition = ((req.query.emojiPosition as string) || "top").toLowerCase();
 
     // Validate username
     if (!username || typeof username !== "string" || username.trim() === "") {
@@ -73,6 +185,24 @@ app.get("/api/framed-avatar/:username", async (req: Request, res: Response) => {
       return res.status(400).json({
         error: "Bad Request",
         message: "Shape must be 'circle', 'rounded', or 'rect'.",
+      });
+    }
+
+    // Validate text parameters
+    const textSize = Math.max(8, Math.min(parseInt(textSizeStr, 10), 100));
+    if (!["top", "bottom", "center"].includes(textPosition)) {
+      return res.status(400).json({
+        error: "Bad Request",
+        message: "textPosition must be 'top', 'bottom', or 'center'.",
+      });
+    }
+
+    // Validate emoji parameters
+    const emojiSize = Math.max(16, Math.min(parseInt(emojiSizeStr, 10), 120));
+    if (!["top", "bottom", "corners"].includes(emojiPosition)) {
+      return res.status(400).json({
+        error: "Bad Request",
+        message: "emojiPosition must be 'top', 'bottom', or 'corners'.",
       });
     }
 
@@ -194,6 +324,26 @@ app.get("/api/framed-avatar/:username", async (req: Request, res: Response) => {
       .png()
       .toBuffer();
 
+    // Create text and emoji overlays
+    const textOverlay = text ? await createTextOverlay(text, textColor, textSize, textPosition, size) : null;
+    const emojiOverlay = emojis ? await createEmojiOverlay(emojis, emojiSize, emojiPosition, size) : null;
+
+    // Build composite layers
+    const compositeLayers = [
+      { input: avatarMasked, gravity: "center" },
+      { input: paddedFrame, gravity: "center" },
+    ];
+
+    // Add text overlay if provided
+    if (textOverlay) {
+      compositeLayers.push({ input: textOverlay, gravity: "center" });
+    }
+
+    // Add emoji overlay if provided
+    if (emojiOverlay) {
+      compositeLayers.push({ input: emojiOverlay, gravity: "center" });
+    }
+
     // Compose final image on custom canvas color
     const finalImage = await sharp({
       create: {
@@ -203,10 +353,7 @@ app.get("/api/framed-avatar/:username", async (req: Request, res: Response) => {
         background: canvasColor,
       },
     })
-      .composite([
-        { input: avatarMasked, gravity: "center" },
-        { input: paddedFrame, gravity: "center" },
-      ])
+      .composite(compositeLayers)
       .png()
       .toBuffer();
 

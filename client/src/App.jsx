@@ -199,6 +199,17 @@ function App() {
   const [shape, setShape] = useState("circle");
   const [radius, setRadius] = useState(38);
   const [frameStyle, setFrameStyle] = useState("default");
+  
+  // Text overlay parameters
+  const [text, setText] = useState("");
+  const [textColor, setTextColor] = useState("#ffffff");
+  const [textSize, setTextSize] = useState(20);
+  const [textPosition, setTextPosition] = useState("bottom");
+  
+  // Emoji overlay parameters
+  const [emojis, setEmojis] = useState("");
+  const [emojiSize, setEmojiSize] = useState(40);
+  const [emojiPosition, setEmojiPosition] = useState("top");
 
   const [loading, setLoading] = useState(false);
   const [themesLoading, setThemesLoading] = useState(true);
@@ -319,6 +330,16 @@ function App() {
       apiUrl += `&accentColor=${encodeURIComponent(customAccentColor)}`;
     }
     
+    // Add text parameters if provided
+    if (text.trim()) {
+      apiUrl += `&text=${encodeURIComponent(text)}&textColor=${encodeURIComponent(textColor)}&textSize=${textSize}&textPosition=${textPosition}`;
+    }
+    
+    // Add emoji parameters if provided
+    if (emojis.trim()) {
+      apiUrl += `&emojis=${encodeURIComponent(emojis)}&emojiSize=${emojiSize}&emojiPosition=${emojiPosition}`;
+    }
+    
     try {
       // Use document.execCommand('copy') for better compatibility in iframe environments
       const tempInput = document.createElement("textarea");
@@ -354,6 +375,16 @@ function App() {
       // Add custom accent color if selected
       if (customAccentColor) {
         url += `&accentColor=${encodeURIComponent(customAccentColor)}`;
+      }
+      
+      // Add text parameters if provided
+      if (text.trim()) {
+        url += `&text=${encodeURIComponent(text)}&textColor=${encodeURIComponent(textColor)}&textSize=${textSize}&textPosition=${textPosition}`;
+      }
+      
+      // Add emoji parameters if provided
+      if (emojis.trim()) {
+        url += `&emojis=${encodeURIComponent(emojis)}&emojiSize=${emojiSize}&emojiPosition=${emojiPosition}`;
       }
 
       // Create AbortController for timeout
@@ -1158,6 +1189,182 @@ function App() {
               </div>
             )}
 
+            {/* Text Overlay Controls */}
+            <div style={{ marginBottom: "24px" }}>
+              <label
+                style={{
+                  display: "block",
+                  fontSize: "14px",
+                  fontWeight: "600",
+                  color: colors.textPrimary,
+                  marginBottom: "8px",
+                }}>
+                Text Overlay (Param: `text`)
+              </label>
+              <div style={{ display: "flex", gap: "12px", marginBottom: "12px" }}>
+                <input
+                  type="text"
+                  placeholder="Enter custom text..."
+                  value={text}
+                  onChange={(e) => setText(e.target.value)}
+                  style={{
+                    flex: 1,
+                    padding: "10px 12px",
+                    borderRadius: "8px",
+                    border: `2px solid ${colors.border}`,
+                    background: colors.bgInput,
+                    color: colors.textPrimary,
+                    fontSize: "14px",
+                    outline: "none",
+                    transition: "border-color 0.2s",
+                  }}
+                />
+                <input
+                  type="color"
+                  value={textColor}
+                  onChange={(e) => setTextColor(e.target.value)}
+                  style={{
+                    width: "50px",
+                    height: "40px",
+                    borderRadius: "8px",
+                    border: `2px solid ${colors.border}`,
+                    cursor: "pointer",
+                  }}
+                />
+              </div>
+              <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
+                <div style={{ flex: 1 }}>
+                  <label style={{ fontSize: "12px", color: colors.textSecondary, marginBottom: "4px", display: "block" }}>
+                    Size: {textSize}px
+                  </label>
+                  <input
+                    type="range"
+                    min="8"
+                    max="100"
+                    value={textSize}
+                    onChange={(e) => setTextSize(parseInt(e.target.value))}
+                    className="range-slider"
+                    style={{
+                      width: "100%",
+                      height: "6px",
+                      borderRadius: "3px",
+                      background: isDark ? "#374151" : "linear-gradient(to right, #a78bfa, #c4b5fd)",
+                      outline: "none",
+                      cursor: "pointer",
+                      WebkitAppearance: "none",
+                    }}
+                  />
+                </div>
+                <div style={{ flex: 1 }}>
+                  <label style={{ fontSize: "12px", color: colors.textSecondary, marginBottom: "4px", display: "block" }}>
+                    Position
+                  </label>
+                  <div style={{ display: "flex", gap: "8px" }}>
+                    <ControlButton
+                      onClick={() => setTextPosition("top")}
+                      isSelected={textPosition === "top"}
+                      isDark={isDark}>
+                      Top
+                    </ControlButton>
+                    <ControlButton
+                      onClick={() => setTextPosition("center")}
+                      isSelected={textPosition === "center"}
+                      isDark={isDark}>
+                      Center
+                    </ControlButton>
+                    <ControlButton
+                      onClick={() => setTextPosition("bottom")}
+                      isSelected={textPosition === "bottom"}
+                      isDark={isDark}>
+                      Bottom
+                    </ControlButton>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Emoji Overlay Controls */}
+            <div style={{ marginBottom: "24px" }}>
+              <label
+                style={{
+                  display: "block",
+                  fontSize: "14px",
+                  fontWeight: "600",
+                  color: colors.textPrimary,
+                  marginBottom: "8px",
+                }}>
+                Emoji Overlay (Param: `emojis`)
+              </label>
+              <div style={{ display: "flex", gap: "12px", marginBottom: "12px" }}>
+                <input
+                  type="text"
+                  placeholder="Enter emojis (e.g., 🚀,💻,🔥)"
+                  value={emojis}
+                  onChange={(e) => setEmojis(e.target.value)}
+                  style={{
+                    flex: 1,
+                    padding: "10px 12px",
+                    borderRadius: "8px",
+                    border: `2px solid ${colors.border}`,
+                    background: colors.bgInput,
+                    color: colors.textPrimary,
+                    fontSize: "14px",
+                    outline: "none",
+                    transition: "border-color 0.2s",
+                  }}
+                />
+              </div>
+              <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
+                <div style={{ flex: 1 }}>
+                  <label style={{ fontSize: "12px", color: colors.textSecondary, marginBottom: "4px", display: "block" }}>
+                    Size: {emojiSize}px
+                  </label>
+                  <input
+                    type="range"
+                    min="16"
+                    max="120"
+                    value={emojiSize}
+                    onChange={(e) => setEmojiSize(parseInt(e.target.value))}
+                    className="range-slider"
+                    style={{
+                      width: "100%",
+                      height: "6px",
+                      borderRadius: "3px",
+                      background: isDark ? "#374151" : "linear-gradient(to right, #a78bfa, #c4b5fd)",
+                      outline: "none",
+                      cursor: "pointer",
+                      WebkitAppearance: "none",
+                    }}
+                  />
+                </div>
+                <div style={{ flex: 1 }}>
+                  <label style={{ fontSize: "12px", color: colors.textSecondary, marginBottom: "4px", display: "block" }}>
+                    Position
+                  </label>
+                  <div style={{ display: "flex", gap: "8px" }}>
+                    <ControlButton
+                      onClick={() => setEmojiPosition("top")}
+                      isSelected={emojiPosition === "top"}
+                      isDark={isDark}>
+                      Top
+                    </ControlButton>
+                    <ControlButton
+                      onClick={() => setEmojiPosition("bottom")}
+                      isSelected={emojiPosition === "bottom"}
+                      isDark={isDark}>
+                      Bottom
+                    </ControlButton>
+                    <ControlButton
+                      onClick={() => setEmojiPosition("corners")}
+                      isSelected={emojiPosition === "corners"}
+                      isDark={isDark}>
+                      Corners
+                    </ControlButton>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             {/* Generate Button */}
             <button
               onClick={generateFramedAvatar}
@@ -1413,6 +1620,12 @@ function App() {
                           let apiUrl = `${API_BASE_URL}/api/framed-avatar/${username}?theme=${selectedTheme}&size=${size}&canvas=${canvas}&shape=${shape}&radius=${finalRadiusForDisplay}&style=${frameStyle}`;
                           if (customAccentColor) {
                             apiUrl += `&accentColor=${encodeURIComponent(customAccentColor)}`;
+                          }
+                          if (text.trim()) {
+                            apiUrl += `&text=${encodeURIComponent(text)}&textColor=${encodeURIComponent(textColor)}&textSize=${textSize}&textPosition=${textPosition}`;
+                          }
+                          if (emojis.trim()) {
+                            apiUrl += `&emojis=${encodeURIComponent(emojis)}&emojiSize=${emojiSize}&emojiPosition=${emojiPosition}`;
                           }
                           return apiUrl;
                         })()}

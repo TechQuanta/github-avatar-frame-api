@@ -80,6 +80,13 @@ https://github-avatar-frame-api.onrender.com/api/framed-avatar/{username}?theme=
 <tr><td>canvas</td><td>string</td><td>light</td><td>Background color of avatar canvas: light / dark</td><td>dark</td></tr>
 <tr><td>shape</td><td>string</td><td>circle</td><td>Avatar shape: circle or rounded</td><td>rounded</td></tr>
 <tr><td>radius</td><td>integer</td><td>25</td><td>Corner radius for rounded shape in px</td><td>50</td></tr>
+<tr><td>text</td><td>string</td><td>optional</td><td>Custom text to display on avatar</td><td>Hello World</td></tr>
+<tr><td>textColor</td><td>string</td><td>#ffffff</td><td>Color of text in HEX format</td><td>#ff0000</td></tr>
+<tr><td>textSize</td><td>integer</td><td>20</td><td>Size of text in pixels (8-100)</td><td>24</td></tr>
+<tr><td>textPosition</td><td>string</td><td>bottom</td><td>Position of text: top / bottom / center</td><td>top</td></tr>
+<tr><td>emojis</td><td>string</td><td>optional</td><td>Comma-separated list of emojis</td><td>🚀,💻,🔥</td></tr>
+<tr><td>emojiSize</td><td>integer</td><td>40</td><td>Size of emojis in pixels (16-120)</td><td>30</td></tr>
+<tr><td>emojiPosition</td><td>string</td><td>top</td><td>Position of emojis: top / bottom / corners</td><td>corners</td></tr>
 </tbody>
 </table>
 
@@ -95,6 +102,25 @@ https://github-avatar-frame-api.onrender.com/api/framed-avatar/{username}?theme=
 </ul>
 
 <p>Combine all three to customize your avatar:</p>
+
+<h3 style="color:#ff4081;">Text & Emoji Overlays</h3>
+
+<p style="font-size:1.05em;">Add personalized text and emojis to make your avatar more expressive:</p>
+
+<ul style="font-size:1.05em;">
+<li><b>text</b>: Add custom text like your name, role, or tagline.</li>
+<li><b>textColor</b>: Set text color using HEX format (e.g., #ff0000 for red).</li>
+<li><b>textSize</b>: Control text size from 8-100 pixels.</li>
+<li><b>textPosition</b>: Place text at top, bottom, or center of the avatar.</li>
+<li><b>emojis</b>: Add multiple emojis separated by commas (e.g., 🚀,💻,🔥).</li>
+<li><b>emojiSize</b>: Control emoji size from 16-120 pixels.</li>
+<li><b>emojiPosition</b>: Place emojis at top, bottom, or in corners.</li>
+</ul>
+
+<p><b>Example with text and emojis:</b></p>
+<pre style="background-color:#f9f9f9; padding:10px; border-radius:10px;">
+https://github-avatar-frame-api.onrender.com/api/framed-avatar/octocat?theme=base&text=GitHub%20User&textColor=%23ffffff&textSize=20&textPosition=bottom&emojis=%F0%9F%9A%80%2C%F0%9F%92%BB%2C%F0%9F%94%A5&emojiSize=30&emojiPosition=top
+</pre>
 <div align=center>
 <table style="width:100%; border-collapse:collapse; font-size:1.05em; text-align:center;">
 <thead style="background-color:#f5f5f5;">
