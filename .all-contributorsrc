@@ -4,7 +4,7 @@
   "repoType": "github",
   "repoHost": "https://github.com",
   "files": [
-    "CONTRIBUTORS.md"
+    "CONTRIBUTING.md"
   ],
   "imageSize": 100,
   "commit": false,
@@ -133,6 +133,25 @@
       "profile": "https://github.com/apps/allcontributors",
       "contributions": [
         "code"
+      ]
+    },
+    {
+      "login": "arundhativaishnav",
+      "name": "Arundhati Anil Vaishnav",
+      "avatar_url": "https://avatars.githubusercontent.com/u/168985050?v=4",
+      "profile": "https://github.com/arundhativaishnav",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "darshan02parmar",
+      "name": "Darshan Parmar",
+      "avatar_url": "https://avatars.githubusercontent.com/u/180026762?v=4",
+      "profile": "https://github.com/darshan02parmar",
+      "contributions": [
+        "design",
+        "ideas"
       ]
     }
   ],

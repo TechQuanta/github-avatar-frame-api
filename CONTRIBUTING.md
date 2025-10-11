@@ -21,6 +21,10 @@
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/shreya-mishra325"><img src="https://avatars.githubusercontent.com/u/210963725?v=4?s=100" width="100px;" alt="Shreya Mishra"/><br /><sub><b>Shreya Mishra</b></sub></a><br /><a href="https://github.com/TechQuanta/github-avatar-frame-api/commits?author=shreya-mishra325" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/ifthikaar24"><img src="https://avatars.githubusercontent.com/u/145851574?v=4?s=100" width="100px;" alt="ifthikaar24"/><br /><sub><b>ifthikaar24</b></sub></a><br /><a href="https://github.com/TechQuanta/github-avatar-frame-api/commits?author=ifthikaar24" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/apps/allcontributors"><img src="https://avatars.githubusercontent.com/in/23186?v=4?s=100" width="100px;" alt="allcontributors[bot]"/><br /><sub><b>allcontributors[bot]</b></sub></a><br /><a href="https://github.com/TechQuanta/github-avatar-frame-api/commits?author=allcontributors[bot]" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/arundhativaishnav"><img src="https://avatars.githubusercontent.com/u/168985050?v=4?s=100" width="100px;" alt="Arundhati Anil Vaishnav"/><br /><sub><b>Arundhati Anil Vaishnav</b></sub></a><br /><a href="https://github.com/TechQuanta/github-avatar-frame-api/commits?author=arundhativaishnav" title="Code">💻</a></td>
+    </tr>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/darshan02parmar"><img src="https://avatars.githubusercontent.com/u/180026762?v=4?s=100" width="100px;" alt="Darshan Parmar"/><br /><sub><b>Darshan Parmar</b></sub></a><br /><a href="#design-darshan02parmar" title="Design">🎨</a> <a href="#ideas-darshan02parmar" title="Ideas, Planning, & Feedback">🤔</a></td>
     </tr>
   </tbody>
 </table>
