@@ -24,7 +24,15 @@ const ASSET_BASE_PATH = path.join(__dirname, "..");
 app.use(express.static(path.join(ASSET_BASE_PATH,"public")));
 /**
  * GET /api/framed-avatar/:username
- * Example: /api/framed-avatar/octocat?theme=base&size=256
+ * Example: /api/framed-avatar/octocat?theme=base&size=256&accentColor=%23ff6b6b
+ * Parameters:
+ * - username: GitHub username (required)
+ * - theme: Frame theme (default: "base")
+ * - size: Image size 64-1024 (default: 256)
+ * - shape: "circle", "rounded", or "rect" (default: "circle")
+ * - radius: Corner radius for rounded/rect shapes
+ * - canvas: "light", "dark", or "transparent" (default: "light")
+ * - accentColor: Custom color for frame tinting (hex format, e.g., "#ff6b6b")
  */
 app.get("/api/framed-avatar/:username", async (req: Request, res: Response) => {
   try {
@@ -34,6 +42,7 @@ app.get("/api/framed-avatar/:username", async (req: Request, res: Response) => {
     const shape = ((req.query.shape as string) || "circle").toLowerCase();
     const radiusStr = req.query.radius as string | undefined;
     const canvasParam = (req.query.canvas as string)?.toLowerCase() || "light"; // "dark" or "light"
+    const accentColor = req.query.accentColor as string | undefined;
 
     // Validate username
     if (!username || typeof username !== "string" || username.trim() === "") {
@@ -147,16 +156,32 @@ app.get("/api/framed-avatar/:username", async (req: Request, res: Response) => {
       frameMetadata.width || size,
       frameMetadata.height || size
     );
-    const paddedFrame = await sharp(frameBuffer)
+    
+    // Apply custom accent color if provided
+    let frameProcessor = sharp(frameBuffer)
       .resize({
         width: maxSide,
         height: maxSide,
         fit: "contain",
         background: { r: 0, g: 0, b: 0, alpha: 0 },
       })
-      .resize(size, size)
-      .png()
-      .toBuffer();
+      .resize(size, size);
+    
+    if (accentColor) {
+      // Convert hex color to RGB for processing
+      const hex = accentColor.replace('#', '');
+      const r = parseInt(hex.substr(0, 2), 16);
+      const g = parseInt(hex.substr(2, 2), 16);
+      const b = parseInt(hex.substr(4, 2), 16);
+      
+      // Apply color tint to the frame
+      frameProcessor = frameProcessor.modulate({
+        brightness: 1.1, // Slightly brighten
+        saturation: 1.3, // Increase saturation
+      }).tint({ r, g, b });
+    }
+    
+    const paddedFrame = await frameProcessor.png().toBuffer();
 
     // Create mask for rounded corners
     const maskSvg = `<svg width="${size}" height="${size}" xmlns="http://www.w3.org/2000/svg">
