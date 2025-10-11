@@ -192,6 +192,8 @@ function App() {
   const [username, setUsername] = useState("");
   const [themes, setThemes] = useState([]);
   const [selectedTheme, setSelectedTheme] = useState("base");
+  const [customAccentColor, setCustomAccentColor] = useState(null);
+  const [originalThemeColor, setOriginalThemeColor] = useState(null);
   const [size, setSize] = useState(384);
   const [canvas, setCanvas] = useState("light");
   const [shape, setShape] = useState("circle");
@@ -206,6 +208,8 @@ function App() {
   const [copied, setCopied] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
   const [isCommunityModalOpen, setIsCommunityModalOpen] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
+  const [showToast, setShowToast] = useState(false);
 
   // System Theme State
   const [isDark, setIsDark] = useState(false);
@@ -308,7 +312,13 @@ function App() {
   };
 
   const copyApiUrl = () => {
-    const apiUrl = `${API_BASE_URL}/api/framed-avatar/${username}?theme=${selectedTheme}&size=${size}&canvas=${canvas}&shape=${shape}&radius=${finalRadiusForDisplay}&style=${frameStyle}`;
+    let apiUrl = `${API_BASE_URL}/api/framed-avatar/${username}?theme=${selectedTheme}&size=${size}&canvas=${canvas}&shape=${shape}&radius=${finalRadiusForDisplay}&style=${frameStyle}`;
+    
+    // Add custom accent color if selected
+    if (customAccentColor) {
+      apiUrl += `&accentColor=${encodeURIComponent(customAccentColor)}`;
+    }
+    
     try {
       // Use document.execCommand('copy') for better compatibility in iframe environments
       const tempInput = document.createElement("textarea");
@@ -339,7 +349,12 @@ function App() {
     try {
       const finalRadius = shape === "circle" ? maxRadius : radius;
 
-      const url = `${API_BASE_URL}/api/framed-avatar/${username}?theme=${selectedTheme}&size=${size}&canvas=${canvas}&shape=${shape}&radius=${finalRadius}&style=${frameStyle}`;
+      let url = `${API_BASE_URL}/api/framed-avatar/${username}?theme=${selectedTheme}&size=${size}&canvas=${canvas}&shape=${shape}&radius=${finalRadius}&style=${frameStyle}`;
+      
+      // Add custom accent color if selected
+      if (customAccentColor) {
+        url += `&accentColor=${encodeURIComponent(customAccentColor)}`;
+      }
 
       // Create AbortController for timeout
       const controller = new AbortController();
@@ -390,6 +405,51 @@ function App() {
   const handleThemeSelect = (theme) => {
     setSelectedTheme(theme);
     setCurrentStep(3);
+    // Reset custom color when selecting a new theme
+    setCustomAccentColor(null);
+    setOriginalThemeColor(null);
+  };
+
+  const handleRandomTheme = () => {
+    if (themes.length === 0) return;
+    
+    const randomIndex = Math.floor(Math.random() * themes.length);
+    const randomTheme = themes[randomIndex];
+    
+    setSelectedTheme(randomTheme.theme);
+    
+    // Randomly decide whether to also randomize accent color (30% chance)
+    const shouldRandomizeColor = Math.random() < 0.3;
+    if (shouldRandomizeColor) {
+      const randomColors = ["#7c3aed", "#ec4899", "#f97316", "#10b981", "#3b82f6", "#8b5cf6", "#ef4444", "#f59e0b"];
+      const randomColor = randomColors[Math.floor(Math.random() * randomColors.length)];
+      setCustomAccentColor(randomColor);
+      showToastNotification("🎲 Random Theme + Color Applied!");
+    } else {
+      setCustomAccentColor(null);
+      showToastNotification("✨ Surprise Style Loaded!");
+    }
+    
+    setOriginalThemeColor(null);
+    setCurrentStep(3);
+  };
+
+  const showToastNotification = (message) => {
+    setToastMessage(message);
+    setShowToast(true);
+    setTimeout(() => {
+      setShowToast(false);
+    }, 3000);
+  };
+
+  const handleCustomColorChange = (color) => {
+    setCustomAccentColor(color);
+  };
+
+  const resetToDefaultColor = () => {
+    setCustomAccentColor(null);
+    setOriginalThemeColor(null);
+    showToastNotification("🎨 Reset to Default Color");
   };
 
   const finalRadiusForDisplay = shape === "circle" ? maxRadius : radius;
@@ -786,6 +846,139 @@ function App() {
                   ))}
                 </div>
               )}
+            </div>
+
+            {/* Custom Color Picker and Random Theme Generator */}
+            <div style={{ marginBottom: "24px" }}>
+              <label
+                style={{
+                  display: "block",
+                  fontSize: "14px",
+                  fontWeight: "600",
+                  color: colors.textPrimary,
+                  marginBottom: "8px",
+                }}>
+                Customization & Discovery
+              </label>
+              <div style={{ display: "flex", gap: "12px", alignItems: "center", flexWrap: "wrap" }}>
+                {/* Custom Accent Color Picker */}
+                <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                  <label
+                    style={{
+                      fontSize: "12px",
+                      fontWeight: "500",
+                      color: colors.textSecondary,
+                      whiteSpace: "nowrap",
+                    }}>
+                    🎨 Accent Color:
+                  </label>
+                  <input
+                    type="color"
+                    value={customAccentColor || "#7c3aed"}
+                    onChange={(e) => handleCustomColorChange(e.target.value)}
+                    style={{
+                      width: "40px",
+                      height: "40px",
+                      border: `2px solid ${colors.border}`,
+                      borderRadius: "8px",
+                      cursor: "pointer",
+                      background: "transparent",
+                      padding: 0,
+                    }}
+                    title="Customize accent color"
+                  />
+                  {customAccentColor && (
+                    <button
+                      onClick={resetToDefaultColor}
+                      style={{
+                        padding: "8px 12px",
+                        background: colors.bgCard,
+                        border: `1px solid ${colors.border}`,
+                        borderRadius: "6px",
+                        color: colors.textPrimary,
+                        fontSize: "11px",
+                        fontWeight: "500",
+                        cursor: "pointer",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "4px",
+                        transition: "all 0.2s",
+                      }}
+                      title="Reset to default color">
+                      ↻ Reset
+                    </button>
+                  )}
+                </div>
+
+                {/* Quick Color Presets */}
+                <div style={{ display: "flex", gap: "6px", alignItems: "center" }}>
+                  <span style={{ fontSize: "11px", color: colors.textSecondary, marginRight: "4px" }}>Quick:</span>
+                  {["#7c3aed", "#ec4899", "#f97316", "#10b981", "#3b82f6", "#8b5cf6"].map((color) => (
+                    <button
+                      key={color}
+                      onClick={() => handleCustomColorChange(color)}
+                      style={{
+                        width: "24px",
+                        height: "24px",
+                        borderRadius: "50%",
+                        border: `2px solid ${colors.border}`,
+                        background: color,
+                        cursor: "pointer",
+                        transition: "all 0.2s",
+                        boxShadow: customAccentColor === color ? "0 0 0 2px rgba(124, 58, 237, 0.3)" : "none",
+                      }}
+                      title={`Set color to ${color}`}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.transform = "scale(1.1)";
+                        e.currentTarget.style.boxShadow = "0 2px 8px rgba(0, 0, 0, 0.2)";
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.transform = "scale(1)";
+                        e.currentTarget.style.boxShadow = customAccentColor === color ? "0 0 0 2px rgba(124, 58, 237, 0.3)" : "none";
+                      }}
+                    />
+                  ))}
+                </div>
+
+                {/* Random Theme Generator */}
+                <button
+                  onClick={handleRandomTheme}
+                  disabled={themes.length === 0}
+                  title="Randomly select a theme (sometimes includes random color too!)"
+                  style={{
+                    padding: "10px 16px",
+                    background: themes.length === 0 
+                      ? colors.border 
+                      : "linear-gradient(to right, #ec4899, #f97316)",
+                    color: "white",
+                    border: "none",
+                    borderRadius: "8px",
+                    fontWeight: "600",
+                    fontSize: "13px",
+                    cursor: themes.length === 0 ? "not-allowed" : "pointer",
+                    transition: "all 0.2s",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "6px",
+                    boxShadow: themes.length === 0 
+                      ? "none" 
+                      : "0 2px 4px rgba(0, 0, 0, 0.1)",
+                  }}
+                  onMouseEnter={(e) => {
+                    if (themes.length > 0) {
+                      e.currentTarget.style.transform = "translateY(-1px)";
+                      e.currentTarget.style.boxShadow = "0 4px 8px rgba(0, 0, 0, 0.15)";
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (themes.length > 0) {
+                      e.currentTarget.style.transform = "translateY(0)";
+                      e.currentTarget.style.boxShadow = "0 2px 4px rgba(0, 0, 0, 0.1)";
+                    }
+                  }}>
+                  🎲 Random Theme
+                </button>
+              </div>
             </div>
 
             {/* Control Group: Canvas & Shape */}
@@ -1216,7 +1409,13 @@ function App() {
                           borderRadius: "6px",
                           border: `1px solid ${colors.borderInput}`,
                         }}>
-                        {`${API_BASE_URL}/api/framed-avatar/${username}?theme=${selectedTheme}&size=${size}&canvas=${canvas}&shape=${shape}&radius=${finalRadiusForDisplay}`}
+                        {(() => {
+                          let apiUrl = `${API_BASE_URL}/api/framed-avatar/${username}?theme=${selectedTheme}&size=${size}&canvas=${canvas}&shape=${shape}&radius=${finalRadiusForDisplay}&style=${frameStyle}`;
+                          if (customAccentColor) {
+                            apiUrl += `&accentColor=${encodeURIComponent(customAccentColor)}`;
+                          }
+                          return apiUrl;
+                        })()}
                       </div>
                     </div>
                   </div>
@@ -1261,6 +1460,49 @@ function App() {
         colors={colors}
       />
 
+      {/* Toast Notification */}
+      {showToast && (
+        <div
+          style={{
+            position: "fixed",
+            top: "24px",
+            right: "24px",
+            background: colors.bgCard,
+            border: `1px solid ${colors.border}`,
+            borderRadius: "12px",
+            padding: "16px 20px",
+            boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.3)",
+            zIndex: 1001,
+            display: "flex",
+            alignItems: "center",
+            gap: "12px",
+            animation: "slideInRight 0.3s ease-out",
+            maxWidth: "300px",
+          }}>
+          <div
+            style={{
+              background: "linear-gradient(135deg, #7c3aed, #a855f7)",
+              borderRadius: "50%",
+              width: "24px",
+              height: "24px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              flexShrink: 0,
+            }}>
+            <Sparkles size={14} color="white" />
+          </div>
+          <span
+            style={{
+              color: colors.textPrimary,
+              fontWeight: "600",
+              fontSize: "14px",
+            }}>
+            {toastMessage}
+          </span>
+        </div>
+      )}
+
       <style>{`
         /* Global Reset to ensure no fixed width/padding causes overflow */
         *, ::before, ::after {
@@ -1279,6 +1521,7 @@ function App() {
         @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         @keyframes pulse-anim { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
         @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
+        @keyframes slideInRight { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
         .spinner { animation: spin 1s linear infinite; }
         .pulse-text { animation: pulse-anim 2s infinite; }
         .error-shake { animation: shake 0.4s ease-out; }
