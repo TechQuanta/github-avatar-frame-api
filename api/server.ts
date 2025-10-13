@@ -379,6 +379,166 @@ app.get("/api/framed-avatar/:username", async (req: Request, res: Response) => {
 });
 
 /**
+ * GET /api/smart-frame/:username
+ * AI-powered smart frame suggestions based on GitHub profile analysis
+ */
+app.get("/api/smart-frame/:username", async (req: Request, res: Response) => {
+  try {
+    const username = req.params.username;
+
+    // Validate username
+    if (!username || typeof username !== "string" || username.trim() === "") {
+      return res
+        .status(400)
+        .json({ error: "Bad Request", message: "Username is required." });
+    }
+
+    // Fetch GitHub user data
+    let userData;
+    try {
+      const userResponse = await axios.get(`https://api.github.com/users/${username}`, {
+        timeout: 10000,
+        headers: {
+          "User-Agent": "GitHub-Avatar-Frame-API/1.0.0",
+        },
+      });
+      userData = userResponse.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.status === 404) {
+        return res.status(404).json({ error: "User not found", message: "GitHub user does not exist." });
+      }
+      throw error;
+    }
+
+    // Fetch user's repositories
+    let reposData = [];
+    try {
+      const reposResponse = await axios.get(`https://api.github.com/users/${username}/repos?per_page=100`, {
+        timeout: 10000,
+        headers: {
+          "User-Agent": "GitHub-Avatar-Frame-API/1.0.0",
+        },
+      });
+      reposData = reposResponse.data;
+    } catch (error) {
+      console.warn("Failed to fetch repos, proceeding with user data only:", error);
+    }
+
+    // Analyze data
+    const analysis = analyzeGitHubProfile(userData, reposData);
+
+    // Generate recommendations
+    const recommendations = generateRecommendations(analysis);
+
+    // Construct preview URL
+    const baseUrl = process.env.BASE_URL || "https://github-avatar-frame-api.onrender.com";
+    const previewURL = `${baseUrl}/api/framed-avatar/${username}?accentColor=${encodeURIComponent(recommendations.accentColor)}&theme=${recommendations.recommendedFrame}&emojis=${encodeURIComponent(recommendations.emojis.join(','))}`;
+
+    const response = {
+      username,
+      recommendedFrame: recommendations.recommendedFrame,
+      accentColor: recommendations.accentColor,
+      emojis: recommendations.emojis,
+      previewURL,
+    };
+
+    res.json(response);
+  } catch (error) {
+    console.error("Error generating smart frame suggestions:", error);
+    if (axios.isAxiosError(error)) {
+      if (error.code === "ECONNRESET" || error.code === "ETIMEDOUT") {
+        return res.status(503).json({
+          error: "Service temporarily unavailable. Please try again later.",
+        });
+      }
+    }
+    res.status(500).json({ error: "Internal Server Error during analysis." });
+  }
+});
+
+/**
+ * Analyze GitHub profile data
+ */
+function analyzeGitHubProfile(userData: any, reposData: any[]) {
+  // Dominant languages
+  const languageCounts: { [key: string]: number } = {};
+  reposData.forEach(repo => {
+    if (repo.language) {
+      languageCounts[repo.language] = (languageCounts[repo.language] || 0) + 1;
+    }
+  });
+  const dominantLanguage = Object.keys(languageCounts).reduce((a, b) =>
+    languageCounts[a] > languageCounts[b] ? a : b, "Unknown"
+  );
+
+  // Activity level (based on public repos, followers, etc.)
+  const activityLevel = Math.min(userData.public_repos + userData.followers + (userData.following || 0), 100) / 100; // 0-1 scale
+
+  // Bio keywords
+  const bio = userData.bio || "";
+  const keywords = bio.toLowerCase().split(/\s+/);
+
+  return {
+    dominantLanguage,
+    activityLevel,
+    keywords,
+    isStudent: keywords.some((k: string) => k.includes("student") || k.includes("learner")),
+    isOpenSource: userData.public_repos > 10,
+    isDataScientist: keywords.some((k: string) => k.includes("data") || k.includes("ml") || k.includes("ai")),
+    isFrontend: keywords.some((k: string) => k.includes("frontend") || k.includes("react") || k.includes("web")),
+    isBackend: keywords.some((k: string) => k.includes("backend") || k.includes("api") || k.includes("server")),
+  };
+}
+
+/**
+ * Generate recommendations based on analysis
+ */
+function generateRecommendations(analysis: any) {
+  let recommendedFrame = "base";
+  let accentColor = "#ffffff";
+  let emojis: string[] = [];
+
+  // Frame type based on profile type
+  if (analysis.isFrontend) {
+    recommendedFrame = "tech-minimal";
+    accentColor = "#61DAFB"; // React blue
+    emojis = ["💻", "🚀"];
+  } else if (analysis.isDataScientist) {
+    recommendedFrame = "neural";
+    accentColor = "#FFD43B"; // Yellow for data
+    emojis = ["🧠", "📊"];
+  } else if (analysis.isStudent || analysis.isOpenSource) {
+    recommendedFrame = "soft-modern";
+    accentColor = "#34D399"; // Green for growth
+    emojis = ["🚀", "📚"];
+  } else if (analysis.dominantLanguage === "Python") {
+    recommendedFrame = "minimal";
+    accentColor = "#3776AB"; // Python blue
+    emojis = ["🐍", "💻"];
+  } else if (analysis.dominantLanguage === "JavaScript") {
+    recommendedFrame = "neon";
+    accentColor = "#F7DF1E"; // JS yellow
+    emojis = ["💻", "⚡"];
+  } else {
+    // Default
+    recommendedFrame = "classic";
+    accentColor = "#FF6B6B"; // Red
+    emojis = ["🌟", "💻"];
+  }
+
+  // Adjust based on activity level
+  if (analysis.activityLevel > 0.7) {
+    emojis.push("🔥"); // High activity
+  }
+
+  return {
+    recommendedFrame,
+    accentColor,
+    emojis,
+  };
+}
+
+/**
  * GET /api/themes
  * Lists all available themes + metadata
  */
@@ -433,5 +593,6 @@ app.listen(PORT, () => {
   console.log(`🎨 Available endpoints:`);
   console.log(`   GET /api/themes - List available themes`);
   console.log(`   GET /api/framed-avatar/:username - Generate framed avatar`);
+  console.log(`   GET /api/smart-frame/:username - AI-powered smart frame suggestions`);
   console.log(`   GET /api/health - Health check`);
 });
