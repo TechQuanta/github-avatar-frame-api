@@ -152,7 +152,7 @@ app.get("/api/framed-avatar/:username", async (req: Request, res: Response) => {
     const textPosition = ((req.query.textPosition as string) || "bottom").toLowerCase();
     
     // Emoji overlay parameters
-    const emojis = req.query.emojis as string | undefined;
+    const emojis = req.query.emojis ? decodeURIComponent(req.query.emojis as string) : undefined;
     const emojiSizeStr = (req.query.emojiSize as string) || "40";
     const emojiPosition = ((req.query.emojiPosition as string) || "top").toLowerCase();
 
