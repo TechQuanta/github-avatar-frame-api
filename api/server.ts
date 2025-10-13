@@ -586,6 +586,21 @@ app.get("/api/health", (req: Request, res: Response) => {
   res.json({ status: "ok", timestamp: new Date().toISOString() });
 });
 
+// Catch-all for invalid API routes
+app.use("/api/*", (req: Request, res: Response) => {
+  res.status(404).json({ error: "Not Found", message: "API endpoint not found." });
+});
+
+// Catch-all for SPA: serve index.html for non-API routes
+app.get("*", (req: Request, res: Response) => {
+  const indexPath = path.join(ASSET_BASE_PATH, "public", "index.html");
+  if (fs.existsSync(indexPath)) {
+    res.sendFile(indexPath);
+  } else {
+    res.status(404).json({ error: "Not Found", message: "Page not found." });
+  }
+});
+
 // Start server
 app.listen(PORT, () => {
   console.log(`🚀 Server running at http://localhost:${PORT}`);

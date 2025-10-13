@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useMemo } from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import AOS from 'aos';
 import 'aos/dist/aos.css';
+import NotFound from "./pages/NotFound.jsx";
 import {
   Frame,
   Download,
@@ -486,18 +488,21 @@ function App() {
   const finalRadiusForDisplay = shape === "circle" ? maxRadius : radius;
 
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        background: colors.bgBody,
-        padding: "24px 16px",
-        color: colors.textPrimary,
-      }}>
-      <div
-        style={{
-          maxWidth: "1200px",
-          margin: "0 auto",
-        }}>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={
+          <div
+            style={{
+              minHeight: "100vh",
+              background: colors.bgBody,
+              padding: "24px 16px",
+              color: colors.textPrimary,
+            }}>
+            <div
+              style={{
+                maxWidth: "1200px",
+                margin: "0 auto",
+              }}>
         {/* --- 1. Top Bar: Title + Community Button --- */}
         <div
           style={{
@@ -1831,7 +1836,11 @@ function App() {
         }
       `}</style>
     </div>
-  );
+  } />
+  <Route path="*" element={<NotFound />} />
+  </Routes>
+  </BrowserRouter>
+);
 }
 
 export default App;
