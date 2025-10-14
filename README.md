@@ -1,3 +1,4 @@
+ <img src="https://user-images.githubusercontent.com/74038190/212284100-561aa473-3905-4a80-b561-0d28506553ee.gif" width="100%">
 <!-- GSSoC Banner -->
 <h1 align="center" style="font-size: 3em; color: #ff4081;">
   GitHub Avatar Frame API
@@ -11,7 +12,36 @@
   <img src="public/assets/gssoc.png" alt="GSSOC" width="80%" style="border-radius: 15px; box-shadow: 0px 5px 15px rgba(0,0,0,0.2);">
 </div>
 
+<div align="center">
+ <a href="https://frame-avatars.vercel.app/"><strong>Explore the Live Demo »</strong></a>
+    <br />
+    <br />
+  
+[Report Bug](https://github.com/TechQuanta/github-avatar-frame-api/issues) • [Request Feature](https://github.com/TechQuanta/github-avatar-frame-api/issues)
+
+</div>
+
+ <img src="https://user-images.githubusercontent.com/74038190/212284100-561aa473-3905-4a80-b561-0d28506553ee.gif" width="100%">
+
 <br>
+<h2 style="color:#ff5722;">✨ Vision</h2>
+<p style="font-size: 1.1em;">
+Democratize creative avatar customization by providing a free, open-source API that transforms GitHub profiles into engaging visual experiences for developers worldwide.
+</p>
+
+ <img src="https://user-images.githubusercontent.com/74038190/212284100-561aa473-3905-4a80-b561-0d28506553ee.gif" width="100%">
+
+<h2 style="color:#ff5722;">🎯 Mission</h2>
+<p style="font-size: 1.1em;">
+<ul>
+ <li>Build the most comprehensive and user-friendly avatar framing API</li>
+<li>Empower developers to personalize their GitHub presence with minimal effort</li>
+<li>Foster creative expression through customizable themes, text, and emoji overlays</li>
+<li>Maintain a free, accessible service that supports the open-source community</li>
+</ul>
+</p>
+
+ <img src="https://user-images.githubusercontent.com/74038190/212284100-561aa473-3905-4a80-b561-0d28506553ee.gif" width="100%">
 
 <h2 align="center" style="color:#ff5722;">📊 Project Insights</h2>
 
@@ -53,6 +83,21 @@ A free and open-source API to frame your GitHub avatar using creative themes. Pe
 </p>
 
 <br>
+ <img src="https://user-images.githubusercontent.com/74038190/212284100-561aa473-3905-4a80-b561-0d28506553ee.gif" width="100%">
+ 
+<h2 style="color:#ff5722;">💡 Why GitHub Avatar Frame API?</h2>
+<p style="font-size: 1.1em;">
+  <ul>
+<li>Zero Setup: No registration, API keys, or complex configurations needed</li>
+<li>Instant Results: Real-time avatar processing with customizable themes</li>
+<li>Developer-Friendly: Simple REST API with comprehensive documentation</li>
+<li>Creative Freedom: Text overlays, emojis, multiple themes, and shape options</li>
+<li>Open Source: Community-driven development with transparent contributions</li>
+<li>Always Free: No usage limits or premium tiers—built for the community</li>
+  </ul>
+</p>
+
+ <img src="https://user-images.githubusercontent.com/74038190/212284100-561aa473-3905-4a80-b561-0d28506553ee.gif" width="100%">
 
 <h2 style="color:#3f51b5;">📌 API Usage</h2>
 
@@ -60,6 +105,11 @@ A free and open-source API to frame your GitHub avatar using creative themes. Pe
 <pre style="background-color:#f9f9f9; padding:10px; border-radius:10px;">
 https://github-avatar-frame-api.onrender.com/api/framed-avatar/{username}?theme={theme}&size={size}&canvas={canvas}&shape={shape}&radius={radius}
 </pre>
+
+ <img src="https://user-images.githubusercontent.com/74038190/212284100-561aa473-3905-4a80-b561-0d28506553ee.gif" width="100%">
+
+<h2 style="color:#3f51b5;">Flowchart</h2>
+<img width="957" height="2844" alt="Untitled diagram-2025-10-14-005556" src="https://github.com/user-attachments/assets/fd49b6b8-07b3-4fa6-ab66-48cc40eb0c38" />
 
 <h3 style="color:#009688;" align=center>Query Parameters:</h3>
 <div align=center>
@@ -166,6 +216,8 @@ https://github-avatar-frame-api.onrender.com/api/framed-avatar/octocat?theme=bas
 </div>
 <br>
 
+ <img src="https://user-images.githubusercontent.com/74038190/212284100-561aa473-3905-4a80-b561-0d28506553ee.gif" width="100%">
+ 
 <h3 style="color:#ff4081;">Live Examples by Theme</h3>
 
 <table style="width:100%; border-collapse:collapse; font-size:1.05em; text-align:center;" align=center>
@@ -225,7 +277,26 @@ https://github-avatar-frame-api.onrender.com/api/framed-avatar/octocat?theme=bas
 ![My Avatar](https://github-avatar-frame-api.onrender.com/api/framed-avatar/your-username?theme=flamingo&size=256&canvas=dark&shape=rounded&radius=20)
 </pre>
 
----
+ <img src="https://user-images.githubusercontent.com/74038190/212284100-561aa473-3905-4a80-b561-0d28506553ee.gif" width="100%">
+
+<h2 style="color:#ff5722;">🧩 Prerequisites</h2>
+<p style="font-size: 1.1em;">
+<p>
+  <ul>
+For API Usage:
+<li>Any modern web browser or HTTP client</li>
+<li>Valid GitHub username</li>
+<li>Basic understanding of URL parameters</li>
+  
+For Development/Contributing:
+<li>Node.js 16+ and npm</li>
+<li>TypeScript knowledge</li>
+<li>Git for version control</li>
+<li>Code editor (VS Code recommended)</li>
+</ul>
+</p>
+
+ <img src="https://user-images.githubusercontent.com/74038190/212284100-561aa473-3905-4a80-b561-0d28506553ee.gif" width="100%">
 
 <h2 style="color:#ff5722;">🤝 Contributing</h2>
 
@@ -236,7 +307,7 @@ https://github-avatar-frame-api.onrender.com/api/framed-avatar/octocat?theme=bas
 <li>📚 Improve documentation</li>
 </ul>
 
----
+ <img src="https://user-images.githubusercontent.com/74038190/212284100-561aa473-3905-4a80-b561-0d28506553ee.gif" width="100%">
 
 <h2 style="color:#673ab7;">⚙ Tech Stack</h2>
 
@@ -247,7 +318,7 @@ https://github-avatar-frame-api.onrender.com/api/framed-avatar/octocat?theme=bas
 <li>TypeScript</li>
 </ul>
 
----
+ <img src="https://user-images.githubusercontent.com/74038190/212284100-561aa473-3905-4a80-b561-0d28506553ee.gif" width="100%">
 
 <h2 style="color:#3f51b5;">🔗 Links</h2>
 
@@ -258,7 +329,7 @@ https://github-avatar-frame-api.onrender.com/api/framed-avatar/octocat?theme=bas
 <li>Code of Conduct: <a href="CODE_OF_CONDUCT.md">CODE_OF_CONDUCT.md</a></li>
 </ul>
 
----
+ <img src="https://user-images.githubusercontent.com/74038190/212284100-561aa473-3905-4a80-b561-0d28506553ee.gif" width="100%">
 
 <h2 style="color:#ff4081;">🌟 Show Your Support</h2>
 
@@ -269,7 +340,41 @@ https://github-avatar-frame-api.onrender.com/api/framed-avatar/octocat?theme=bas
 <li>📢 Share with the community</li>
 </ul>
 
----
+ <img src="https://user-images.githubusercontent.com/74038190/212284100-561aa473-3905-4a80-b561-0d28506553ee.gif" width="100%">
+ 
+<h2 style="color:#3f51b5;">🛠️ Troubleshooting</h2>
+<p>
+<h3>API Issues:</h3>
+<h3>Avatar not loading</h3>
+  <ul>
+<li>Check if GitHub username is valid</li>
+<li>Verify theme name spelling (eternity, base, flamingo)</li>
+<li>Ensure size is between 64-1024 pixels</li>
+  </ul>
+<h3>Slow response times</h3>
+<ul>
+<li>API may be cold-starting (hosted on Render free tier)</li>
+<li>Wait 10-15 seconds for first request</li>
+<li>Subsequent requests will be faster</li>
+</ul>
+
+Development Issues:
+Installation problems
+
+```npm cache clean --force```
+```rm -rf node_modules package-lock.json```
+```npm install```
+
+Port conflicts
+Check if port 3000 is in use
+```netstat -ano | findstr :3000```
+Kill process or change port in server config
+</p>
+
+ <img src="https://user-images.githubusercontent.com/74038190/212284100-561aa473-3905-4a80-b561-0d28506553ee.gif" width="100%">
 
 <h2 style="color:#009688;">📜 License</h2>
-<p style="font-size:1.05em;">MIT License</p>
+<a href="https://github.com/TechQuanta/github-avatar-frame-api?tab=MIT-1-ov-file">MIT License </a>
+<div align="center">
+<img src="https://user-images.githubusercontent.com/74038190/212284158-e840e285-664b-44d7-b79b-e264b5e54825.gif" width="400">
+<br><br>
