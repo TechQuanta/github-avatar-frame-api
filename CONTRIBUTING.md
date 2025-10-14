@@ -25,6 +25,7 @@
     </tr>
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/darshan02parmar"><img src="https://avatars.githubusercontent.com/u/180026762?v=4?s=100" width="100px;" alt="Darshan Parmar"/><br /><sub><b>Darshan Parmar</b></sub></a><br /><a href="#design-darshan02parmar" title="Design">🎨</a> <a href="#ideas-darshan02parmar" title="Ideas, Planning, & Feedback">🤔</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/Anshita-Rajput"><img src="https://avatars.githubusercontent.com/u/122893543?v=4?s=100" width="100px;" alt="Anshita Rajput"/><br /><sub><b>Anshita Rajput</b></sub></a><br /><a href="#design-Anshita-Rajput" title="Design">🎨</a> <a href="#infra-Anshita-Rajput" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a></td>
     </tr>
   </tbody>
 </table>
