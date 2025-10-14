@@ -320,6 +320,10 @@ For Development/Contributing:
 
  <img src="https://user-images.githubusercontent.com/74038190/212284100-561aa473-3905-4a80-b561-0d28506553ee.gif" width="100%">
 
+<h2 style="color:#673ab7;">Screenshot</h2>
+<img width="785" height="756" alt="Screenshot 2025-10-14 113128" src="https://github.com/user-attachments/assets/df7698d1-710b-4eed-a714-2e624a6b31e0" />
+
+
 <h2 style="color:#3f51b5;">🔗 Links</h2>
 
 <ul style="font-size:1.05em;">
