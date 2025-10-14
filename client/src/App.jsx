@@ -231,6 +231,7 @@ function App() {
   const previewCanvasRef = useRef(null);
   const [previewLoading, setPreviewLoading] = useState(false);
   const [previewError, setPreviewError] = useState(null);
+  const [isPreviewUpdating, setIsPreviewUpdating] = useState(false);
 
   const maxRadius = useMemo(() => Math.floor(size / 2), [size]);
 
@@ -514,6 +515,7 @@ function App() {
 
     setPreviewLoading(true);
     setPreviewError(null);
+    setIsPreviewUpdating(true);
 
     try {
       const canvas = previewCanvasRef.current;
@@ -626,6 +628,7 @@ function App() {
       setPreviewError(error.message);
     } finally {
       setPreviewLoading(false);
+      setIsPreviewUpdating(false);
     }
   };
 
