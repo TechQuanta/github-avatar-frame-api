@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import AOS from 'aos';
 import 'aos/dist/aos.css';
@@ -226,6 +226,11 @@ function App() {
 
   // System Theme State
   const [isDark, setIsDark] = useState(false);
+
+  // Live Preview Canvas Ref
+  const previewCanvasRef = useRef(null);
+  const [previewLoading, setPreviewLoading] = useState(false);
+  const [previewError, setPreviewError] = useState(null);
 
   const maxRadius = useMemo(() => Math.floor(size / 2), [size]);
 
@@ -486,6 +491,149 @@ function App() {
   };
 
   const finalRadiusForDisplay = shape === "circle" ? maxRadius : radius;
+
+  // Live Preview Functions
+  const fetchAvatar = async (username) => {
+    const avatarUrl = `https://avatars.githubusercontent.com/${username}?size=${size}`;
+    const response = await fetch(avatarUrl, { cache: 'no-cache' });
+    if (!response.ok) throw new Error('Avatar not found');
+    const blob = await response.blob();
+    return createImageBitmap(blob);
+  };
+
+  const fetchFrame = async (theme) => {
+    const frameUrl = `${API_BASE_URL}/public/frames/${theme}/frame.png`;
+    const response = await fetch(frameUrl, { cache: 'no-cache' });
+    if (!response.ok) throw new Error('Frame not found');
+    const blob = await response.blob();
+    return createImageBitmap(blob);
+  };
+
+  const drawPreview = async () => {
+    if (!username.trim() || !previewCanvasRef.current) return;
+
+    setPreviewLoading(true);
+    setPreviewError(null);
+
+    try {
+      const canvas = previewCanvasRef.current;
+      const ctx = canvas.getContext('2d');
+      canvas.width = size;
+      canvas.height = size;
+
+      // Clear canvas
+      ctx.clearRect(0, 0, size, size);
+
+      // Set canvas background
+      let bgColor = { r: 240, g: 240, b: 240, alpha: 1 }; // light default
+      if (canvas === "dark") bgColor = { r: 34, g: 34, b: 34, alpha: 1 };
+      ctx.fillStyle = `rgba(${bgColor.r}, ${bgColor.g}, ${bgColor.b}, ${bgColor.alpha})`;
+      ctx.fillRect(0, 0, size, size);
+
+      // Fetch avatar
+      let avatarImage;
+      try {
+        avatarImage = await fetchAvatar(username);
+      } catch (error) {
+        // Use fallback if avatar not found
+        const fallbackUrl = `${API_BASE_URL}/public/not-found.png`;
+        const response = await fetch(fallbackUrl);
+        const blob = await response.blob();
+        avatarImage = await createImageBitmap(blob);
+      }
+
+      // Fetch frame
+      const frameImage = await fetchFrame(selectedTheme);
+
+      // Resize avatar to fit
+      const avatarSize = size;
+      ctx.save();
+      ctx.beginPath();
+      const radius = shape === "circle" ? size / 2 : finalRadiusForDisplay;
+      if (shape === "circle") {
+        ctx.arc(size / 2, size / 2, radius, 0, 2 * Math.PI);
+      } else {
+        ctx.roundRect(0, 0, size, size, radius);
+      }
+      ctx.closePath();
+      ctx.clip();
+      ctx.drawImage(avatarImage, 0, 0, avatarSize, avatarSize);
+      ctx.restore();
+
+      // Draw frame with tint if custom color
+      ctx.save();
+      if (customAccentColor) {
+        // Apply tint by drawing frame with globalCompositeOperation
+        ctx.globalCompositeOperation = 'source-over';
+        ctx.drawImage(frameImage, 0, 0, size, size);
+        ctx.globalCompositeOperation = 'multiply';
+        const [r, g, b] = customAccentColor.match(/\w\w/g).map(x => parseInt(x, 16));
+        ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+        ctx.fillRect(0, 0, size, size);
+        ctx.globalCompositeOperation = 'source-over';
+      } else {
+        ctx.drawImage(frameImage, 0, 0, size, size);
+      }
+      ctx.restore();
+
+      // Draw text overlay
+      if (text.trim()) {
+        ctx.save();
+        ctx.font = `bold ${textSize}px Arial, sans-serif`;
+        ctx.fillStyle = textColor;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = textPosition === 'top' ? 'top' : textPosition === 'bottom' ? 'bottom' : 'middle';
+        const y = textPosition === 'top' ? 10 : textPosition === 'bottom' ? size - 10 : size / 2;
+        ctx.fillText(text, size / 2, y);
+        ctx.restore();
+      }
+
+      // Draw emoji overlay
+      if (emojis.trim()) {
+        const emojiList = emojis.split(',').map(e => e.trim()).filter(e => e);
+        if (emojiList.length > 0) {
+          ctx.save();
+          ctx.font = `${emojiSize}px Arial, sans-serif`;
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+
+          if (emojiPosition === 'corners' && emojiList.length >= 4) {
+            const positions = [
+              { x: emojiSize / 2 + 5, y: emojiSize / 2 + 5 },
+              { x: size - emojiSize / 2 - 5, y: emojiSize / 2 + 5 },
+              { x: emojiSize / 2 + 5, y: size - emojiSize / 2 - 5 },
+              { x: size - emojiSize / 2 - 5, y: size - emojiSize / 2 - 5 }
+            ];
+            emojiList.slice(0, 4).forEach((emoji, index) => {
+              ctx.fillText(emoji, positions[index].x, positions[index].y);
+            });
+          } else {
+            const y = emojiPosition === 'top' ? emojiSize + 5 : size - 5;
+            const spacing = emojiSize + 10;
+            const totalWidth = emojiList.length * spacing;
+            const startX = (size - totalWidth) / 2 + emojiSize / 2;
+            emojiList.forEach((emoji, index) => {
+              const x = startX + index * spacing;
+              ctx.fillText(emoji, x, y);
+            });
+          }
+          ctx.restore();
+        }
+      }
+
+    } catch (error) {
+      console.error('Preview error:', error);
+      setPreviewError(error.message);
+    } finally {
+      setPreviewLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (username.trim()) {
+      drawPreview();
+    }
+  }, [username, selectedTheme, size, canvas, shape, radius, customAccentColor, text, textColor, textSize, textPosition, emojis, emojiSize, emojiPosition]);
 
   return (
     <BrowserRouter>
@@ -1052,7 +1200,7 @@ function App() {
                     onClick={()=> setCanvas("transparent")}
                     isSelected={canvas === "transparent"}
                     isDark={isDark}>
-                      <Sparkles size={18}/> Tranparent
+                      <Sparkles size={18}/> Transparent
                     </ControlButton>
                 </div>
               </div>
@@ -1637,6 +1785,52 @@ function App() {
                       </div>
                     </div>
                   </div>
+                </div>
+              ) : username.trim() ? (
+                <div style={{ textAlign: "center", width: "100%" }}>
+                  {previewLoading && (
+                    <div style={{ marginBottom: "16px" }}>
+                      <Loader2
+                        size={32}
+                        color={colors.accentPrimary}
+                        className='spinner'
+                      />
+                      <p
+                        style={{
+                          color: colors.textSecondary,
+                          fontSize: "14px",
+                          marginTop: "8px",
+                        }}>
+                        Loading preview...
+                      </p>
+                    </div>
+                  )}
+                  <canvas
+                    ref={previewCanvasRef}
+                    style={{
+                      borderRadius:
+                        shape === "circle"
+                          ? "50%"
+                          : `${finalRadiusForDisplay}px`,
+                      boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.2)",
+                      border: `3px solid ${isDark ? "#374151" : "white"}`,
+                      width: "100%",
+                      height: "auto",
+                      maxWidth: "384px",
+                      maxHeight: "384px",
+                      marginBottom: "24px",
+                    }}
+                  />
+                  {previewError && (
+                    <p
+                      style={{
+                        color: colors.errorText,
+                        fontSize: "14px",
+                        marginTop: "8px",
+                      }}>
+                      {previewError}
+                    </p>
+                  )}
                 </div>
               ) : (
                 <div
