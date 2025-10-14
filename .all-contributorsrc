@@ -153,6 +153,16 @@
         "design",
         "ideas"
       ]
+    },
+    {
+      "login": "Anshita-Rajput",
+      "name": "Anshita Rajput",
+      "avatar_url": "https://avatars.githubusercontent.com/u/122893543?v=4",
+      "profile": "https://github.com/Anshita-Rajput",
+      "contributions": [
+        "design",
+        "infra"
+      ]
     }
   ],
   "commitConvention": "angular",
