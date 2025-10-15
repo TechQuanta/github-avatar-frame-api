@@ -19,6 +19,10 @@
   
 [Report Bug](https://github.com/TechQuanta/github-avatar-frame-api/issues) • [Request Feature](https://github.com/TechQuanta/github-avatar-frame-api/issues)
 
+<img src="https://user-images.githubusercontent.com/74038190/212284100-561aa473-3905-4a80-b561-0d28506553ee.gif" width="100%">
+
+<img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&pause=1000&color=FF0000&width=435&lines=Welcome+to+GitHub+Avatar+Frame+API;Contribute+to+open+source" alt="Typing SVG" />
+
 </div>
 
  <img src="https://user-images.githubusercontent.com/74038190/212284100-561aa473-3905-4a80-b561-0d28506553ee.gif" width="100%">
@@ -34,10 +38,10 @@ Democratize creative avatar customization by providing a free, open-source API t
 <h2 style="color:#ff5722;">🎯 Mission</h2>
 <p style="font-size: 1.1em;">
 <ul>
- <li>Build the most comprehensive and user-friendly avatar framing API</li>
-<li>Empower developers to personalize their GitHub presence with minimal effort</li>
-<li>Foster creative expression through customizable themes, text, and emoji overlays</li>
-<li>Maintain a free, accessible service that supports the open-source community</li>
+ <li>🏗️ Build the most comprehensive and user-friendly avatar framing API</li>
+<li>💪 Empower developers to personalize their GitHub presence with minimal effort</li>
+<li>🎨 Foster creative expression through customizable themes, text, and emoji overlays</li>
+<li>🆓 Maintain a free, accessible service that supports the open-source community</li>
 </ul>
 </p>
 
@@ -88,12 +92,12 @@ A free and open-source API to frame your GitHub avatar using creative themes. Pe
 <h2 style="color:#ff5722;">💡 Why GitHub Avatar Frame API?</h2>
 <p style="font-size: 1.1em;">
   <ul>
-<li>Zero Setup: No registration, API keys, or complex configurations needed</li>
-<li>Instant Results: Real-time avatar processing with customizable themes</li>
-<li>Developer-Friendly: Simple REST API with comprehensive documentation</li>
-<li>Creative Freedom: Text overlays, emojis, multiple themes, and shape options</li>
-<li>Open Source: Community-driven development with transparent contributions</li>
-<li>Always Free: No usage limits or premium tiers—built for the community</li>
+<li>🆓 Zero Setup: No registration, API keys, or complex configurations needed</li>
+<li>⚡ Instant Results: Real-time avatar processing with customizable themes</li>
+<li>👨‍💻 Developer-Friendly: Simple REST API with comprehensive documentation</li>
+<li>🎭 Creative Freedom: Text overlays, emojis, multiple themes, and shape options</li>
+<li>🔓 Open Source: Community-driven development with transparent contributions</li>
+<li>💖 Always Free: No usage limits or premium tiers—built for the community</li>
   </ul>
 </p>
 
@@ -101,7 +105,7 @@ A free and open-source API to frame your GitHub avatar using creative themes. Pe
 
 <h2 style="color:#3f51b5;">📌 API Usage</h2>
 
-<p style="font-size:1.05em;"><b>Base Endpoint:</b></p>
+<p style="font-size:1.05em;"><b>🔗 Base Endpoint:</b></p>
 <pre style="background-color:#f9f9f9; padding:10px; border-radius:10px;">
 https://github-avatar-frame-api.onrender.com/api/framed-avatar/{username}?theme={theme}&size={size}&canvas={canvas}&shape={shape}&radius={radius}
 </pre>
@@ -146,9 +150,9 @@ https://github-avatar-frame-api.onrender.com/api/framed-avatar/{username}?theme=
 <h3 style="color:#ff4081;">🧱 Canvas, Shape & Radius Explained</h3>
 
 <ul style="font-size:1.05em;">
-<li><b>canvas</b>: Sets the avatar background color. Options: <code>light</code> or <code>dark</code>.</li>
-<li><b>shape</b>: Sets the avatar outline. Options: <code>circle</code> or <code>rounded</code>.</li>
-<li><b>radius</b>: Controls corner rounding in px when <code>shape=rounded</code>. 0 = square, higher = more rounded.</li>
+<li>🎨 <b>canvas</b>: Sets the avatar background color. Options: <code>light</code> or <code>dark</code>.</li>
+<li>🔷 <b>shape</b>: Sets the avatar outline. Options: <code>circle</code> or <code>rounded</code>.</li>
+<li>📐 <b>radius</b>: Controls corner rounding in px when <code>shape=rounded</code>. 0 = square, higher = more rounded.</li>
 </ul>
 
 <p>Combine all three to customize your avatar:</p>
@@ -158,13 +162,13 @@ https://github-avatar-frame-api.onrender.com/api/framed-avatar/{username}?theme=
 <p style="font-size:1.05em;">Add personalized text and emojis to make your avatar more expressive:</p>
 
 <ul style="font-size:1.05em;">
-<li><b>text</b>: Add custom text like your name, role, or tagline.</li>
-<li><b>textColor</b>: Set text color using HEX format (e.g., #ff0000 for red).</li>
-<li><b>textSize</b>: Control text size from 8-100 pixels.</li>
-<li><b>textPosition</b>: Place text at top, bottom, or center of the avatar.</li>
-<li><b>emojis</b>: Add multiple emojis separated by commas (e.g., 🚀,💻,🔥).</li>
-<li><b>emojiSize</b>: Control emoji size from 16-120 pixels.</li>
-<li><b>emojiPosition</b>: Place emojis at top, bottom, or in corners.</li>
+<li>📝 <b>text</b>: Add custom text like your name, role, or tagline.</li>
+<li>🎨 <b>textColor</b>: Set text color using HEX format (e.g., #ff0000 for red).</li>
+<li>🔠 <b>textSize</b>: Control text size from 8-100 pixels.</li>
+<li>📍 <b>textPosition</b>: Place text at top, bottom, or center of the avatar.</li>
+<li>😀 <b>emojis</b>: Add multiple emojis separated by commas (e.g., 🚀,💻,🔥).</li>
+<li>📏 <b>emojiSize</b>: Control emoji size from 16-120 pixels.</li>
+<li>📍 <b>emojiPosition</b>: Place emojis at top, bottom, or in corners.</li>
 </ul>
 
 <p><b>📌 Example with text and emojis:</b></p>
@@ -312,10 +316,10 @@ For Development/Contributing:
 <h2 style="color:#673ab7;">⚙ Tech Stack</h2>
 
 <ul style="font-size:1.05em;">
-<li>Node.js & Express.js (TypeScript)</li>
-<li>Sharp (image processing)</li>
-<li>Render (hosting)</li>
-<li>TypeScript</li>
+<li>🟢Node.js & Express.js (TypeScript)</li>
+<li>🖼️Sharp (image processing)</li>
+<li>☁️ Render (hosting)</li>
+<li>📘TypeScript</li>
 </ul>
 
  <img src="https://user-images.githubusercontent.com/74038190/212284100-561aa473-3905-4a80-b561-0d28506553ee.gif" width="100%">
