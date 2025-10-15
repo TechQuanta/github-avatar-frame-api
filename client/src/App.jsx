@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import AOS from 'aos';
 import 'aos/dist/aos.css';
@@ -21,6 +21,7 @@ import {
   Users,
   X,
 } from "lucide-react";
+import ThemeSlider from "./components/ThemeSlider.jsx";
 
 // NOTE: Replace with your actual API URL or environment variable
 const API_BASE_URL =
@@ -798,91 +799,15 @@ function App() {
               </div>
             </div>
 
-            {/* Theme Selection (Small and Scrollable) */}
-            <div style={{ marginBottom: "24px" }}>
-              <label
-                style={{
-                  display: "block",
-                  fontSize: "14px",
-                  fontWeight: "600",
-                  color: colors.textPrimary,
-                  marginBottom: "8px",
-                }}>
-                Frame Theme ({themes.length} available)
-              </label>
-              {themesLoading ? (
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    padding: "32px 0",
-                  }}>
-                  <Loader2
-                    size={32}
-                    color={colors.accentPrimary}
-                    className='spinner'
-                  />
-                </div>
-              ) : (
-                <div
-                  className='themes-scroll-container'
-                  style={{
-                    display: "flex",
-                    gap: "8px",
-                    overflowX: "scroll",
-                    paddingBottom: "12px",
-                    whiteSpace: "nowrap",
-                  }}>
-                  {themes.map((theme) => (
-                    <button
-                      key={theme.theme}
-                      onClick={() => handleThemeSelect(theme.theme)}
-                      style={{
-                        padding: "8px 12px",
-                        minWidth: "100px",
-                        flexShrink: 0,
-                        borderRadius: "8px",
-                        border: "2px solid",
-                        borderColor:
-                          selectedTheme === theme.theme
-                            ? colors.accentPrimary
-                            : colors.border,
-                        background:
-                          selectedTheme === theme.theme
-                            ? isDark
-                              ? "#4c1d95"
-                              : "#f5f3ff"
-                            : colors.bgCard,
-                        cursor: "pointer",
-                        transition: "all 0.2s",
-                        textAlign: "center",
-                        boxShadow: "0 1px 3px rgba(0,0,0,0.05)",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        gap: "6px",
-                      }}>
-                      {selectedTheme === theme.theme && (
-                        <Zap
-                          size={14}
-                          color={colors.accentPrimary}
-                          fill={colors.accentPrimary}
-                        />
-                      )}
-                      <span
-                        style={{
-                          fontWeight: "600",
-                          fontSize: "13px",
-                          color: colors.textPrimary,
-                          textTransform: "capitalize",
-                        }}>
-                        {theme.name || theme.theme}
-                      </span>
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
+            {/* Theme Selection Slider */}
+            <ThemeSlider
+            themes={themes}
+            themesLoading={themesLoading}
+            selectedTheme={selectedTheme}
+            handleThemeSelect={handleThemeSelect}
+            colors={colors}
+            isDark={isDark}
+            />
 
             {/* Custom Color Picker and Random Theme Generator */}
             <div style={{ marginBottom: "24px" }}>
