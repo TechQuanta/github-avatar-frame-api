@@ -1,0 +1,172 @@
+{
+  "projectName": "github-avatar-frame-api",
+  "projectOwner": "TechQuanta",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "files": [
+    "CONTRIBUTING.md"
+  ],
+  "imageSize": 100,
+  "commit": false,
+  "contributorsPerLine": 7,
+  "contributorsSortAlphabetically": false,
+  "types": {
+    "custom": {
+      "symbol": "🔭",
+      "description": "A custom contribution type.",
+      "link": "[<%= symbol %>](<%= url %> \"<%= description %>\")"
+    }
+  },
+  "contributors": [
+    {
+      "login": "Anvesha-24",
+      "name": "Anvesha-24",
+      "avatar_url": "https://avatars.githubusercontent.com/u/208858168?v=4",
+      "profile": "https://github.com/Anvesha-24",
+      "contributions": [
+        "ideas"
+      ]
+    },
+    {
+      "login": "shivram9",
+      "name": "Shivram Reddy",
+      "avatar_url": "https://avatars.githubusercontent.com/u/205002678?v=4",
+      "profile": "https://github.com/shivram9",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "ashmeet07",
+      "name": "$ῗἧḡḥ@sḥmⓔⓔṫ",
+      "avatar_url": "https://avatars.githubusercontent.com/u/91828139?v=4",
+      "profile": "https://github.com/ashmeet07",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "Suke2004",
+      "name": "Sukesh Reddy Ustela",
+      "avatar_url": "https://avatars.githubusercontent.com/u/137488933?v=4",
+      "profile": "https://github.com/Suke2004",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "itspavant",
+      "name": "T Pavan Teja | Contributor",
+      "avatar_url": "https://avatars.githubusercontent.com/u/187398519?v=4",
+      "profile": "https://github.com/itspavant",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "techquantacommunity",
+      "name": "techquantacommunity",
+      "avatar_url": "https://avatars.githubusercontent.com/u/212399388?v=4",
+      "profile": "https://github.com/techquantacommunity",
+      "contributions": [
+        "maintenance"
+      ]
+    },
+    {
+      "login": "Adez017",
+      "name": "aditya singh rathore",
+      "avatar_url": "https://avatars.githubusercontent.com/u/142787780?v=4",
+      "profile": "https://adityasinghrathore.netlify.app/",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "aliviahossain",
+      "name": "Alivia Hossain",
+      "avatar_url": "https://avatars.githubusercontent.com/u/211632522?v=4",
+      "profile": "https://github.com/aliviahossain",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "vishal6268",
+      "name": "VISHAL",
+      "avatar_url": "https://avatars.githubusercontent.com/u/125592050?v=4",
+      "profile": "https://github.com/vishal6268",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "dharapandya85",
+      "name": "Dhara Pandya ",
+      "avatar_url": "https://avatars.githubusercontent.com/u/109461918?v=4",
+      "profile": "https://github.com/dharapandya85",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "shreya-mishra325",
+      "name": "Shreya Mishra",
+      "avatar_url": "https://avatars.githubusercontent.com/u/210963725?v=4",
+      "profile": "https://github.com/shreya-mishra325",
+      "contributions": [
+        "code",
+        "design",
+        "infra"
+      ]
+    },
+    {
+      "login": "ifthikaar24",
+      "name": "ifthikaar24",
+      "avatar_url": "https://avatars.githubusercontent.com/u/145851574?v=4",
+      "profile": "https://github.com/ifthikaar24",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "allcontributors[bot]",
+      "name": "allcontributors[bot]",
+      "avatar_url": "https://avatars.githubusercontent.com/in/23186?v=4",
+      "profile": "https://github.com/apps/allcontributors",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "arundhativaishnav",
+      "name": "Arundhati Anil Vaishnav",
+      "avatar_url": "https://avatars.githubusercontent.com/u/168985050?v=4",
+      "profile": "https://github.com/arundhativaishnav",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "darshan02parmar",
+      "name": "Darshan Parmar",
+      "avatar_url": "https://avatars.githubusercontent.com/u/180026762?v=4",
+      "profile": "https://github.com/darshan02parmar",
+      "contributions": [
+        "design",
+        "ideas"
+      ]
+    },
+    {
+      "login": "Anshita-Rajput",
+      "name": "Anshita Rajput",
+      "avatar_url": "https://avatars.githubusercontent.com/u/122893543?v=4",
+      "profile": "https://github.com/Anshita-Rajput",
+      "contributions": [
+        "design",
+        "infra"
+      ]
+    }
+  ],
+  "commitConvention": "angular",
+  "commitType": "docs"
+}

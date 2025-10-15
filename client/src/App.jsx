@@ -1,6 +1,8 @@
-import React, { useState, useEffect, useMemo } from "react";
-import AOS from "aos";
-import "aos/dist/aos.css";
+import React, { useState, useEffect, useMemo, useRef } from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import AOS from 'aos';
+import 'aos/dist/aos.css';
+import NotFound from "./pages/NotFound.jsx";
 import {
   Frame,
   Download,
@@ -191,19 +193,32 @@ const CommunityModal = ({ isOpen, onClose, colors }) => {
 function App() {
   useEffect(() => {
     AOS.init({
-      duration: 1000,
+      duration: 1000, 
       easing: "ease-in-out",
-      once: true,
+      once: true, 
     });
   }, []);
   const [username, setUsername] = useState("");
   const [themes, setThemes] = useState([]);
   const [selectedTheme, setSelectedTheme] = useState("base");
+  const [customAccentColor, setCustomAccentColor] = useState(null);
+  const [originalThemeColor, setOriginalThemeColor] = useState(null);
   const [size, setSize] = useState(384);
   const [canvas, setCanvas] = useState("light");
   const [shape, setShape] = useState("circle");
   const [radius, setRadius] = useState(38);
   const [frameStyle, setFrameStyle] = useState("default");
+  
+  // Text overlay parameters
+  const [text, setText] = useState("");
+  const [textColor, setTextColor] = useState("#ffffff");
+  const [textSize, setTextSize] = useState(20);
+  const [textPosition, setTextPosition] = useState("bottom");
+  
+  // Emoji overlay parameters
+  const [emojis, setEmojis] = useState("");
+  const [emojiSize, setEmojiSize] = useState(40);
+  const [emojiPosition, setEmojiPosition] = useState("top");
 
   const [loading, setLoading] = useState(false);
   const [themesLoading, setThemesLoading] = useState(true);
@@ -213,9 +228,17 @@ function App() {
   const [copied, setCopied] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
   const [isCommunityModalOpen, setIsCommunityModalOpen] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
+  const [showToast, setShowToast] = useState(false);
 
   // System Theme State
   const [isDark, setIsDark] = useState(false);
+
+  // Live Preview Canvas Ref
+  const previewCanvasRef = useRef(null);
+  const [previewLoading, setPreviewLoading] = useState(false);
+  const [previewError, setPreviewError] = useState(null);
+  const [isPreviewUpdating, setIsPreviewUpdating] = useState(false);
 
   const maxRadius = useMemo(() => Math.floor(size / 2), [size]);
 
@@ -315,7 +338,23 @@ function App() {
   };
 
   const copyApiUrl = () => {
-    const apiUrl = `${API_BASE_URL}/api/framed-avatar/${username}?theme=${selectedTheme}&size=${size}&canvas=${canvas}&shape=${shape}&radius=${finalRadiusForDisplay}&style=${frameStyle}`;
+    let apiUrl = `${API_BASE_URL}/api/framed-avatar/${username}?theme=${selectedTheme}&size=${size}&canvas=${canvas}&shape=${shape}&radius=${finalRadiusForDisplay}&style=${frameStyle}`;
+    
+    // Add custom accent color if selected
+    if (customAccentColor) {
+      apiUrl += `&accentColor=${encodeURIComponent(customAccentColor)}`;
+    }
+    
+    // Add text parameters if provided
+    if (text.trim()) {
+      apiUrl += `&text=${encodeURIComponent(text)}&textColor=${encodeURIComponent(textColor)}&textSize=${textSize}&textPosition=${textPosition}`;
+    }
+    
+    // Add emoji parameters if provided
+    if (emojis.trim()) {
+      apiUrl += `&emojis=${encodeURIComponent(emojis)}&emojiSize=${emojiSize}&emojiPosition=${emojiPosition}`;
+    }
+    
     try {
       // Use document.execCommand('copy') for better compatibility in iframe environments
       const tempInput = document.createElement("textarea");
@@ -346,7 +385,22 @@ function App() {
     try {
       const finalRadius = shape === "circle" ? maxRadius : radius;
 
-      const url = `${API_BASE_URL}/api/framed-avatar/${username}?theme=${selectedTheme}&size=${size}&canvas=${canvas}&shape=${shape}&radius=${finalRadius}&style=${frameStyle}`;
+      let url = `${API_BASE_URL}/api/framed-avatar/${username}?theme=${selectedTheme}&size=${size}&canvas=${canvas}&shape=${shape}&radius=${finalRadius}&style=${frameStyle}`;
+      
+      // Add custom accent color if selected
+      if (customAccentColor) {
+        url += `&accentColor=${encodeURIComponent(customAccentColor)}`;
+      }
+      
+      // Add text parameters if provided
+      if (text.trim()) {
+        url += `&text=${encodeURIComponent(text)}&textColor=${encodeURIComponent(textColor)}&textSize=${textSize}&textPosition=${textPosition}`;
+      }
+      
+      // Add emoji parameters if provided
+      if (emojis.trim()) {
+        url += `&emojis=${encodeURIComponent(emojis)}&emojiSize=${emojiSize}&emojiPosition=${emojiPosition}`;
+      }
 
       // Create AbortController for timeout
       const controller = new AbortController();
@@ -397,25 +451,216 @@ function App() {
   const handleThemeSelect = (theme) => {
     setSelectedTheme(theme);
     setCurrentStep(3);
+    // Reset custom color when selecting a new theme
+    setCustomAccentColor(null);
+    setOriginalThemeColor(null);
+  };
+
+  const handleRandomTheme = () => {
+    if (themes.length === 0) return;
+    
+    const randomIndex = Math.floor(Math.random() * themes.length);
+    const randomTheme = themes[randomIndex];
+    
+    setSelectedTheme(randomTheme.theme);
+    
+    // Randomly decide whether to also randomize accent color (30% chance)
+    const shouldRandomizeColor = Math.random() < 0.3;
+    if (shouldRandomizeColor) {
+      const randomColors = ["#7c3aed", "#ec4899", "#f97316", "#10b981", "#3b82f6", "#8b5cf6", "#ef4444", "#f59e0b"];
+      const randomColor = randomColors[Math.floor(Math.random() * randomColors.length)];
+      setCustomAccentColor(randomColor);
+      showToastNotification("🎲 Random Theme + Color Applied!");
+    } else {
+      setCustomAccentColor(null);
+      showToastNotification("✨ Surprise Style Loaded!");
+    }
+    
+    setOriginalThemeColor(null);
+    setCurrentStep(3);
+  };
+
+  const showToastNotification = (message) => {
+    setToastMessage(message);
+    setShowToast(true);
+    setTimeout(() => {
+      setShowToast(false);
+    }, 3000);
+  };
+
+  const handleCustomColorChange = (color) => {
+    setCustomAccentColor(color);
+  };
+
+  const resetToDefaultColor = () => {
+    setCustomAccentColor(null);
+    setOriginalThemeColor(null);
+    showToastNotification("🎨 Reset to Default Color");
   };
 
   const finalRadiusForDisplay = shape === "circle" ? maxRadius : radius;
 
+  // Live Preview Functions
+  const fetchAvatar = async (username) => {
+    const avatarUrl = `https://avatars.githubusercontent.com/${username}?size=${size}`;
+    const response = await fetch(avatarUrl, { cache: 'no-cache' });
+    if (!response.ok) throw new Error('Avatar not found');
+    const blob = await response.blob();
+    return createImageBitmap(blob);
+  };
+
+  const fetchFrame = async (theme) => {
+    const frameUrl = `${API_BASE_URL}/public/frames/${theme}/frame.png`;
+    const response = await fetch(frameUrl, { cache: 'no-cache' });
+    if (!response.ok) throw new Error('Frame not found');
+    const blob = await response.blob();
+    return createImageBitmap(blob);
+  };
+
+  const drawPreview = async () => {
+    if (!username.trim() || !previewCanvasRef.current) return;
+
+    setPreviewLoading(true);
+    setPreviewError(null);
+    setIsPreviewUpdating(true);
+
+    try {
+      const canvas = previewCanvasRef.current;
+      const ctx = canvas.getContext('2d');
+      canvas.width = size;
+      canvas.height = size;
+
+      // Clear canvas
+      ctx.clearRect(0, 0, size, size);
+
+      // Set canvas background
+      let bgColor = { r: 240, g: 240, b: 240, alpha: 1 }; // light default
+      if (canvas === "dark") bgColor = { r: 34, g: 34, b: 34, alpha: 1 };
+      ctx.fillStyle = `rgba(${bgColor.r}, ${bgColor.g}, ${bgColor.b}, ${bgColor.alpha})`;
+      ctx.fillRect(0, 0, size, size);
+
+      // Fetch avatar
+      let avatarImage;
+      try {
+        avatarImage = await fetchAvatar(username);
+      } catch (error) {
+        // Use fallback if avatar not found
+        const fallbackUrl = `${API_BASE_URL}/public/not-found.png`;
+        const response = await fetch(fallbackUrl);
+        const blob = await response.blob();
+        avatarImage = await createImageBitmap(blob);
+      }
+
+      // Fetch frame
+      const frameImage = await fetchFrame(selectedTheme);
+
+      // Resize avatar to fit
+      const avatarSize = size;
+      ctx.save();
+      ctx.beginPath();
+      const radius = shape === "circle" ? size / 2 : finalRadiusForDisplay;
+      if (shape === "circle") {
+        ctx.arc(size / 2, size / 2, radius, 0, 2 * Math.PI);
+      } else {
+        ctx.roundRect(0, 0, size, size, radius);
+      }
+      ctx.closePath();
+      ctx.clip();
+      ctx.drawImage(avatarImage, 0, 0, avatarSize, avatarSize);
+      ctx.restore();
+
+      // Draw frame with tint if custom color
+      ctx.save();
+      if (customAccentColor) {
+        // Apply tint by drawing frame with globalCompositeOperation
+        ctx.globalCompositeOperation = 'source-over';
+        ctx.drawImage(frameImage, 0, 0, size, size);
+        ctx.globalCompositeOperation = 'multiply';
+        const [r, g, b] = customAccentColor.match(/\w\w/g).map(x => parseInt(x, 16));
+        ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+        ctx.fillRect(0, 0, size, size);
+        ctx.globalCompositeOperation = 'source-over';
+      } else {
+        ctx.drawImage(frameImage, 0, 0, size, size);
+      }
+      ctx.restore();
+
+      // Draw text overlay
+      if (text.trim()) {
+        ctx.save();
+        ctx.font = `bold ${textSize}px Arial, sans-serif`;
+        ctx.fillStyle = textColor;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = textPosition === 'top' ? 'top' : textPosition === 'bottom' ? 'bottom' : 'middle';
+        const y = textPosition === 'top' ? 10 : textPosition === 'bottom' ? size - 10 : size / 2;
+        ctx.fillText(text, size / 2, y);
+        ctx.restore();
+      }
+
+      // Draw emoji overlay
+      if (emojis.trim()) {
+        const emojiList = emojis.split(',').map(e => e.trim()).filter(e => e);
+        if (emojiList.length > 0) {
+          ctx.save();
+          ctx.font = `${emojiSize}px Arial, sans-serif`;
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+
+          if (emojiPosition === 'corners' && emojiList.length >= 4) {
+            const positions = [
+              { x: emojiSize / 2 + 5, y: emojiSize / 2 + 5 },
+              { x: size - emojiSize / 2 - 5, y: emojiSize / 2 + 5 },
+              { x: emojiSize / 2 + 5, y: size - emojiSize / 2 - 5 },
+              { x: size - emojiSize / 2 - 5, y: size - emojiSize / 2 - 5 }
+            ];
+            emojiList.slice(0, 4).forEach((emoji, index) => {
+              ctx.fillText(emoji, positions[index].x, positions[index].y);
+            });
+          } else {
+            const y = emojiPosition === 'top' ? emojiSize + 5 : size - 5;
+            const spacing = emojiSize + 10;
+            const totalWidth = emojiList.length * spacing;
+            const startX = (size - totalWidth) / 2 + emojiSize / 2;
+            emojiList.forEach((emoji, index) => {
+              const x = startX + index * spacing;
+              ctx.fillText(emoji, x, y);
+            });
+          }
+          ctx.restore();
+        }
+      }
+
+    } catch (error) {
+      console.error('Preview error:', error);
+      setPreviewError(error.message);
+    } finally {
+      setPreviewLoading(false);
+      setIsPreviewUpdating(false);
+    }
+  };
+
+  useEffect(() => {
+    if (username.trim()) {
+      drawPreview();
+    }
+  }, [username, selectedTheme, size, canvas, shape, radius, customAccentColor, text, textColor, textSize, textPosition, emojis, emojiSize, emojiPosition]);
+
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        background: colors.bgBody,
-        padding: "24px 16px",
-        color: colors.textPrimary,
-      }}
-    >
-      <div
-        style={{
-          maxWidth: "1200px",
-          margin: "0 auto",
-        }}
-      >
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={
+          <div
+            style={{
+              minHeight: "100vh",
+              background: colors.bgBody,
+              padding: "24px 16px",
+              color: colors.textPrimary,
+            }}>
+            <div
+              style={{
+                maxWidth: "1200px",
+                margin: "0 auto",
+              }}>
         {/* --- 1. Top Bar: Title + Community Button --- */}
         <div
           style={{
@@ -426,9 +671,9 @@ function App() {
             flexWrap: "wrap",
             gap: "16px",
           }}
-          className="header-container"
+          className='header-container'
           data-aos="fade-down"
-        >
+          >
           {/* Center Title Block */}
           <div
             style={{
@@ -478,9 +723,7 @@ function App() {
                   WebkitTextFillColor: "transparent",
                   backgroundClip: "text",
                   margin: 0,
-                }}
-                data-aos="zoom-in"
-              >
+                }} data-aos="zoom-in">
                 𝕲𝖎𝖙𝕳𝖚𝖇 𝔸𝕧𝕒𝕥𝕒𝕣 𝕱𝖗𝖆𝖒𝖊𝖘
               </h1>
             </div>
@@ -490,16 +733,14 @@ function App() {
                 fontSize: "16px",
                 margin: "0",
               }}
-              data-aos="fade-right"
-            >
+              data-aos="fade-right">
               ↤↤↤↤↤ 𝐶𝑟𝑒𝑎𝑡𝑒 𝑠𝑡𝑢𝑛𝑛𝑖𝑛𝑔 𝑓𝑟𝑎𝑚𝑒𝑑 𝑎𝑣𝑎𝑡𝑎𝑟𝑠 𝑓𝑜𝑟 𝑦𝑜𝑢𝑟 𝐺𝑖𝑡𝐻𝑢𝑏 𝑝𝑟𝑜𝑓𝑖𝑙𝑒 𝑖𝑛
               𝑠𝑒𝑐𝑜𝑛𝑑𝑠 ↦↦↦↦↦
             </p>
           </div>
 
           {/* Open Community Button (Top Right) */}
-          <button
-            data-aos="fade-right"
+          <button data-aos="fade-right"
             onClick={() => setIsCommunityModalOpen(true)}
             className="community-button"
             style={{
@@ -649,8 +890,7 @@ function App() {
           }}
         >
           {/* Left: Configuration Panel (50%) */}
-          <div
-            data-aos="flip-right"
+          <div data-aos="flip-right"
             style={{
               background: colors.bgCard,
               borderRadius: "12px",
@@ -850,87 +1090,241 @@ function App() {
               )}
             </div>
 
+            {/* Custom Color Picker and Random Theme Generator */}
+            <div style={{ marginBottom: "24px" }}>
+              <label
+                style={{
+                  display: "block",
+                  fontSize: "14px",
+                  fontWeight: "600",
+                  color: colors.textPrimary,
+                  marginBottom: "8px",
+                }}>
+                Customization & Discovery
+              </label>
+              <div style={{ display: "flex", gap: "12px", alignItems: "center", flexWrap: "wrap" }}>
+                {/* Custom Accent Color Picker */}
+                <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                  <label
+                    style={{
+                      fontSize: "12px",
+                      fontWeight: "500",
+                      color: colors.textSecondary,
+                      whiteSpace: "nowrap",
+                    }}>
+                    🎨 Accent Color:
+                  </label>
+                  <input
+                    type="color"
+                    value={customAccentColor || "#7c3aed"}
+                    onChange={(e) => handleCustomColorChange(e.target.value)}
+                    style={{
+                      width: "40px",
+                      height: "40px",
+                      border: `2px solid ${colors.border}`,
+                      borderRadius: "8px",
+                      cursor: "pointer",
+                      background: "transparent",
+                      padding: 0,
+                    }}
+                    title="Customize accent color"
+                  />
+                  {customAccentColor && (
+                    <button
+                      onClick={resetToDefaultColor}
+                      style={{
+                        padding: "8px 12px",
+                        background: colors.bgCard,
+                        border: `1px solid ${colors.border}`,
+                        borderRadius: "6px",
+                        color: colors.textPrimary,
+                        fontSize: "11px",
+                        fontWeight: "500",
+                        cursor: "pointer",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "4px",
+                        transition: "all 0.2s",
+                      }}
+                      title="Reset to default color">
+                      ↻ Reset
+                    </button>
+                  )}
+                </div>
+
+                {/* Quick Color Presets */}
+                <div style={{ display: "flex", gap: "6px", alignItems: "center" }}>
+                  <span style={{ fontSize: "11px", color: colors.textSecondary, marginRight: "4px" }}>Quick:</span>
+                  {["#7c3aed", "#ec4899", "#f97316", "#10b981", "#3b82f6", "#8b5cf6"].map((color) => (
+                    <button
+                      key={color}
+                      onClick={() => handleCustomColorChange(color)}
+                      style={{
+                        width: "24px",
+                        height: "24px",
+                        borderRadius: "50%",
+                        border: `2px solid ${colors.border}`,
+                        background: color,
+                        cursor: "pointer",
+                        transition: "all 0.2s",
+                        boxShadow: customAccentColor === color ? "0 0 0 2px rgba(124, 58, 237, 0.3)" : "none",
+                      }}
+                      title={`Set color to ${color}`}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.transform = "scale(1.1)";
+                        e.currentTarget.style.boxShadow = "0 2px 8px rgba(0, 0, 0, 0.2)";
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.transform = "scale(1)";
+                        e.currentTarget.style.boxShadow = customAccentColor === color ? "0 0 0 2px rgba(124, 58, 237, 0.3)" : "none";
+                      }}
+                    />
+                  ))}
+                </div>
+
+                {/* Random Theme Generator */}
+                <button
+                  onClick={handleRandomTheme}
+                  disabled={themes.length === 0}
+                  title="Randomly select a theme (sometimes includes random color too!)"
+                  style={{
+                    padding: "10px 16px",
+                    background: themes.length === 0 
+                      ? colors.border 
+                      : "linear-gradient(to right, #ec4899, #f97316)",
+                    color: "white",
+                    border: "none",
+                    borderRadius: "8px",
+                    fontWeight: "600",
+                    fontSize: "13px",
+                    cursor: themes.length === 0 ? "not-allowed" : "pointer",
+                    transition: "all 0.2s",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "6px",
+                    boxShadow: themes.length === 0 
+                      ? "none" 
+                      : "0 2px 4px rgba(0, 0, 0, 0.1)",
+                  }}
+                  onMouseEnter={(e) => {
+                    if (themes.length > 0) {
+                      e.currentTarget.style.transform = "translateY(-1px)";
+                      e.currentTarget.style.boxShadow = "0 4px 8px rgba(0, 0, 0, 0.15)";
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (themes.length > 0) {
+                      e.currentTarget.style.transform = "translateY(0)";
+                      e.currentTarget.style.boxShadow = "0 2px 4px rgba(0, 0, 0, 0.1)";
+                    }
+                  }}>
+                  🎲 Random Theme
+                </button>
+              </div>
+            </div>
+
             {/* Control Group: Canvas & Shape */}
-            <div
-              className="control-group"
-              style={{
-                display: "flex",
-                flexWrap: "wrap",
-                gap: "24px",
-                marginBottom: "24px",
-              }}
-            >
-              <div style={{ minWidth: "260px",flex: 1 }}>
-                <label
-                  style={{
-                    display: "block",
-                    fontSize: "14px",
-                    fontWeight: "600",
-                    color: colors.textPrimary,
-                    marginBottom: "8px",
-                  }}
-                >
-                  Background Canvas (Param: `canvas`)
+             <div
+    className='control-group'
+    // REMOVED: display: "flex" and gap: "24px" to allow vertical stacking
+    style={{ marginBottom: "24px" }}>
+    {/* Background Canvas (Param: `canvas`) */}
+    <div style={{ flex: 1, marginBottom: "24px" }}>
+        <label
+            style={{
+                display: "block",
+                fontSize: "14px",
+                fontWeight: "600",
+                color: colors.textPrimary,
+                marginBottom: "8px",
+            }}>
+            Background Canvas (Param: `canvas`)
+        </label>
+        <div
+            className='control-button-set'
+            style={{ display: "flex", gap: "12px" }}>
+            <ControlButton
+                onClick={() => setCanvas("light")}
+                isSelected={canvas === "light"}
+                isDark={isDark}>
+                <Sun size={18} /> Light
+            </ControlButton>
+            <ControlButton
+                onClick={() => setCanvas("dark")}
+                isSelected={canvas === "dark"}
+                isDark={isDark}>
+                <Moon size={18} /> Dark
+            </ControlButton>
+            {/*Transparent Button */}
+            <ControlButton
+                onClick={()=> setCanvas("transparent")}
+                isSelected={canvas === "transparent"}
+                isDark={isDark}>
+                <Sparkles size={18}/> Transparent
+            </ControlButton>
+        </div>
+    </div>
+    {/* Avatar Shape (Param: `shape`) - Now appears below the Background Canvas */}
+    <div style={{ flex: 1 }}>
+        <label
+            style={{
+                display: "block",
+                fontSize: "14px",
+                fontWeight: "600",
+                color: colors.textPrimary,
+                marginBottom: "8px",
+            }}>
+            Avatar Shape (Param: `shape`)
+        </label>
+        <div
+            className='control-button-set'
+            style={{ display: "flex", gap: "12px" }}>
+            <ControlButton
+                onClick={() => setShape("circle")}
+                isSelected={shape === "circle"}
+                isDark={isDark}>
+                <Circle size={18} /> Circle
+            </ControlButton>
+            <ControlButton
+                onClick={() => setShape("rect")}
+                isSelected={shape === "rect"}
+                isDark={isDark}>
+                <Square size={18} /> Square
+            </ControlButton>
+        </div>
+      </div>
+  </div>
+    
+            {/* Frame Style Control Group(Border Focus) */}
+            <div style={{marginBottom: "24px"}}>
+              <label
+                style={{
+                  display: "block",
+                  fontSize: "14px",
+                  fontWeight: "600",
+                  color: colors.textPrimary,
+                  marginBottom: "8px",
+                }}>
+                  Frame Style (Param : `style`)
                 </label>
-                <div
-                  className="control-button-set"
-                  style={{ display: "flex", flexWrap: "wrap", gap: "12px" }}
-                >
-                  <ControlButton
-                    onClick={() => setCanvas("light")}
-                    isSelected={canvas === "light"}
-                    isDark={isDark}
-                  >
-                    <Sun size={18} /> Light
+                <div style={{maxWidth: "fit-content"}}>
+                <div 
+                  className='control-button-set'
+                  style={{display: "flex", gap: "12px"}}>
+                    <ControlButton
+                    onClick={() => setFrameStyle("default")}
+                    isSelected={frameStyle === "default"}
+                    isDark={isDark}>
+                      Default
                   </ControlButton>
                   <ControlButton
-                    onClick={() => setCanvas("dark")}
-                    isSelected={canvas === "dark"}
-                    isDark={isDark}
-                  >
-                    <Moon size={18} /> Dark
+                    onClick={() => setFrameStyle("border-focus")}
+                    isSelected={frameStyle === "border-focus"}
+                    isDark={isDark}>
+                    Border Focus
                   </ControlButton>
-                  {/*Transparent Button */}
-                  <ControlButton
-                    onClick={() => setCanvas("transparent")}
-                    isSelected={canvas === "transparent"}
-                    isDark={isDark}
-                  >
-                    <Sparkles size={18} /> Transparent
-                  </ControlButton>
-                </div>
-              </div>
-              <div style={{ flex: 1 }}>
-                <label
-                  style={{
-                    display: "block",
-                    fontSize: "14px",
-                    fontWeight: "600",
-                    color: colors.textPrimary,
-                    marginBottom: "8px",
-                  }}
-                >
-                  Avatar Shape (Param: `shape`)
-                </label>
-                <div
-                  className="control-button-set"
-                  style={{ display: "flex", flexWrap: "wrap", gap: "12px" }}>
-                  <ControlButton
-                    onClick={() => setShape("circle")}
-                    isSelected={shape === "circle"}
-                    isDark={isDark}
-                  >
-                    <Circle size={18} /> Circle
-                  </ControlButton>
-                  <ControlButton
-                    onClick={() => setShape("rect")}
-                    isSelected={shape === "rect"}
-                    isDark={isDark}
-                  >
-                    <Square size={18} /> Square
-                  </ControlButton>
-                </div>
-              </div>
+                  </div>
+            </div>
             </div>
             {/* Frame Style Control Group(Border Focus) */}
             <div style={{ marginBottom: "24px" }}>
@@ -1048,6 +1442,182 @@ function App() {
               </div>
             )}
 
+            {/* Text Overlay Controls */}
+            <div style={{ marginBottom: "24px" }}>
+              <label
+                style={{
+                  display: "block",
+                  fontSize: "14px",
+                  fontWeight: "600",
+                  color: colors.textPrimary,
+                  marginBottom: "8px",
+                }}>
+                Text Overlay (Param: `text`)
+              </label>
+              <div style={{ display: "flex", gap: "12px", marginBottom: "12px" }}>
+                <input
+                  type="text"
+                  placeholder="Enter custom text..."
+                  value={text}
+                  onChange={(e) => setText(e.target.value)}
+                  style={{
+                    flex: 1,
+                    padding: "10px 12px",
+                    borderRadius: "8px",
+                    border: `2px solid ${colors.border}`,
+                    background: colors.bgInput,
+                    color: colors.textPrimary,
+                    fontSize: "14px",
+                    outline: "none",
+                    transition: "border-color 0.2s",
+                  }}
+                />
+                <input
+                  type="color"
+                  value={textColor}
+                  onChange={(e) => setTextColor(e.target.value)}
+                  style={{
+                    width: "50px",
+                    height: "40px",
+                    borderRadius: "8px",
+                    border: `2px solid ${colors.border}`,
+                    cursor: "pointer",
+                  }}
+                />
+              </div>
+              <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
+                <div style={{ flex: 1 }}>
+                  <label style={{ fontSize: "12px", color: colors.textSecondary, marginBottom: "4px", display: "block" }}>
+                    Size: {textSize}px
+                  </label>
+                  <input
+                    type="range"
+                    min="8"
+                    max="100"
+                    value={textSize}
+                    onChange={(e) => setTextSize(parseInt(e.target.value))}
+                    className="range-slider"
+                    style={{
+                      width: "100%",
+                      height: "6px",
+                      borderRadius: "3px",
+                      background: isDark ? "#374151" : "linear-gradient(to right, #a78bfa, #c4b5fd)",
+                      outline: "none",
+                      cursor: "pointer",
+                      WebkitAppearance: "none",
+                    }}
+                  />
+                </div>
+                <div style={{ flex: 1 }}>
+                  <label style={{ fontSize: "12px", color: colors.textSecondary, marginBottom: "4px", display: "block" }}>
+                    Position
+                  </label>
+                  <div style={{ display: "flex", gap: "8px" }}>
+                    <ControlButton
+                      onClick={() => setTextPosition("top")}
+                      isSelected={textPosition === "top"}
+                      isDark={isDark}>
+                      Top
+                    </ControlButton>
+                    <ControlButton
+                      onClick={() => setTextPosition("center")}
+                      isSelected={textPosition === "center"}
+                      isDark={isDark}>
+                      Center
+                    </ControlButton>
+                    <ControlButton
+                      onClick={() => setTextPosition("bottom")}
+                      isSelected={textPosition === "bottom"}
+                      isDark={isDark}>
+                      Bottom
+                    </ControlButton>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Emoji Overlay Controls */}
+            <div style={{ marginBottom: "24px" }}>
+              <label
+                style={{
+                  display: "block",
+                  fontSize: "14px",
+                  fontWeight: "600",
+                  color: colors.textPrimary,
+                  marginBottom: "8px",
+                }}>
+                Emoji Overlay (Param: `emojis`)
+              </label>
+              <div style={{ display: "flex", gap: "12px", marginBottom: "12px" }}>
+                <input
+                  type="text"
+                  placeholder="Enter emojis (e.g., 🚀,💻,🔥)"
+                  value={emojis}
+                  onChange={(e) => setEmojis(e.target.value)}
+                  style={{
+                    flex: 1,
+                    padding: "10px 12px",
+                    borderRadius: "8px",
+                    border: `2px solid ${colors.border}`,
+                    background: colors.bgInput,
+                    color: colors.textPrimary,
+                    fontSize: "14px",
+                    outline: "none",
+                    transition: "border-color 0.2s",
+                  }}
+                />
+              </div>
+              <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
+                <div style={{ flex: 1 }}>
+                  <label style={{ fontSize: "12px", color: colors.textSecondary, marginBottom: "4px", display: "block" }}>
+                    Size: {emojiSize}px
+                  </label>
+                  <input
+                    type="range"
+                    min="16"
+                    max="120"
+                    value={emojiSize}
+                    onChange={(e) => setEmojiSize(parseInt(e.target.value))}
+                    className="range-slider"
+                    style={{
+                      width: "100%",
+                      height: "6px",
+                      borderRadius: "3px",
+                      background: isDark ? "#374151" : "linear-gradient(to right, #a78bfa, #c4b5fd)",
+                      outline: "none",
+                      cursor: "pointer",
+                      WebkitAppearance: "none",
+                    }}
+                  />
+                </div>
+                <div style={{ flex: 1 }}>
+                  <label style={{ fontSize: "12px", color: colors.textSecondary, marginBottom: "4px", display: "block" }}>
+                    Position
+                  </label>
+                  <div style={{ display: "flex", gap: "8px" }}>
+                    <ControlButton
+                      onClick={() => setEmojiPosition("top")}
+                      isSelected={emojiPosition === "top"}
+                      isDark={isDark}>
+                      Top
+                    </ControlButton>
+                    <ControlButton
+                      onClick={() => setEmojiPosition("bottom")}
+                      isSelected={emojiPosition === "bottom"}
+                      isDark={isDark}>
+                      Bottom
+                    </ControlButton>
+                    <ControlButton
+                      onClick={() => setEmojiPosition("corners")}
+                      isSelected={emojiPosition === "corners"}
+                      isDark={isDark}>
+                      Corners
+                    </ControlButton>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             {/* Generate Button */}
             <button
               onClick={generateFramedAvatar}
@@ -1126,8 +1696,7 @@ function App() {
           </div>
 
           {/* Right: Preview Panel (50%) */}
-          <div
-            data-aos="flip-left"
+          <div data-aos="flip-left"
             style={{
               background: colors.bgCard,
               borderRadius: "12px",
@@ -1316,12 +1885,69 @@ function App() {
                           padding: "10px",
                           borderRadius: "6px",
                           border: `1px solid ${colors.borderInput}`,
-                        }}
-                      >
-                        {`${API_BASE_URL}/api/framed-avatar/${username}?theme=${selectedTheme}&size=${size}&canvas=${canvas}&shape=${shape}&radius=${finalRadiusForDisplay}`}
+                        }}>
+                        {(() => {
+                          let apiUrl = `${API_BASE_URL}/api/framed-avatar/${username}?theme=${selectedTheme}&size=${size}&canvas=${canvas}&shape=${shape}&radius=${finalRadiusForDisplay}&style=${frameStyle}`;
+                          if (customAccentColor) {
+                            apiUrl += `&accentColor=${encodeURIComponent(customAccentColor)}`;
+                          }
+                          if (text.trim()) {
+                            apiUrl += `&text=${encodeURIComponent(text)}&textColor=${encodeURIComponent(textColor)}&textSize=${textSize}&textPosition=${textPosition}`;
+                          }
+                          if (emojis.trim()) {
+                            apiUrl += `&emojis=${encodeURIComponent(emojis)}&emojiSize=${emojiSize}&emojiPosition=${emojiPosition}`;
+                          }
+                          return apiUrl;
+                        })()}
                       </div>
                     </div>
                   </div>
+                </div>
+              ) : username.trim() ? (
+                <div style={{ textAlign: "center", width: "100%" }}>
+                  {previewLoading && (
+                    <div style={{ marginBottom: "16px" }}>
+                      <Loader2
+                        size={32}
+                        color={colors.accentPrimary}
+                        className='spinner'
+                      />
+                      <p
+                        style={{
+                          color: colors.textSecondary,
+                          fontSize: "14px",
+                          marginTop: "8px",
+                        }}>
+                        Loading preview...
+                      </p>
+                    </div>
+                  )}
+                  <canvas
+                    ref={previewCanvasRef}
+                    style={{
+                      borderRadius:
+                        shape === "circle"
+                          ? "50%"
+                          : `${finalRadiusForDisplay}px`,
+                      boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.2)",
+                      border: `3px solid ${isDark ? "#374151" : "white"}`,
+                      width: "100%",
+                      height: "auto",
+                      maxWidth: "384px",
+                      maxHeight: "384px",
+                      marginBottom: "24px",
+                    }}
+                  />
+                  {previewError && (
+                    <p
+                      style={{
+                        color: colors.errorText,
+                        fontSize: "14px",
+                        marginTop: "8px",
+                      }}>
+                      {previewError}
+                    </p>
+                  )}
                 </div>
               ) : (
                 <div
@@ -1366,6 +1992,49 @@ function App() {
         colors={colors}
       />
 
+      {/* Toast Notification */}
+      {showToast && (
+        <div
+          style={{
+            position: "fixed",
+            top: "24px",
+            right: "24px",
+            background: colors.bgCard,
+            border: `1px solid ${colors.border}`,
+            borderRadius: "12px",
+            padding: "16px 20px",
+            boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.3)",
+            zIndex: 1001,
+            display: "flex",
+            alignItems: "center",
+            gap: "12px",
+            animation: "slideInRight 0.3s ease-out",
+            maxWidth: "300px",
+          }}>
+          <div
+            style={{
+              background: "linear-gradient(135deg, #7c3aed, #a855f7)",
+              borderRadius: "50%",
+              width: "24px",
+              height: "24px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              flexShrink: 0,
+            }}>
+            <Sparkles size={14} color="white" />
+          </div>
+          <span
+            style={{
+              color: colors.textPrimary,
+              fontWeight: "600",
+              fontSize: "14px",
+            }}>
+            {toastMessage}
+          </span>
+        </div>
+      )}
+
       <style>{`
         /* Global Reset to ensure no fixed width/padding causes overflow */
         *, ::before, ::after {
@@ -1384,6 +2053,7 @@ function App() {
         @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         @keyframes pulse-anim { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
         @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
+        @keyframes slideInRight { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
         .spinner { animation: spin 1s linear infinite; }
         .pulse-text { animation: pulse-anim 2s infinite; }
         .error-shake { animation: shake 0.4s ease-out; }
@@ -1480,7 +2150,11 @@ function App() {
         }
       `}</style>
     </div>
-  );
+  } />
+  <Route path="*" element={<NotFound />} />
+  </Routes>
+  </BrowserRouter>
+);
 }
 
 export default App;
