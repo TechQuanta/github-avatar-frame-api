@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
-import AOS from 'aos';
-import 'aos/dist/aos.css';
+import AOS from "aos";
+import "aos/dist/aos.css";
 import {
   Frame,
   Download,
@@ -67,7 +67,8 @@ const ControlButton = ({ onClick, isSelected, children, isDark }) => (
       justifyContent: "center",
       gap: "8px",
       boxShadow: "0 1px 2px rgba(0,0,0,0.05)",
-    }}>
+    }}
+  >
     {children}
   </button>
 );
@@ -92,7 +93,8 @@ const CommunityModal = ({ isOpen, onClose, colors }) => {
         zIndex: 1000,
         padding: "16px",
         backdropFilter: "blur(5px)",
-      }}>
+      }}
+    >
       <div
         style={{
           background: colors.bgCard,
@@ -103,7 +105,8 @@ const CommunityModal = ({ isOpen, onClose, colors }) => {
           boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.5)",
           position: "relative",
           border: `1px solid ${colors.border}`,
-        }}>
+        }}
+      >
         <button
           onClick={onClose}
           style={{
@@ -121,7 +124,8 @@ const CommunityModal = ({ isOpen, onClose, colors }) => {
           }
           onMouseLeave={(e) =>
             (e.currentTarget.style.color = colors.textSecondary)
-          }>
+          }
+        >
           <X size={24} />
         </button>
 
@@ -137,7 +141,8 @@ const CommunityModal = ({ isOpen, onClose, colors }) => {
               fontWeight: "bold",
               color: colors.textPrimary,
               margin: 0,
-            }}>
+            }}
+          >
             Join the 𝕆𝕡𝕖𝕟 ℂ𝕠𝕞𝕞𝕦𝕟𝕚𝕥𝕪
           </h3>
         </div>
@@ -147,15 +152,16 @@ const CommunityModal = ({ isOpen, onClose, colors }) => {
             color: colors.textSecondary,
             textAlign: "center",
             marginBottom: "32px",
-          }}>
+          }}
+        >
           This is where you'd find hundreds of custom themes, share your
           creations, and collaborate on new frame designs!
         </p>
 
         <a
-          href='https://github.com/TechQuanta/github-avatar-frame-api' // Mock link
-          target='_blank'
-          rel='noopener noreferrer'
+          href="https://github.com/TechQuanta/github-avatar-frame-api" // Mock link
+          target="_blank"
+          rel="noopener noreferrer"
           onClick={onClose}
           style={{
             display: "block",
@@ -172,7 +178,8 @@ const CommunityModal = ({ isOpen, onClose, colors }) => {
             boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
           }}
           onMouseEnter={(e) => (e.currentTarget.style.opacity = 0.9)}
-          onMouseLeave={(e) => (e.currentTarget.style.opacity = 1)}>
+          onMouseLeave={(e) => (e.currentTarget.style.opacity = 1)}
+        >
           Visit Community Repository
         </a>
       </div>
@@ -184,9 +191,9 @@ const CommunityModal = ({ isOpen, onClose, colors }) => {
 function App() {
   useEffect(() => {
     AOS.init({
-      duration: 1000, 
+      duration: 1000,
       easing: "ease-in-out",
-      once: true, 
+      once: true,
     });
   }, []);
   const [username, setUsername] = useState("");
@@ -401,12 +408,14 @@ function App() {
         background: colors.bgBody,
         padding: "24px 16px",
         color: colors.textPrimary,
-      }}>
+      }}
+    >
       <div
         style={{
           maxWidth: "1200px",
           margin: "0 auto",
-        }}>
+        }}
+      >
         {/* --- 1. Top Bar: Title + Community Button --- */}
         <div
           style={{
@@ -417,9 +426,9 @@ function App() {
             flexWrap: "wrap",
             gap: "16px",
           }}
-          className='header-container'
+          className="header-container"
           data-aos="fade-down"
-          >
+        >
           {/* Center Title Block */}
           <div
             style={{
@@ -428,7 +437,8 @@ function App() {
               minWidth: "200px",
               order: 1,
               width: "100%",
-            }}>
+            }}
+          >
             <div
               style={{
                 display: "flex",
@@ -436,7 +446,8 @@ function App() {
                 justifyContent: "center",
                 gap: "12px",
                 marginBottom: "8px",
-              }}>
+              }}
+            >
               <div style={{ position: "relative", display: "inline-block" }}>
                 <Frame
                   size={48}
@@ -446,7 +457,7 @@ function App() {
                 <Sparkles
                   size={20}
                   color={colors.accentSecondary}
-                  className='pulse-icon'
+                  className="pulse-icon"
                   style={{
                     position: "absolute",
                     top: "-4px",
@@ -455,7 +466,7 @@ function App() {
                 />
               </div>
               <h1
-                className='main-title'
+                className="main-title"
                 style={{
                   fontSize: "48px",
                   fontWeight: "900",
@@ -467,7 +478,9 @@ function App() {
                   WebkitTextFillColor: "transparent",
                   backgroundClip: "text",
                   margin: 0,
-                }} data-aos="zoom-in">
+                }}
+                data-aos="zoom-in"
+              >
                 𝕲𝖎𝖙𝕳𝖚𝖇 𝔸𝕧𝕒𝕥𝕒𝕣 𝕱𝖗𝖆𝖒𝖊𝖘
               </h1>
             </div>
@@ -477,16 +490,18 @@ function App() {
                 fontSize: "16px",
                 margin: "0",
               }}
-              data-aos="fade-right">
+              data-aos="fade-right"
+            >
               ↤↤↤↤↤ 𝐶𝑟𝑒𝑎𝑡𝑒 𝑠𝑡𝑢𝑛𝑛𝑖𝑛𝑔 𝑓𝑟𝑎𝑚𝑒𝑑 𝑎𝑣𝑎𝑡𝑎𝑟𝑠 𝑓𝑜𝑟 𝑦𝑜𝑢𝑟 𝐺𝑖𝑡𝐻𝑢𝑏 𝑝𝑟𝑜𝑓𝑖𝑙𝑒 𝑖𝑛
               𝑠𝑒𝑐𝑜𝑛𝑑𝑠 ↦↦↦↦↦
             </p>
           </div>
 
           {/* Open Community Button (Top Right) */}
-          <button data-aos="fade-right"
+          <button
+            data-aos="fade-right"
             onClick={() => setIsCommunityModalOpen(true)}
-            className='community-button'
+            className="community-button"
             style={{
               padding: "10px 20px",
               borderRadius: "8px",
@@ -516,7 +531,8 @@ function App() {
               e.currentTarget.style.color = isDark
                 ? colors.accentDark
                 : colors.accentPrimary;
-            }}>
+            }}
+          >
             <Users size={20} />
             <span style={{ fontFamily: "Times New Roman, serif" }}>
               𝕆𝕡𝕖𝕟 ℂ𝕠𝕞𝕞𝕦𝕟𝕚𝕥𝕪
@@ -533,14 +549,16 @@ function App() {
               padding: "20px",
               border: `1px solid ${colors.border}`,
               maxWidth: "100%",
-            }}>
+            }}
+          >
             <div
               style={{
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "space-between",
                 flexWrap: "wrap",
-              }}>
+              }}
+            >
               {steps.map((step, idx) => {
                 const isActive = currentStep >= step.num;
                 const Icon = step.icon;
@@ -561,7 +579,8 @@ function App() {
                         alignItems: "center",
                         flex: 1,
                         minWidth: "20%",
-                      }}>
+                      }}
+                    >
                       <div
                         style={{
                           width: "48px",
@@ -577,7 +596,8 @@ function App() {
                           border: `2px solid ${
                             isActive ? activeBorder : inactiveBorder
                           }`,
-                        }}>
+                        }}
+                      >
                         <Icon size={20} />
                       </div>
                       <div
@@ -588,7 +608,8 @@ function App() {
                           color: isActive
                             ? colors.textPrimary
                             : colors.textSecondary,
-                        }}>
+                        }}
+                      >
                         {step.label}
                       </div>
                     </div>
@@ -615,35 +636,50 @@ function App() {
 
         {/* --- 3. Main Left/Right Container (50/50 Split Desktop, Column Mobile) --- */}
         <div
-          className='main-grid-container'
+          className="main-grid-container"
           style={{
             display: "grid",
             gap: "24px",
-          }}>
+            alignItems: "start",
+            justifyContent: "center",
+            gridTemplateColumns: "1fr 1fr",
+            maxWidth: "1200px",
+            margin: "0 auto",
+            padding: "32px 16px",
+          }}
+        >
           {/* Left: Configuration Panel (50%) */}
-          <div data-aos="flip-right"
+          <div
+            data-aos="flip-right"
             style={{
               background: colors.bgCard,
               borderRadius: "12px",
               border: `1px solid ${colors.border}`,
               padding: "32px",
+              display: "flex",
               maxWidth: "100%",
+              flexDirection: "column",
+              gap: "24px",
+              boxShadow: "0 4px 12px rgba(0,0,0,0.05)",
               minWidth: "0" /* Critical for layout flexibility */,
-            }}>
+            }}
+          >
             <div
               style={{
                 display: "flex",
                 alignItems: "center",
                 gap: "12px",
                 marginBottom: "24px",
-              }}>
+              }}
+            >
               <div
                 style={{
                   background: `linear-gradient(135deg, ${colors.accentPrimary} 0%, ${colors.accentSecondary} 100%)`,
                   padding: "10px",
                   borderRadius: "8px",
-                }}>
-                <Github size={20} color='white' />
+                }}
+              >
+                <Github size={20} color="white" />
               </div>
               <h2
                 style={{
@@ -651,29 +687,42 @@ function App() {
                   fontWeight: "bold",
                   color: colors.textPrimary,
                   margin: 0,
-                }}>
+                }}
+              >
                 Configuration & Params
               </h2>
             </div>
 
             {/* Username Input (Monospace Font Applied Here) */}
-            <div style={{ marginBottom: "24px" }}>
+            <div
+              style={{
+                marginBottom: "24px",
+                display: "flex",
+                flexDirection: "column",
+                gap: "8px",
+              }}
+            >
               <label
                 style={{
-                  display: "block",
                   fontSize: "14px",
                   fontWeight: "600",
                   color: colors.textPrimary,
-                  marginBottom: "8px",
-                }}>
+                }}
+              >
                 GitHub Username
               </label>
-              <div style={{ position: "relative" }}>
+              <div
+                style={{
+                  position: "relative",
+                  display: "flex",
+                  alignItems: "center",
+                }}
+              >
                 <input
-                  type='text'
+                  type="text"
                   value={username}
                   onChange={handleUsernameChange}
-                  placeholder='Enter username (e.g., torvalds)'
+                  placeholder="Enter username (e.g., torvalds)"
                   style={{
                     width: "100%",
                     padding: "12px 16px 12px 44px",
@@ -698,6 +747,14 @@ function App() {
                     transform: "translateY(-50%)",
                     pointerEvents: "none",
                   }}
+                  onFocus={(e) => {
+                    e.target.style.borderColor = colors.accentPrimary;
+                    e.target.style.boxShadow = `0 0 0 2px ${colors.accentPrimary}33`;
+                  }}
+                  onBlur={(e) => {
+                    e.target.style.borderColor = colors.borderInput;
+                    e.target.style.boxShadow = "none";
+                  }}
                 />
               </div>
             </div>
@@ -711,7 +768,8 @@ function App() {
                   fontWeight: "600",
                   color: colors.textPrimary,
                   marginBottom: "8px",
-                }}>
+                }}
+              >
                 Frame Theme ({themes.length} available)
               </label>
               {themesLoading ? (
@@ -720,23 +778,25 @@ function App() {
                     display: "flex",
                     justifyContent: "center",
                     padding: "32px 0",
-                  }}>
+                  }}
+                >
                   <Loader2
                     size={32}
                     color={colors.accentPrimary}
-                    className='spinner'
+                    className="spinner"
                   />
                 </div>
               ) : (
                 <div
-                  className='themes-scroll-container'
+                  className="themes-scroll-container"
                   style={{
                     display: "flex",
                     gap: "8px",
                     overflowX: "scroll",
                     paddingBottom: "12px",
                     whiteSpace: "nowrap",
-                  }}>
+                  }}
+                >
                   {themes.map((theme) => (
                     <button
                       key={theme.theme}
@@ -765,7 +825,8 @@ function App() {
                         alignItems: "center",
                         justifyContent: "center",
                         gap: "6px",
-                      }}>
+                      }}
+                    >
                       {selectedTheme === theme.theme && (
                         <Zap
                           size={14}
@@ -779,7 +840,8 @@ function App() {
                           fontSize: "13px",
                           color: colors.textPrimary,
                           textTransform: "capitalize",
-                        }}>
+                        }}
+                      >
                         {theme.name || theme.theme}
                       </span>
                     </button>
@@ -790,9 +852,15 @@ function App() {
 
             {/* Control Group: Canvas & Shape */}
             <div
-              className='control-group'
-              style={{ display: "flex", gap: "24px", marginBottom: "24px" }}>
-              <div style={{ flex: 1 }}>
+              className="control-group"
+              style={{
+                display: "flex",
+                flexWrap: "wrap",
+                gap: "24px",
+                marginBottom: "24px",
+              }}
+            >
+              <div style={{ minWidth: "260px",flex: 1 }}>
                 <label
                   style={{
                     display: "block",
@@ -800,31 +868,36 @@ function App() {
                     fontWeight: "600",
                     color: colors.textPrimary,
                     marginBottom: "8px",
-                  }}>
+                  }}
+                >
                   Background Canvas (Param: `canvas`)
                 </label>
                 <div
-                  className='control-button-set'
-                  style={{ display: "flex", gap: "12px" }}>
+                  className="control-button-set"
+                  style={{ display: "flex", flexWrap: "wrap", gap: "12px" }}
+                >
                   <ControlButton
                     onClick={() => setCanvas("light")}
                     isSelected={canvas === "light"}
-                    isDark={isDark}>
+                    isDark={isDark}
+                  >
                     <Sun size={18} /> Light
                   </ControlButton>
                   <ControlButton
                     onClick={() => setCanvas("dark")}
                     isSelected={canvas === "dark"}
-                    isDark={isDark}>
+                    isDark={isDark}
+                  >
                     <Moon size={18} /> Dark
                   </ControlButton>
                   {/*Transparent Button */}
                   <ControlButton
-                    onClick={()=> setCanvas("transparent")}
+                    onClick={() => setCanvas("transparent")}
                     isSelected={canvas === "transparent"}
-                    isDark={isDark}>
-                      <Sparkles size={18}/> Tranparent
-                    </ControlButton>
+                    isDark={isDark}
+                  >
+                    <Sparkles size={18} /> Transparent
+                  </ControlButton>
                 </div>
               </div>
               <div style={{ flex: 1 }}>
@@ -835,29 +908,32 @@ function App() {
                     fontWeight: "600",
                     color: colors.textPrimary,
                     marginBottom: "8px",
-                  }}>
+                  }}
+                >
                   Avatar Shape (Param: `shape`)
                 </label>
                 <div
-                  className='control-button-set'
-                  style={{ display: "flex", gap: "12px" }}>
+                  className="control-button-set"
+                  style={{ display: "flex", flexWrap: "wrap", gap: "12px" }}>
                   <ControlButton
                     onClick={() => setShape("circle")}
                     isSelected={shape === "circle"}
-                    isDark={isDark}>
+                    isDark={isDark}
+                  >
                     <Circle size={18} /> Circle
                   </ControlButton>
                   <ControlButton
                     onClick={() => setShape("rect")}
                     isSelected={shape === "rect"}
-                    isDark={isDark}>
+                    isDark={isDark}
+                  >
                     <Square size={18} /> Square
                   </ControlButton>
                 </div>
               </div>
             </div>
             {/* Frame Style Control Group(Border Focus) */}
-            <div style={{marginBottom: "24px"}}>
+            <div style={{ marginBottom: "24px" }}>
               <label
                 style={{
                   display: "block",
@@ -865,27 +941,31 @@ function App() {
                   fontWeight: "600",
                   color: colors.textPrimary,
                   marginBottom: "8px",
-                }}>
-                  Frame Style (Param : `style`)
-                </label>
-                <div style={{maxWidth: "fit-content"}}>
-                <div 
-                  className='control-button-set'
-                  style={{display: "flex", gap: "12px"}}>
-                    <ControlButton
+                }}
+              >
+                Frame Style (Param : `style`)
+              </label>
+              <div style={{ maxWidth: "fit-content" }}>
+                <div
+                  className="control-button-set"
+                  style={{ display: "flex", gap: "12px" }}
+                >
+                  <ControlButton
                     onClick={() => setFrameStyle("default")}
                     isSelected={frameStyle === "default"}
-                    isDark={isDark}>
-                      Default
+                    isDark={isDark}
+                  >
+                    Default
                   </ControlButton>
                   <ControlButton
                     onClick={() => setFrameStyle("border-focus")}
                     isSelected={frameStyle === "border-focus"}
-                    isDark={isDark}>
+                    isDark={isDark}
+                  >
                     Border Focus
                   </ControlButton>
-                  </div>
-            </div>
+                </div>
+              </div>
             </div>
 
             {/* Size Slider */}
@@ -897,20 +977,21 @@ function App() {
                   fontWeight: "600",
                   color: colors.textPrimary,
                   marginBottom: "8px",
-                }}>
+                }}
+              >
                 Size (Param: `size`):{" "}
                 <span style={{ color: colors.accentPrimary, fontSize: "16px" }}>
                   {size}px
                 </span>
               </label>
               <input
-                type='range'
-                min='64'
-                max='1024'
-                step='64'
+                type="range"
+                min="64"
+                max="1024"
+                step="64"
                 value={size}
                 onChange={(e) => setSize(parseInt(e.target.value))}
-                className='range-slider'
+                className="range-slider"
                 style={{
                   width: "100%",
                   height: "8px",
@@ -935,21 +1016,23 @@ function App() {
                     fontWeight: "600",
                     color: colors.textPrimary,
                     marginBottom: "8px",
-                  }}>
+                  }}
+                >
                   Corner Radius (Param: `radius`):{" "}
                   <span
-                    style={{ color: colors.accentPrimary, fontSize: "16px" }}>
+                    style={{ color: colors.accentPrimary, fontSize: "16px" }}
+                  >
                     {finalRadiusForDisplay}px
                   </span>
                 </label>
                 <input
-                  type='range'
-                  min='0'
+                  type="range"
+                  min="0"
                   max={maxRadius}
-                  step='1'
+                  step="1"
                   value={radius}
                   onChange={(e) => setRadius(parseInt(e.target.value))}
-                  className='range-slider'
+                  className="range-slider"
                   style={{
                     width: "100%",
                     height: "8px",
@@ -1001,10 +1084,11 @@ function App() {
                 e.currentTarget.style.transform = "translateY(0)";
                 e.currentTarget.style.boxShadow =
                   "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1)";
-              }}>
+              }}
+            >
               {loading ? (
                 <>
-                  <Loader2 size={20} className='spinner' />
+                  <Loader2 size={20} className="spinner" />
                   Generating...
                 </>
               ) : (
@@ -1017,7 +1101,7 @@ function App() {
 
             {error && (
               <div
-                className='error-shake'
+                className="error-shake"
                 style={{
                   padding: "12px",
                   background: colors.errorBg,
@@ -1027,10 +1111,11 @@ function App() {
                   alignItems: "flex-start",
                   gap: "8px",
                   marginTop: "16px",
-                }}>
+                }}
+              >
                 <AlertCircle
                   size={18}
-                  color='#dc2626'
+                  color="#dc2626"
                   style={{ flexShrink: 0, marginTop: "2px" }}
                 />
                 <div style={{ fontSize: "14px", color: colors.errorText }}>
@@ -1041,7 +1126,8 @@ function App() {
           </div>
 
           {/* Right: Preview Panel (50%) */}
-          <div data-aos="flip-left"
+          <div
+            data-aos="flip-left"
             style={{
               background: colors.bgCard,
               borderRadius: "12px",
@@ -1049,21 +1135,24 @@ function App() {
               padding: "32px",
               maxWidth: "100%",
               minWidth: "0" /* Critical for layout flexibility */,
-            }}>
+            }}
+          >
             <div
               style={{
                 display: "flex",
                 alignItems: "center",
                 gap: "12px",
                 marginBottom: "24px",
-              }}>
+              }}
+            >
               <div
                 style={{
                   background: `linear-gradient(135deg, ${colors.accentSecondary} 0%, #ec4899 100%)`,
                   padding: "10px",
                   borderRadius: "8px",
-                }}>
-                <Frame size={20} color='white' />
+                }}
+              >
+                <Frame size={20} color="white" />
               </div>
               <h2
                 style={{
@@ -1071,7 +1160,8 @@ function App() {
                   fontWeight: "bold",
                   color: colors.textPrimary,
                   margin: 0,
-                }}>
+                }}
+              >
                 Preview & Download
               </h2>
             </div>
@@ -1083,7 +1173,8 @@ function App() {
                 alignItems: "center",
                 justifyContent: "center",
                 minHeight: "400px",
-              }}>
+              }}
+            >
               {/* Preview Logic (Conditional) */}
               {loading ? (
                 <div style={{ textAlign: "center" }}>
@@ -1091,16 +1182,17 @@ function App() {
                     size={64}
                     color={colors.accentPrimary}
                     strokeWidth={2.5}
-                    className='spinner'
+                    className="spinner"
                   />
                   <p
-                    className='pulse-text'
+                    className="pulse-text"
                     style={{
                       color: colors.textSecondary,
                       fontWeight: "600",
                       fontSize: "16px",
                       marginTop: "16px",
-                    }}>
+                    }}
+                  >
                     Creating your framed avatar...
                   </p>
                 </div>
@@ -1110,7 +1202,7 @@ function App() {
                   <img
                     key={previewKey}
                     src={framedAvatarUrl}
-                    alt='Framed Avatar'
+                    alt="Framed Avatar"
                     style={{
                       borderRadius:
                         shape === "circle"
@@ -1122,6 +1214,9 @@ function App() {
                       height: "auto", // Ensure aspect ratio is maintained
                       maxWidth: "384px", // Respect the max size for larger screens
                       maxHeight: "384px",
+                      display: "block",
+                      marginLeft: "auto",
+                      marginRight: "auto",
                       marginBottom: "24px",
                     }}
                   />
@@ -1131,7 +1226,8 @@ function App() {
                       width: "100%",
                       maxWidth: "400px",
                       margin: "0 auto",
-                    }}>
+                    }}
+                  >
                     <button
                       onClick={downloadImage}
                       style={{
@@ -1147,13 +1243,14 @@ function App() {
                         cursor: "pointer",
                         transition: "all 0.2s",
                         display: "flex",
-                        alignItems: "center",
                         justifyContent: "center",
+                        alignItems: "center",
                         gap: "8px",
                         marginBottom: "12px",
                         boxShadow:
                           "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1)",
-                      }}>
+                      }}
+                    >
                       <Download size={20} />
                       Download Image
                     </button>
@@ -1165,20 +1262,23 @@ function App() {
                         background: isDark ? "#334155" : "#f9fafb",
                         borderRadius: "8px",
                         border: `1px solid ${colors.border}`,
-                      }}>
+                      }}
+                    >
                       <div
                         style={{
                           display: "flex",
                           alignItems: "center",
                           justifyContent: "space-between",
                           marginBottom: "8px",
-                        }}>
+                        }}
+                      >
                         <div
                           style={{
                             fontSize: "12px",
                             fontWeight: "600",
                             color: colors.textPrimary,
-                          }}>
+                          }}
+                        >
                           API URL (Click to copy for badges/README)
                         </div>
                         <button
@@ -1196,9 +1296,10 @@ function App() {
                             alignItems: "center",
                             gap: "6px",
                             transition: "all 0.1s",
-                          }}>
+                          }}
+                        >
                           {copied ? (
-                            <Check size={14} color='#16a34a' />
+                            <Check size={14} color="#16a34a" />
                           ) : (
                             <Copy size={14} color={colors.textPrimary} />
                           )}
@@ -1215,7 +1316,8 @@ function App() {
                           padding: "10px",
                           borderRadius: "6px",
                           border: `1px solid ${colors.borderInput}`,
-                        }}>
+                        }}
+                      >
                         {`${API_BASE_URL}/api/framed-avatar/${username}?theme=${selectedTheme}&size=${size}&canvas=${canvas}&shape=${shape}&radius=${finalRadiusForDisplay}`}
                       </div>
                     </div>
@@ -1223,7 +1325,8 @@ function App() {
                 </div>
               ) : (
                 <div
-                  style={{ textAlign: "center", color: colors.textSecondary }}>
+                  style={{ textAlign: "center", color: colors.textSecondary }}
+                >
                   <Frame
                     size={120}
                     color={colors.borderInput}
@@ -1236,14 +1339,16 @@ function App() {
                       fontWeight: "600",
                       color: colors.textPrimary,
                       marginBottom: "8px",
-                    }}>
+                    }}
+                  >
                     Ready to Create!
                   </p>
                   <p
                     style={{
                       fontSize: "14px",
                       color: colors.textSecondary,
-                    }}>
+                    }}
+                  >
                     Enter a GitHub username and click **Generate** to see your
                     avatar.
                   </p>

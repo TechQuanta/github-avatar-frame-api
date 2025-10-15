@@ -1,4 +1,6 @@
-import express, { Request, Response } from "express";
+
+import express from "express";
+import type { Request, Response } from "express";
 import axios from "axios";
 import sharp from "sharp";
 import cors from "cors";
