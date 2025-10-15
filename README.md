@@ -108,10 +108,10 @@ https://github-avatar-frame-api.onrender.com/api/framed-avatar/{username}?theme=
 
  <img src="https://user-images.githubusercontent.com/74038190/212284100-561aa473-3905-4a80-b561-0d28506553ee.gif" width="100%">
 
-<h2 style="color:#3f51b5;">Flowchart</h2>
+<h2 style="color:#3f51b5;">🧭 Flowchart</h2>
 <img width="957" height="2844" alt="Untitled diagram-2025-10-14-005556" src="https://github.com/user-attachments/assets/fd49b6b8-07b3-4fa6-ab66-48cc40eb0c38" />
 
-<h3 style="color:#009688;" align=center>Query Parameters:</h3>
+<h3 style="color:#009688;" align=center>🧮 Query Parameters:</h3>
 <div align=center>
 <table style="width:100%; border-collapse:collapse; font-size:1.05em;">
 <thead style="background-color:#f5f5f5; text-align:center;">
@@ -143,7 +143,7 @@ https://github-avatar-frame-api.onrender.com/api/framed-avatar/{username}?theme=
 </div>
 <br>
 
-<h3 style="color:#ff4081;">Canvas, Shape & Radius Explained</h3>
+<h3 style="color:#ff4081;">🧱 Canvas, Shape & Radius Explained</h3>
 
 <ul style="font-size:1.05em;">
 <li><b>canvas</b>: Sets the avatar background color. Options: <code>light</code> or <code>dark</code>.</li>
@@ -153,7 +153,7 @@ https://github-avatar-frame-api.onrender.com/api/framed-avatar/{username}?theme=
 
 <p>Combine all three to customize your avatar:</p>
 
-<h3 style="color:#ff4081;">Text & Emoji Overlays</h3>
+<h3 style="color:#ff4081;">✍️ Text & Emoji Overlays</h3>
 
 <p style="font-size:1.05em;">Add personalized text and emojis to make your avatar more expressive:</p>
 
@@ -167,7 +167,7 @@ https://github-avatar-frame-api.onrender.com/api/framed-avatar/{username}?theme=
 <li><b>emojiPosition</b>: Place emojis at top, bottom, or in corners.</li>
 </ul>
 
-<p><b>Example with text and emojis:</b></p>
+<p><b>📌 Example with text and emojis:</b></p>
 <pre style="background-color:#f9f9f9; padding:10px; border-radius:10px;">
 https://github-avatar-frame-api.onrender.com/api/framed-avatar/octocat?theme=base&text=GitHub%20User&textColor=%23ffffff&textSize=20&textPosition=bottom&emojis=%F0%9F%9A%80%2C%F0%9F%92%BB%2C%F0%9F%94%A5&emojiSize=30&emojiPosition=top
 </pre>
@@ -218,7 +218,7 @@ https://github-avatar-frame-api.onrender.com/api/framed-avatar/octocat?theme=bas
 
  <img src="https://user-images.githubusercontent.com/74038190/212284100-561aa473-3905-4a80-b561-0d28506553ee.gif" width="100%">
  
-<h3 style="color:#ff4081;">Live Examples by Theme</h3>
+<h3 style="color:#ff4081;">🧪 Live Examples by Theme</h3>
 
 <table style="width:100%; border-collapse:collapse; font-size:1.05em; text-align:center;" align=center>
 <thead style="background-color:#f5f5f5;">
@@ -271,7 +271,7 @@ https://github-avatar-frame-api.onrender.com/api/framed-avatar/octocat?theme=bas
 
 <br>
 
-<h3 style="color:#3f51b5;" align=left>Embed in README</h3>
+<h3 style="color:#3f51b5;" align=left>📥 Embed in README</h3>
 
 <pre style="background-color:#f0f0f0; padding:10px; border-radius:10px;">
 ![My Avatar](https://github-avatar-frame-api.onrender.com/api/framed-avatar/your-username?theme=flamingo&size=256&canvas=dark&shape=rounded&radius=20)
@@ -320,7 +320,7 @@ For Development/Contributing:
 
  <img src="https://user-images.githubusercontent.com/74038190/212284100-561aa473-3905-4a80-b561-0d28506553ee.gif" width="100%">
 
-<h2 style="color:#673ab7;">Screenshot</h2>
+<h2 style="color:#673ab7;">🖼️ Screenshot</h2>
 <img width="785" height="756" alt="Screenshot 2025-10-14 113128" src="https://github.com/user-attachments/assets/df7698d1-710b-4eed-a714-2e624a6b31e0" />
 
 
@@ -348,29 +348,29 @@ For Development/Contributing:
  
 <h2 style="color:#3f51b5;">🛠️ Troubleshooting</h2>
 <p>
-<h3>API Issues:</h3>
-<h3>Avatar not loading</h3>
+<h3>🧩 API Issues:</h3>
+<h3>🖼️ Avatar not loading</h3>
   <ul>
 <li>Check if GitHub username is valid</li>
 <li>Verify theme name spelling (eternity, base, flamingo)</li>
 <li>Ensure size is between 64-1024 pixels</li>
   </ul>
-<h3>Slow response times</h3>
+<h3>🐢 Slow response times</h3>
 <ul>
 <li>API may be cold-starting (hosted on Render free tier)</li>
 <li>Wait 10-15 seconds for first request</li>
 <li>Subsequent requests will be faster</li>
 </ul>
 
-Development Issues:
-Installation problems
+🔧 Development Issues:
+🧰 Installation problems
 
 ```npm cache clean --force```
 ```rm -rf node_modules package-lock.json```
 ```npm install```
 
-Port conflicts
-Check if port 3000 is in use
+🔌 Port conflicts
+🔎 Check if port 3000 is in use
 ```netstat -ano | findstr :3000```
 Kill process or change port in server config
 </p>
@@ -379,6 +379,10 @@ Kill process or change port in server config
 
 <h2 style="color:#009688;">📜 License</h2>
 <a href="https://github.com/TechQuanta/github-avatar-frame-api?tab=MIT-1-ov-file">MIT License </a>
+
 <div align="center">
-<img src="https://user-images.githubusercontent.com/74038190/212284158-e840e285-664b-44d7-b79b-e264b5e54825.gif" width="400">
+  <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&pause=1000&color=FF0000&width=435&lines=Thanks+for+visiting++;GitHub+Avatar+Frame+API+%F0%9F%99%8C;Star+the+repo;Contribute+and+Grow+%F0%9F%8C%8D;Happy+Coding+%E2%9C%A8" alt="Typing SVG" />
+</div>
+<div align="center">
+<img src="https://user-images.githubusercontent.com/74038190/212284158-e840e285-664b-44d7-b79b-e264b5e54825.gif" width="200">
 <br><br>
