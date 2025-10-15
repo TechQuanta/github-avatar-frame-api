@@ -165,6 +165,16 @@
         "design",
         "infra"
       ]
+    },
+    {
+      "login": "Alpana176",
+      "name": "Alpana Choubey",
+      "avatar_url": "https://avatars.githubusercontent.com/u/99571514?v=4",
+      "profile": "https://github.com/Alpana176",
+      "contributions": [
+        "design",
+        "code"
+      ]
     }
   ],
   "commitConvention": "angular",
