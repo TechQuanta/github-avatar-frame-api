@@ -175,6 +175,16 @@
         "design",
         "code"
       ]
+    },
+    {
+      "login": "ananyasinha-1",
+      "name": "Ananya Sinha",
+      "avatar_url": "https://avatars.githubusercontent.com/u/214334171?v=4",
+      "profile": "https://github.com/ananyasinha-1",
+      "contributions": [
+        "code",
+        "infra"
+      ]
     }
   ],
   "commitConvention": "angular",
