@@ -68,6 +68,20 @@ const ControlButton = ({ onClick, isSelected, children, isDark }) => (
       justifyContent: "center",
       gap: "8px",
       boxShadow: "0 1px 2px rgba(0,0,0,0.05)",
+    }}
+    onMouseEnter={(e) => {
+      e.currentTarget.style.transform = "scale(1.05)";
+      e.currentTarget.style.boxShadow = "0 4px 8px rgba(0,0,0,0.15)";
+      if (!isSelected) {
+        e.currentTarget.style.background = isDark ? "#374151" : "#f9fafb";
+      }
+    }}
+    onMouseLeave={(e) => {
+      e.currentTarget.style.transform = "scale(1)";
+      e.currentTarget.style.boxShadow = "0 1px 2px rgba(0,0,0,0.05)";
+      if (!isSelected) {
+        e.currentTarget.style.background = isDark ? "#1f2937" : "white";
+      }
     }}>
     {children}
   </button>
@@ -139,7 +153,7 @@ const CommunityModal = ({ isOpen, onClose, colors }) => {
               color: colors.textPrimary,
               margin: 0,
             }}>
-            Join the 𝕆𝕡𝕖𝕟 ℂ𝕠𝕞𝕞𝕦𝕟𝕚𝕥𝕪
+            Join the Open Community
           </h3>
         </div>
 
@@ -238,10 +252,10 @@ function App() {
 
   // Progress Steps definition (using requested labels)
   const steps = [
-    { num: 1, label: "▀▄▀▄ Enter Username ▄▀▄▀", icon: Github },
-    { num: 2, label: "☆ ☆ 𝙲𝚑𝚘𝚘𝚜𝚎 𝚃𝚑𝚎𝚖𝚎 ☆ ☆", icon: Sparkles },
-    { num: 3, label: "🇦​🇩​🇯​🇺​🇸​🇹​ 🇸​🇪​🇹​🇹​🇮​🇳​🇬​🇸​", icon: Zap },
-    { num: 4, label: "▄︻┻ Generate ︻┳═─-", icon: Frame },
+    { num: 1, label: "Enter Username", icon: Github },
+    { num: 2, label: "Choose Theme", icon: Sparkles },
+    { num: 3, label: "Adjust Settings", icon: Zap },
+    { num: 4, label: "Generate", icon: Frame },
   ];
 
   // Detect system preference and set up listener
@@ -480,8 +494,7 @@ function App() {
                 margin: "0",
               }}
               data-aos="fade-right">
-              ↤↤↤↤↤ 𝐶𝑟𝑒𝑎𝑡𝑒 𝑠𝑡𝑢𝑛𝑛𝑖𝑛𝑔 𝑓𝑟𝑎𝑚𝑒𝑑 𝑎𝑣𝑎𝑡𝑎𝑟𝑠 𝑓𝑜𝑟 𝑦𝑜𝑢𝑟 𝐺𝑖𝑡𝐻𝑢𝑏 𝑝𝑟𝑜𝑓𝑖𝑙𝑒 𝑖𝑛
-              𝑠𝑒𝑐𝑜𝑛𝑑𝑠 ↦↦↦↦↦
+                Create stunning framed avatars for your GitHub profile in seconds
             </p>
           </div>
 
@@ -521,7 +534,7 @@ function App() {
             }}>
             <Users size={20} />
             <span style={{ fontFamily: "Times New Roman, serif" }}>
-              𝕆𝕡𝕖𝕟 ℂ𝕠𝕞𝕞𝕦𝕟𝕚𝕥𝕪
+              Open Community
             </span>
           </button>
         </div>
@@ -563,6 +576,18 @@ function App() {
                         alignItems: "center",
                         flex: 1,
                         minWidth: "20%",
+                        transition: "all 0.3s",
+                        cursor: "pointer",
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.background = isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.05)";
+                        e.currentTarget.style.borderRadius = "8px";
+                        e.currentTarget.style.padding = "8px";
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.background = "transparent";
+                        e.currentTarget.style.borderRadius = "0";
+                        e.currentTarget.style.padding = "0";
                       }}>
                       <div
                         style={{
@@ -590,24 +615,12 @@ function App() {
                           color: isActive
                             ? colors.textPrimary
                             : colors.textSecondary,
+                          fontFamily: "monospace",
                         }}>
                         {step.label}
                       </div>
                     </div>
-                    {idx < steps.length - 1 && (
-                      <ChevronRight
-                        size={20}
-                        color={
-                          currentStep > step.num
-                            ? colors.textPrimary
-                            : colors.borderInput
-                        }
-                        style={{
-                          marginTop: "-32px",
-                          flexShrink: 0,
-                        }}
-                      />
-                    )}
+
                   </React.Fragment>
                 );
               })}
@@ -678,7 +691,7 @@ function App() {
                   placeholder='Enter username (e.g., torvalds)'
                   style={{
                     width: "100%",
-                    padding: "12px 16px 12px 44px",
+                    padding: "12px 16px",
                     fontSize: "16px",
                     border: `1px solid ${colors.borderInput}`,
                     borderRadius: "8px",
@@ -690,22 +703,26 @@ function App() {
                     fontFamily: "monospace", // Applied monospace font
                   }}
                 />
-                <Github
-                  size={20}
-                  color={colors.textSecondary}
-                  style={{
-                    position: "absolute",
-                    left: "14px",
-                    top: "50%",
-                    transform: "translateY(-50%)",
-                    pointerEvents: "none",
-                  }}
-                />
               </div>
             </div>
 
             {/* Theme Selection (Small and Scrollable) */}
-            <div style={{ marginBottom: "24px" }}>
+            <div
+              style={{
+                marginBottom: "24px",
+                transition: "all 0.3s",
+                cursor: "pointer",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.05)";
+                e.currentTarget.style.borderRadius = "8px";
+                e.currentTarget.style.padding = "8px";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = "transparent";
+                e.currentTarget.style.borderRadius = "0";
+                e.currentTarget.style.padding = "0";
+              }}>
               <label
                 style={{
                   display: "block",
@@ -767,6 +784,20 @@ function App() {
                         alignItems: "center",
                         justifyContent: "center",
                         gap: "6px",
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.transform = "scale(1.05)";
+                        e.currentTarget.style.boxShadow = "0 4px 8px rgba(0,0,0,0.15)";
+                        if (selectedTheme !== theme.theme) {
+                          e.currentTarget.style.background = isDark ? "#475569" : "#f0f4f8";
+                        }
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.transform = "scale(1)";
+                        e.currentTarget.style.boxShadow = "0 1px 3px rgba(0,0,0,0.05)";
+                        if (selectedTheme !== theme.theme) {
+                          e.currentTarget.style.background = colors.bgCard;
+                        }
                       }}>
                       {selectedTheme === theme.theme && (
                         <Zap
@@ -793,7 +824,23 @@ function App() {
             {/* Control Group: Canvas & Shape */}
             <div
               className='control-group'
-              style={{ display: "flex", gap: "24px", marginBottom: "24px" }}>
+              style={{
+                display: "flex",
+                gap: "24px",
+                marginBottom: "24px",
+                transition: "all 0.3s",
+                cursor: "pointer",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.05)";
+                e.currentTarget.style.borderRadius = "8px";
+                e.currentTarget.style.padding = "8px";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = "transparent";
+                e.currentTarget.style.borderRadius = "0";
+                e.currentTarget.style.padding = "0";
+              }}>
               <div style={{ flex: 1 }}>
                 <label
                   style={{
@@ -859,7 +906,22 @@ function App() {
               </div>
             </div>
             {/* Frame Style Control Group(Border Focus) */}
-            <div style={{marginBottom: "24px"}}>
+            <div
+              style={{
+                marginBottom: "24px",
+                transition: "all 0.3s",
+                cursor: "pointer",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.05)";
+                e.currentTarget.style.borderRadius = "8px";
+                e.currentTarget.style.padding = "8px";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = "transparent";
+                e.currentTarget.style.borderRadius = "0";
+                e.currentTarget.style.padding = "0";
+              }}>
               <label
                 style={{
                   display: "block",
@@ -868,8 +930,8 @@ function App() {
                   color: colors.textPrimary,
                   marginBottom: "8px",
                 }}>
-                  Frame Style (Param : `style`)
-                </label>
+                Frame Style (Param : `style`)
+              </label>
                 <div style={{maxWidth: "fit-content"}}>
                 <div 
                   className='control-button-set'
@@ -891,7 +953,22 @@ function App() {
             </div>
 
             {/* Size Slider */}
-            <div style={{ marginBottom: "24px" }}>
+            <div
+              style={{
+                marginBottom: "24px",
+                transition: "all 0.3s",
+                cursor: "pointer",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.05)";
+                e.currentTarget.style.borderRadius = "8px";
+                e.currentTarget.style.padding = "8px";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = "transparent";
+                e.currentTarget.style.borderRadius = "0";
+                e.currentTarget.style.padding = "0";
+              }}>
               <label
                 style={{
                   display: "block",
@@ -929,7 +1006,22 @@ function App() {
 
             {/* Radius Slider (Conditional) */}
             {shape === "rect" && (
-              <div style={{ marginBottom: "24px" }}>
+              <div
+                style={{
+                  marginBottom: "24px",
+                  transition: "all 0.3s",
+                  cursor: "pointer",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.05)";
+                  e.currentTarget.style.borderRadius = "8px";
+                  e.currentTarget.style.padding = "8px";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = "transparent";
+                  e.currentTarget.style.borderRadius = "0";
+                  e.currentTarget.style.padding = "0";
+                }}>
                 <label
                   style={{
                     display: "block",
@@ -997,13 +1089,18 @@ function App() {
                   e.currentTarget.style.transform = "translateY(-2px)";
                   e.currentTarget.style.boxShadow =
                     "0 6px 12px -2px rgba(0, 0, 0, 0.2)";
+                  e.currentTarget.style.background = "linear-gradient(to right, #5b21b6, #7c3aed)";
                 }
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.transform = "translateY(0)";
                 e.currentTarget.style.boxShadow =
                   "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1)";
-              }}>
+                e.currentTarget.style.background = loading || !username.trim()
+                  ? colors.border
+                  : "linear-gradient(to right, #7c3aed, #a855f7)";
+              }}
+            >
               {loading ? (
                 <>
                   <Loader2 size={20} className='spinner' />
