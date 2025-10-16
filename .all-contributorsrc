@@ -114,7 +114,9 @@
       "avatar_url": "https://avatars.githubusercontent.com/u/210963725?v=4",
       "profile": "https://github.com/shreya-mishra325",
       "contributions": [
-        "code"
+        "code",
+        "design",
+        "infra"
       ]
     },
     {
@@ -141,7 +143,37 @@
       "avatar_url": "https://avatars.githubusercontent.com/u/168985050?v=4",
       "profile": "https://github.com/arundhativaishnav",
       "contributions": [
-        "design"
+        "code"
+      ]
+    },
+    {
+      "login": "darshan02parmar",
+      "name": "Darshan Parmar",
+      "avatar_url": "https://avatars.githubusercontent.com/u/180026762?v=4",
+      "profile": "https://github.com/darshan02parmar",
+      "contributions": [
+        "design",
+        "ideas"
+      ]
+    },
+    {
+      "login": "Anshita-Rajput",
+      "name": "Anshita Rajput",
+      "avatar_url": "https://avatars.githubusercontent.com/u/122893543?v=4",
+      "profile": "https://github.com/Anshita-Rajput",
+      "contributions": [
+        "design",
+        "infra"
+      ]
+    },
+    {
+      "login": "Alpana176",
+      "name": "Alpana Choubey",
+      "avatar_url": "https://avatars.githubusercontent.com/u/99571514?v=4",
+      "profile": "https://github.com/Alpana176",
+      "contributions": [
+        "design",
+        "code"
       ]
     }
   ],
