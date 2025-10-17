@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import AOS from 'aos';
 import 'aos/dist/aos.css';
@@ -21,6 +21,7 @@ import {
   Users,
   X,
 } from "lucide-react";
+import ThemeSlider from "./components/ThemeSlider.jsx";
 
 // NOTE: Replace with your actual API URL or environment variable
 const API_BASE_URL =
@@ -69,7 +70,8 @@ const ControlButton = ({ onClick, isSelected, children, isDark }) => (
       justifyContent: "center",
       gap: "8px",
       boxShadow: "0 1px 2px rgba(0,0,0,0.05)",
-    }}>
+    }}
+  >
     {children}
   </button>
 );
@@ -94,7 +96,8 @@ const CommunityModal = ({ isOpen, onClose, colors }) => {
         zIndex: 1000,
         padding: "16px",
         backdropFilter: "blur(5px)",
-      }}>
+      }}
+    >
       <div
         style={{
           background: colors.bgCard,
@@ -105,7 +108,8 @@ const CommunityModal = ({ isOpen, onClose, colors }) => {
           boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.5)",
           position: "relative",
           border: `1px solid ${colors.border}`,
-        }}>
+        }}
+      >
         <button
           onClick={onClose}
           style={{
@@ -123,7 +127,8 @@ const CommunityModal = ({ isOpen, onClose, colors }) => {
           }
           onMouseLeave={(e) =>
             (e.currentTarget.style.color = colors.textSecondary)
-          }>
+          }
+        >
           <X size={24} />
         </button>
 
@@ -139,7 +144,8 @@ const CommunityModal = ({ isOpen, onClose, colors }) => {
               fontWeight: "bold",
               color: colors.textPrimary,
               margin: 0,
-            }}>
+            }}
+          >
             Join the 𝕆𝕡𝕖𝕟 ℂ𝕠𝕞𝕞𝕦𝕟𝕚𝕥𝕪
           </h3>
         </div>
@@ -149,15 +155,16 @@ const CommunityModal = ({ isOpen, onClose, colors }) => {
             color: colors.textSecondary,
             textAlign: "center",
             marginBottom: "32px",
-          }}>
+          }}
+        >
           This is where you'd find hundreds of custom themes, share your
           creations, and collaborate on new frame designs!
         </p>
 
         <a
-          href='https://github.com/TechQuanta/github-avatar-frame-api' // Mock link
-          target='_blank'
-          rel='noopener noreferrer'
+          href="https://github.com/TechQuanta/github-avatar-frame-api" // Mock link
+          target="_blank"
+          rel="noopener noreferrer"
           onClick={onClose}
           style={{
             display: "block",
@@ -174,7 +181,8 @@ const CommunityModal = ({ isOpen, onClose, colors }) => {
             boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
           }}
           onMouseEnter={(e) => (e.currentTarget.style.opacity = 0.9)}
-          onMouseLeave={(e) => (e.currentTarget.style.opacity = 1)}>
+          onMouseLeave={(e) => (e.currentTarget.style.opacity = 1)}
+        >
           Visit Community Repository
         </a>
       </div>
@@ -227,6 +235,12 @@ function App() {
   // System Theme State
   const [isDark, setIsDark] = useState(false);
 
+  // Live Preview Canvas Ref
+  const previewCanvasRef = useRef(null);
+  const [previewLoading, setPreviewLoading] = useState(false);
+  const [previewError, setPreviewError] = useState(null);
+  const [isPreviewUpdating, setIsPreviewUpdating] = useState(false);
+
   const maxRadius = useMemo(() => Math.floor(size / 2), [size]);
 
   // Define dark mode colors based on system preference (Enhanced Dark Theme)
@@ -253,10 +267,10 @@ function App() {
 
   // Progress Steps definition (using requested labels)
   const steps = [
-    { num: 1, label: "▀▄▀▄ Enter Username ▄▀▄▀", icon: Github },
-    { num: 2, label: "☆ ☆ 𝙲𝚑𝚘𝚘𝚜𝚎 𝚃𝚑𝚎𝚖𝚎 ☆ ☆", icon: Sparkles },
-    { num: 3, label: "🇦​🇩​🇯​🇺​🇸​🇹​ 🇸​🇪​🇹​🇹​🇮​🇳​🇬​🇸​", icon: Zap },
-    { num: 4, label: "▄︻┻ Generate ︻┳═─-", icon: Frame },
+    { num: 1, label: "Enter Username", icon: Github },
+    { num: 2, label: "Choose Theme", icon: Sparkles },
+    { num: 3, label: "Adjust Settings", icon: Zap },
+    { num: 4, label: "Generate", icon: Frame },
   ];
 
   // Detect system preference and set up listener
@@ -487,6 +501,151 @@ function App() {
 
   const finalRadiusForDisplay = shape === "circle" ? maxRadius : radius;
 
+  // Live Preview Functions
+  const fetchAvatar = async (username) => {
+    const avatarUrl = `https://avatars.githubusercontent.com/${username}?size=${size}`;
+    const response = await fetch(avatarUrl, { cache: 'no-cache' });
+    if (!response.ok) throw new Error('Avatar not found');
+    const blob = await response.blob();
+    return createImageBitmap(blob);
+  };
+
+  const fetchFrame = async (theme) => {
+    const frameUrl = `${API_BASE_URL}/public/frames/${theme}/frame.png`;
+    const response = await fetch(frameUrl, { cache: 'no-cache' });
+    if (!response.ok) throw new Error('Frame not found');
+    const blob = await response.blob();
+    return createImageBitmap(blob);
+  };
+
+  const drawPreview = async () => {
+    if (!username.trim() || !previewCanvasRef.current) return;
+
+    setPreviewLoading(true);
+    setPreviewError(null);
+    setIsPreviewUpdating(true);
+
+    try {
+      const canvas = previewCanvasRef.current;
+      const ctx = canvas.getContext('2d');
+      canvas.width = size;
+      canvas.height = size;
+
+      // Clear canvas
+      ctx.clearRect(0, 0, size, size);
+
+      // Set canvas background
+      let bgColor = { r: 240, g: 240, b: 240, alpha: 1 }; // light default
+      if (canvas === "dark") bgColor = { r: 34, g: 34, b: 34, alpha: 1 };
+      ctx.fillStyle = `rgba(${bgColor.r}, ${bgColor.g}, ${bgColor.b}, ${bgColor.alpha})`;
+      ctx.fillRect(0, 0, size, size);
+
+      // Fetch avatar
+      let avatarImage;
+      try {
+        avatarImage = await fetchAvatar(username);
+      } catch (error) {
+        // Use fallback if avatar not found
+        const fallbackUrl = `${API_BASE_URL}/public/not-found.png`;
+        const response = await fetch(fallbackUrl);
+        const blob = await response.blob();
+        avatarImage = await createImageBitmap(blob);
+      }
+
+      // Fetch frame
+      const frameImage = await fetchFrame(selectedTheme);
+
+      // Resize avatar to fit
+      const avatarSize = size;
+      ctx.save();
+      ctx.beginPath();
+      const radius = shape === "circle" ? size / 2 : finalRadiusForDisplay;
+      if (shape === "circle") {
+        ctx.arc(size / 2, size / 2, radius, 0, 2 * Math.PI);
+      } else {
+        ctx.roundRect(0, 0, size, size, radius);
+      }
+      ctx.closePath();
+      ctx.clip();
+      ctx.drawImage(avatarImage, 0, 0, avatarSize, avatarSize);
+      ctx.restore();
+
+      // Draw frame with tint if custom color
+      ctx.save();
+      if (customAccentColor) {
+        // Apply tint by drawing frame with globalCompositeOperation
+        ctx.globalCompositeOperation = 'source-over';
+        ctx.drawImage(frameImage, 0, 0, size, size);
+        ctx.globalCompositeOperation = 'multiply';
+        const [r, g, b] = customAccentColor.match(/\w\w/g).map(x => parseInt(x, 16));
+        ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+        ctx.fillRect(0, 0, size, size);
+        ctx.globalCompositeOperation = 'source-over';
+      } else {
+        ctx.drawImage(frameImage, 0, 0, size, size);
+      }
+      ctx.restore();
+
+      // Draw text overlay
+      if (text.trim()) {
+        ctx.save();
+        ctx.font = `bold ${textSize}px Arial, sans-serif`;
+        ctx.fillStyle = textColor;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = textPosition === 'top' ? 'top' : textPosition === 'bottom' ? 'bottom' : 'middle';
+        const y = textPosition === 'top' ? 10 : textPosition === 'bottom' ? size - 10 : size / 2;
+        ctx.fillText(text, size / 2, y);
+        ctx.restore();
+      }
+
+      // Draw emoji overlay
+      if (emojis.trim()) {
+        const emojiList = emojis.split(',').map(e => e.trim()).filter(e => e);
+        if (emojiList.length > 0) {
+          ctx.save();
+          ctx.font = `${emojiSize}px Arial, sans-serif`;
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+
+          if (emojiPosition === 'corners' && emojiList.length >= 4) {
+            const positions = [
+              { x: emojiSize / 2 + 5, y: emojiSize / 2 + 5 },
+              { x: size - emojiSize / 2 - 5, y: emojiSize / 2 + 5 },
+              { x: emojiSize / 2 + 5, y: size - emojiSize / 2 - 5 },
+              { x: size - emojiSize / 2 - 5, y: size - emojiSize / 2 - 5 }
+            ];
+            emojiList.slice(0, 4).forEach((emoji, index) => {
+              ctx.fillText(emoji, positions[index].x, positions[index].y);
+            });
+          } else {
+            const y = emojiPosition === 'top' ? emojiSize + 5 : size - 5;
+            const spacing = emojiSize + 10;
+            const totalWidth = emojiList.length * spacing;
+            const startX = (size - totalWidth) / 2 + emojiSize / 2;
+            emojiList.forEach((emoji, index) => {
+              const x = startX + index * spacing;
+              ctx.fillText(emoji, x, y);
+            });
+          }
+          ctx.restore();
+        }
+      }
+
+    } catch (error) {
+      console.error('Preview error:', error);
+      setPreviewError(error.message);
+    } finally {
+      setPreviewLoading(false);
+      setIsPreviewUpdating(false);
+    }
+  };
+
+  useEffect(() => {
+    if (username.trim()) {
+      drawPreview();
+    }
+  }, [username, selectedTheme, size, canvas, shape, radius, customAccentColor, text, textColor, textSize, textPosition, emojis, emojiSize, emojiPosition]);
+
   return (
     <BrowserRouter>
       <Routes>
@@ -524,7 +683,8 @@ function App() {
               minWidth: "200px",
               order: 1,
               width: "100%",
-            }}>
+            }}
+          >
             <div
               style={{
                 display: "flex",
@@ -532,7 +692,8 @@ function App() {
                 justifyContent: "center",
                 gap: "12px",
                 marginBottom: "8px",
-              }}>
+              }}
+            >
               <div style={{ position: "relative", display: "inline-block" }}>
                 <Frame
                   size={48}
@@ -542,7 +703,7 @@ function App() {
                 <Sparkles
                   size={20}
                   color={colors.accentSecondary}
-                  className='pulse-icon'
+                  className="pulse-icon"
                   style={{
                     position: "absolute",
                     top: "-4px",
@@ -551,7 +712,7 @@ function App() {
                 />
               </div>
               <h1
-                className='main-title'
+                className="main-title"
                 style={{
                   fontSize: "48px",
                   fontWeight: "900",
@@ -574,15 +735,14 @@ function App() {
                 margin: "0",
               }}
               data-aos="fade-right">
-              ↤↤↤↤↤ 𝐶𝑟𝑒𝑎𝑡𝑒 𝑠𝑡𝑢𝑛𝑛𝑖𝑛𝑔 𝑓𝑟𝑎𝑚𝑒𝑑 𝑎𝑣𝑎𝑡𝑎𝑟𝑠 𝑓𝑜𝑟 𝑦𝑜𝑢𝑟 𝐺𝑖𝑡𝐻𝑢𝑏 𝑝𝑟𝑜𝑓𝑖𝑙𝑒 𝑖𝑛
-              𝑠𝑒𝑐𝑜𝑛𝑑𝑠 ↦↦↦↦↦
+                Create stunning framed avatars for your GitHub profile in seconds
             </p>
           </div>
 
           {/* Open Community Button (Top Right) */}
           <button data-aos="fade-right"
             onClick={() => setIsCommunityModalOpen(true)}
-            className='community-button'
+            className="community-button"
             style={{
               padding: "10px 20px",
               borderRadius: "8px",
@@ -612,10 +772,11 @@ function App() {
               e.currentTarget.style.color = isDark
                 ? colors.accentDark
                 : colors.accentPrimary;
-            }}>
+            }}
+          >
             <Users size={20} />
             <span style={{ fontFamily: "Times New Roman, serif" }}>
-              𝕆𝕡𝕖𝕟 ℂ𝕠𝕞𝕞𝕦𝕟𝕚𝕥𝕪
+              Open Community
             </span>
           </button>
         </div>
@@ -629,14 +790,16 @@ function App() {
               padding: "20px",
               border: `1px solid ${colors.border}`,
               maxWidth: "100%",
-            }}>
+            }}
+          >
             <div
               style={{
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "space-between",
                 flexWrap: "wrap",
-              }}>
+              }}
+            >
               {steps.map((step, idx) => {
                 const isActive = currentStep >= step.num;
                 const Icon = step.icon;
@@ -657,7 +820,8 @@ function App() {
                         alignItems: "center",
                         flex: 1,
                         minWidth: "20%",
-                      }}>
+                      }}
+                    >
                       <div
                         style={{
                           width: "48px",
@@ -673,7 +837,8 @@ function App() {
                           border: `2px solid ${
                             isActive ? activeBorder : inactiveBorder
                           }`,
-                        }}>
+                        }}
+                      >
                         <Icon size={20} />
                       </div>
                       <div
@@ -684,24 +849,12 @@ function App() {
                           color: isActive
                             ? colors.textPrimary
                             : colors.textSecondary,
-                        }}>
+                        }}
+                      >
                         {step.label}
                       </div>
                     </div>
-                    {idx < steps.length - 1 && (
-                      <ChevronRight
-                        size={20}
-                        color={
-                          currentStep > step.num
-                            ? colors.textPrimary
-                            : colors.borderInput
-                        }
-                        style={{
-                          marginTop: "-32px",
-                          flexShrink: 0,
-                        }}
-                      />
-                    )}
+
                   </React.Fragment>
                 );
               })}
@@ -711,11 +864,18 @@ function App() {
 
         {/* --- 3. Main Left/Right Container (50/50 Split Desktop, Column Mobile) --- */}
         <div
-          className='main-grid-container'
+          className="main-grid-container"
           style={{
             display: "grid",
             gap: "24px",
-          }}>
+            alignItems: "start",
+            justifyContent: "center",
+            gridTemplateColumns: "1fr 1fr",
+            maxWidth: "1200px",
+            margin: "0 auto",
+            padding: "32px 16px",
+          }}
+        >
           {/* Left: Configuration Panel (50%) */}
           <div data-aos="flip-right"
             style={{
@@ -723,23 +883,30 @@ function App() {
               borderRadius: "12px",
               border: `1px solid ${colors.border}`,
               padding: "32px",
+              display: "flex",
               maxWidth: "100%",
+              flexDirection: "column",
+              gap: "24px",
+              boxShadow: "0 4px 12px rgba(0,0,0,0.05)",
               minWidth: "0" /* Critical for layout flexibility */,
-            }}>
+            }}
+          >
             <div
               style={{
                 display: "flex",
                 alignItems: "center",
                 gap: "12px",
                 marginBottom: "24px",
-              }}>
+              }}
+            >
               <div
                 style={{
                   background: `linear-gradient(135deg, ${colors.accentPrimary} 0%, ${colors.accentSecondary} 100%)`,
                   padding: "10px",
                   borderRadius: "8px",
-                }}>
-                <Github size={20} color='white' />
+                }}
+              >
+                <Github size={20} color="white" />
               </div>
               <h2
                 style={{
@@ -747,32 +914,45 @@ function App() {
                   fontWeight: "bold",
                   color: colors.textPrimary,
                   margin: 0,
-                }}>
+                }}
+              >
                 Configuration & Params
               </h2>
             </div>
 
             {/* Username Input (Monospace Font Applied Here) */}
-            <div style={{ marginBottom: "24px" }}>
+            <div
+              style={{
+                marginBottom: "24px",
+                display: "flex",
+                flexDirection: "column",
+                gap: "8px",
+              }}
+            >
               <label
                 style={{
-                  display: "block",
                   fontSize: "14px",
                   fontWeight: "600",
                   color: colors.textPrimary,
-                  marginBottom: "8px",
-                }}>
+                }}
+              >
                 GitHub Username
               </label>
-              <div style={{ position: "relative" }}>
+              <div
+                style={{
+                  position: "relative",
+                  display: "flex",
+                  alignItems: "center",
+                }}
+              >
                 <input
-                  type='text'
+                  type="text"
                   value={username}
                   onChange={handleUsernameChange}
-                  placeholder='Enter username (e.g., torvalds)'
+                  placeholder="Enter username (e.g., torvalds)"
                   style={{
                     width: "100%",
-                    padding: "12px 16px 12px 44px",
+                    padding: "12px 16px",
                     fontSize: "16px",
                     border: `1px solid ${colors.borderInput}`,
                     borderRadius: "8px",
@@ -794,95 +974,27 @@ function App() {
                     transform: "translateY(-50%)",
                     pointerEvents: "none",
                   }}
+                  onFocus={(e) => {
+                    e.target.style.borderColor = colors.accentPrimary;
+                    e.target.style.boxShadow = `0 0 0 2px ${colors.accentPrimary}33`;
+                  }}
+                  onBlur={(e) => {
+                    e.target.style.borderColor = colors.borderInput;
+                    e.target.style.boxShadow = "none";
+                  }}
                 />
               </div>
             </div>
 
-            {/* Theme Selection (Small and Scrollable) */}
-            <div style={{ marginBottom: "24px" }}>
-              <label
-                style={{
-                  display: "block",
-                  fontSize: "14px",
-                  fontWeight: "600",
-                  color: colors.textPrimary,
-                  marginBottom: "8px",
-                }}>
-                Frame Theme ({themes.length} available)
-              </label>
-              {themesLoading ? (
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    padding: "32px 0",
-                  }}>
-                  <Loader2
-                    size={32}
-                    color={colors.accentPrimary}
-                    className='spinner'
-                  />
-                </div>
-              ) : (
-                <div
-                  className='themes-scroll-container'
-                  style={{
-                    display: "flex",
-                    gap: "8px",
-                    overflowX: "scroll",
-                    paddingBottom: "12px",
-                    whiteSpace: "nowrap",
-                  }}>
-                  {themes.map((theme) => (
-                    <button
-                      key={theme.theme}
-                      onClick={() => handleThemeSelect(theme.theme)}
-                      style={{
-                        padding: "8px 12px",
-                        minWidth: "100px",
-                        flexShrink: 0,
-                        borderRadius: "8px",
-                        border: "2px solid",
-                        borderColor:
-                          selectedTheme === theme.theme
-                            ? colors.accentPrimary
-                            : colors.border,
-                        background:
-                          selectedTheme === theme.theme
-                            ? isDark
-                              ? "#4c1d95"
-                              : "#f5f3ff"
-                            : colors.bgCard,
-                        cursor: "pointer",
-                        transition: "all 0.2s",
-                        textAlign: "center",
-                        boxShadow: "0 1px 3px rgba(0,0,0,0.05)",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        gap: "6px",
-                      }}>
-                      {selectedTheme === theme.theme && (
-                        <Zap
-                          size={14}
-                          color={colors.accentPrimary}
-                          fill={colors.accentPrimary}
-                        />
-                      )}
-                      <span
-                        style={{
-                          fontWeight: "600",
-                          fontSize: "13px",
-                          color: colors.textPrimary,
-                          textTransform: "capitalize",
-                        }}>
-                        {theme.name || theme.theme}
-                      </span>
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
+            {/* Theme Selection Slider */}
+            <ThemeSlider
+            themes={themes}
+            themesLoading={themesLoading}
+            selectedTheme={selectedTheme}
+            handleThemeSelect={handleThemeSelect}
+            colors={colors}
+            isDark={isDark}
+            />
 
             {/* Custom Color Picker and Random Theme Generator */}
             <div style={{ marginBottom: "24px" }}>
@@ -1018,75 +1130,94 @@ function App() {
             </div>
 
             {/* Control Group: Canvas & Shape */}
-            <div
-              className='control-group'
-              style={{ display: "flex", gap: "24px", marginBottom: "24px" }}>
-              <div style={{ flex: 1 }}>
-                <label
-                  style={{
-                    display: "block",
-                    fontSize: "14px",
-                    fontWeight: "600",
-                    color: colors.textPrimary,
-                    marginBottom: "8px",
-                  }}>
-                  Background Canvas (Param: `canvas`)
-                </label>
-                <div
-                  className='control-button-set'
-                  style={{ display: "flex", gap: "12px" }}>
-                  <ControlButton
-                    onClick={() => setCanvas("light")}
-                    isSelected={canvas === "light"}
-                    isDark={isDark}>
-                    <Sun size={18} /> Light
-                  </ControlButton>
-                  <ControlButton
-                    onClick={() => setCanvas("dark")}
-                    isSelected={canvas === "dark"}
-                    isDark={isDark}>
-                    <Moon size={18} /> Dark
-                  </ControlButton>
-                  {/*Transparent Button */}
-                  <ControlButton
-                    onClick={()=> setCanvas("transparent")}
-                    isSelected={canvas === "transparent"}
-                    isDark={isDark}>
-                      <Sparkles size={18}/> Tranparent
-                    </ControlButton>
-                </div>
-              </div>
-              <div style={{ flex: 1 }}>
-                <label
-                  style={{
-                    display: "block",
-                    fontSize: "14px",
-                    fontWeight: "600",
-                    color: colors.textPrimary,
-                    marginBottom: "8px",
-                  }}>
-                  Avatar Shape (Param: `shape`)
-                </label>
-                <div
-                  className='control-button-set'
-                  style={{ display: "flex", gap: "12px" }}>
-                  <ControlButton
-                    onClick={() => setShape("circle")}
-                    isSelected={shape === "circle"}
-                    isDark={isDark}>
-                    <Circle size={18} /> Circle
-                  </ControlButton>
-                  <ControlButton
-                    onClick={() => setShape("rect")}
-                    isSelected={shape === "rect"}
-                    isDark={isDark}>
-                    <Square size={18} /> Square
-                  </ControlButton>
-                </div>
-              </div>
-            </div>
+             <div
+    className='control-group'
+    // REMOVED: display: "flex" and gap: "24px" to allow vertical stacking
+    style={{ marginBottom: "24px" }}>
+    {/* Background Canvas (Param: `canvas`) */}
+    <div style={{ flex: 1, marginBottom: "24px" }}>
+        <label
+            style={{
+                display: "block",
+                fontSize: "14px",
+                fontWeight: "600",
+                color: colors.textPrimary,
+                marginBottom: "8px",
+            }}>
+            Background Canvas (Param: `canvas`)
+        </label>
+        <div
+            className='control-button-set'
+            style={{ display: "flex", gap: "12px" }}>
+            <ControlButton
+                onClick={() => setCanvas("light")}
+                isSelected={canvas === "light"}
+                isDark={isDark}>
+                <Sun size={18} /> Light
+            </ControlButton>
+            <ControlButton
+                onClick={() => setCanvas("dark")}
+                isSelected={canvas === "dark"}
+                isDark={isDark}>
+                <Moon size={18} /> Dark
+            </ControlButton>
+            {/*Transparent Button */}
+            <ControlButton
+                onClick={()=> setCanvas("transparent")}
+                isSelected={canvas === "transparent"}
+                isDark={isDark}>
+                <Sparkles size={18}/> Transparent
+            </ControlButton>
+        </div>
+    </div>
+    {/* Avatar Shape (Param: `shape`) - Now appears below the Background Canvas */}
+    <div style={{ flex: 1 }}>
+        <label
+            style={{
+                display: "block",
+                fontSize: "14px",
+                fontWeight: "600",
+                color: colors.textPrimary,
+                marginBottom: "8px",
+            }}>
+            Avatar Shape (Param: `shape`)
+        </label>
+        <div
+            className='control-button-set'
+            style={{ display: "flex", gap: "12px" }}>
+            <ControlButton
+                onClick={() => setShape("circle")}
+                isSelected={shape === "circle"}
+                isDark={isDark}>
+                <Circle size={18} /> Circle
+            </ControlButton>
+            <ControlButton
+                onClick={() => setShape("rect")}
+                isSelected={shape === "rect"}
+                isDark={isDark}>
+                <Square size={18} /> Square
+            </ControlButton>
+        </div>
+      </div>
+  </div>
+    
             {/* Frame Style Control Group(Border Focus) */}
-            <div style={{marginBottom: "24px"}}>
+            <div
+              style={{
+                marginBottom: "24px",
+                transition: "all 0.3s",
+                cursor: "pointer",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.05)";
+                e.currentTarget.style.borderRadius = "8px";
+                e.currentTarget.style.padding = "8px";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = "transparent";
+                e.currentTarget.style.borderRadius = "0";
+                e.currentTarget.style.padding = "0";
+              }}>
               <label
                 style={{
                   display: "block",
@@ -1095,8 +1226,8 @@ function App() {
                   color: colors.textPrimary,
                   marginBottom: "8px",
                 }}>
-                  Frame Style (Param : `style`)
-                </label>
+                Frame Style (Param : `style`)
+              </label>
                 <div style={{maxWidth: "fit-content"}}>
                 <div 
                   className='control-button-set'
@@ -1116,8 +1247,7 @@ function App() {
                   </div>
             </div>
             </div>
-
-            {/* Size Slider */}
+            {/* Frame Style Control Group(Border Focus) */}
             <div style={{ marginBottom: "24px" }}>
               <label
                 style={{
@@ -1126,20 +1256,72 @@ function App() {
                   fontWeight: "600",
                   color: colors.textPrimary,
                   marginBottom: "8px",
-                }}>
+                }}
+              >
+                Frame Style (Param : `style`)
+              </label>
+              <div style={{ maxWidth: "fit-content" }}>
+                <div
+                  className="control-button-set"
+                  style={{ display: "flex", gap: "12px" }}
+                >
+                  <ControlButton
+                    onClick={() => setFrameStyle("default")}
+                    isSelected={frameStyle === "default"}
+                    isDark={isDark}
+                  >
+                    Default
+                  </ControlButton>
+                  <ControlButton
+                    onClick={() => setFrameStyle("border-focus")}
+                    isSelected={frameStyle === "border-focus"}
+                    isDark={isDark}
+                  >
+                    Border Focus
+                  </ControlButton>
+                </div>
+              </div>
+            </div>
+
+            {/* Size Slider */}
+            <div
+              style={{
+                marginBottom: "24px",
+                transition: "all 0.3s",
+                cursor: "pointer",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.05)";
+                e.currentTarget.style.borderRadius = "8px";
+                e.currentTarget.style.padding = "8px";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = "transparent";
+                e.currentTarget.style.borderRadius = "0";
+                e.currentTarget.style.padding = "0";
+              }}>
+              <label
+                style={{
+                  display: "block",
+                  fontSize: "14px",
+                  fontWeight: "600",
+                  color: colors.textPrimary,
+                  marginBottom: "8px",
+                }}
+              >
                 Size (Param: `size`):{" "}
                 <span style={{ color: colors.accentPrimary, fontSize: "16px" }}>
                   {size}px
                 </span>
               </label>
               <input
-                type='range'
-                min='64'
-                max='1024'
-                step='64'
+                type="range"
+                min="64"
+                max="1024"
+                step="64"
                 value={size}
                 onChange={(e) => setSize(parseInt(e.target.value))}
-                className='range-slider'
+                className="range-slider"
                 style={{
                   width: "100%",
                   height: "8px",
@@ -1156,7 +1338,22 @@ function App() {
 
             {/* Radius Slider (Conditional) */}
             {shape === "rect" && (
-              <div style={{ marginBottom: "24px" }}>
+              <div
+                style={{
+                  marginBottom: "24px",
+                  transition: "all 0.3s",
+                  cursor: "pointer",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.05)";
+                  e.currentTarget.style.borderRadius = "8px";
+                  e.currentTarget.style.padding = "8px";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = "transparent";
+                  e.currentTarget.style.borderRadius = "0";
+                  e.currentTarget.style.padding = "0";
+                }}>
                 <label
                   style={{
                     display: "block",
@@ -1164,21 +1361,23 @@ function App() {
                     fontWeight: "600",
                     color: colors.textPrimary,
                     marginBottom: "8px",
-                  }}>
+                  }}
+                >
                   Corner Radius (Param: `radius`):{" "}
                   <span
-                    style={{ color: colors.accentPrimary, fontSize: "16px" }}>
+                    style={{ color: colors.accentPrimary, fontSize: "16px" }}
+                  >
                     {finalRadiusForDisplay}px
                   </span>
                 </label>
                 <input
-                  type='range'
-                  min='0'
+                  type="range"
+                  min="0"
                   max={maxRadius}
-                  step='1'
+                  step="1"
                   value={radius}
                   onChange={(e) => setRadius(parseInt(e.target.value))}
-                  className='range-slider'
+                  className="range-slider"
                   style={{
                     width: "100%",
                     height: "8px",
@@ -1400,16 +1599,18 @@ function App() {
                   e.currentTarget.style.transform = "translateY(-2px)";
                   e.currentTarget.style.boxShadow =
                     "0 6px 12px -2px rgba(0, 0, 0, 0.2)";
+                  e.currentTarget.style.background = "linear-gradient(to right, #5b21b6, #7c3aed)";
                 }
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.transform = "translateY(0)";
                 e.currentTarget.style.boxShadow =
                   "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1)";
-              }}>
+              }}
+            >
               {loading ? (
                 <>
-                  <Loader2 size={20} className='spinner' />
+                  <Loader2 size={20} className="spinner" />
                   Generating...
                 </>
               ) : (
@@ -1422,7 +1623,7 @@ function App() {
 
             {error && (
               <div
-                className='error-shake'
+                className="error-shake"
                 style={{
                   padding: "12px",
                   background: colors.errorBg,
@@ -1432,10 +1633,11 @@ function App() {
                   alignItems: "flex-start",
                   gap: "8px",
                   marginTop: "16px",
-                }}>
+                }}
+              >
                 <AlertCircle
                   size={18}
-                  color='#dc2626'
+                  color="#dc2626"
                   style={{ flexShrink: 0, marginTop: "2px" }}
                 />
                 <div style={{ fontSize: "14px", color: colors.errorText }}>
@@ -1454,21 +1656,24 @@ function App() {
               padding: "32px",
               maxWidth: "100%",
               minWidth: "0" /* Critical for layout flexibility */,
-            }}>
+            }}
+          >
             <div
               style={{
                 display: "flex",
                 alignItems: "center",
                 gap: "12px",
                 marginBottom: "24px",
-              }}>
+              }}
+            >
               <div
                 style={{
                   background: `linear-gradient(135deg, ${colors.accentSecondary} 0%, #ec4899 100%)`,
                   padding: "10px",
                   borderRadius: "8px",
-                }}>
-                <Frame size={20} color='white' />
+                }}
+              >
+                <Frame size={20} color="white" />
               </div>
               <h2
                 style={{
@@ -1476,7 +1681,8 @@ function App() {
                   fontWeight: "bold",
                   color: colors.textPrimary,
                   margin: 0,
-                }}>
+                }}
+              >
                 Preview & Download
               </h2>
             </div>
@@ -1488,7 +1694,8 @@ function App() {
                 alignItems: "center",
                 justifyContent: "center",
                 minHeight: "400px",
-              }}>
+              }}
+            >
               {/* Preview Logic (Conditional) */}
               {loading ? (
                 <div style={{ textAlign: "center" }}>
@@ -1496,16 +1703,17 @@ function App() {
                     size={64}
                     color={colors.accentPrimary}
                     strokeWidth={2.5}
-                    className='spinner'
+                    className="spinner"
                   />
                   <p
-                    className='pulse-text'
+                    className="pulse-text"
                     style={{
                       color: colors.textSecondary,
                       fontWeight: "600",
                       fontSize: "16px",
                       marginTop: "16px",
-                    }}>
+                    }}
+                  >
                     Creating your framed avatar...
                   </p>
                 </div>
@@ -1515,7 +1723,7 @@ function App() {
                   <img
                     key={previewKey}
                     src={framedAvatarUrl}
-                    alt='Framed Avatar'
+                    alt="Framed Avatar"
                     style={{
                       borderRadius:
                         shape === "circle"
@@ -1527,6 +1735,9 @@ function App() {
                       height: "auto", // Ensure aspect ratio is maintained
                       maxWidth: "384px", // Respect the max size for larger screens
                       maxHeight: "384px",
+                      display: "block",
+                      marginLeft: "auto",
+                      marginRight: "auto",
                       marginBottom: "24px",
                     }}
                   />
@@ -1536,7 +1747,8 @@ function App() {
                       width: "100%",
                       maxWidth: "400px",
                       margin: "0 auto",
-                    }}>
+                    }}
+                  >
                     <button
                       onClick={downloadImage}
                       style={{
@@ -1552,13 +1764,14 @@ function App() {
                         cursor: "pointer",
                         transition: "all 0.2s",
                         display: "flex",
-                        alignItems: "center",
                         justifyContent: "center",
+                        alignItems: "center",
                         gap: "8px",
                         marginBottom: "12px",
                         boxShadow:
                           "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1)",
-                      }}>
+                      }}
+                    >
                       <Download size={20} />
                       Download Image
                     </button>
@@ -1570,20 +1783,23 @@ function App() {
                         background: isDark ? "#334155" : "#f9fafb",
                         borderRadius: "8px",
                         border: `1px solid ${colors.border}`,
-                      }}>
+                      }}
+                    >
                       <div
                         style={{
                           display: "flex",
                           alignItems: "center",
                           justifyContent: "space-between",
                           marginBottom: "8px",
-                        }}>
+                        }}
+                      >
                         <div
                           style={{
                             fontSize: "12px",
                             fontWeight: "600",
                             color: colors.textPrimary,
-                          }}>
+                          }}
+                        >
                           API URL (Click to copy for badges/README)
                         </div>
                         <button
@@ -1601,9 +1817,10 @@ function App() {
                             alignItems: "center",
                             gap: "6px",
                             transition: "all 0.1s",
-                          }}>
+                          }}
+                        >
                           {copied ? (
-                            <Check size={14} color='#16a34a' />
+                            <Check size={14} color="#16a34a" />
                           ) : (
                             <Copy size={14} color={colors.textPrimary} />
                           )}
@@ -1638,9 +1855,56 @@ function App() {
                     </div>
                   </div>
                 </div>
+              ) : username.trim() ? (
+                <div style={{ textAlign: "center", width: "100%" }}>
+                  {previewLoading && (
+                    <div style={{ marginBottom: "16px" }}>
+                      <Loader2
+                        size={32}
+                        color={colors.accentPrimary}
+                        className='spinner'
+                      />
+                      <p
+                        style={{
+                          color: colors.textSecondary,
+                          fontSize: "14px",
+                          marginTop: "8px",
+                        }}>
+                        Loading preview...
+                      </p>
+                    </div>
+                  )}
+                  <canvas
+                    ref={previewCanvasRef}
+                    style={{
+                      borderRadius:
+                        shape === "circle"
+                          ? "50%"
+                          : `${finalRadiusForDisplay}px`,
+                      boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.2)",
+                      border: `3px solid ${isDark ? "#374151" : "white"}`,
+                      width: "100%",
+                      height: "auto",
+                      maxWidth: "384px",
+                      maxHeight: "384px",
+                      marginBottom: "24px",
+                    }}
+                  />
+                  {previewError && (
+                    <p
+                      style={{
+                        color: colors.errorText,
+                        fontSize: "14px",
+                        marginTop: "8px",
+                      }}>
+                      {previewError}
+                    </p>
+                  )}
+                </div>
               ) : (
                 <div
-                  style={{ textAlign: "center", color: colors.textSecondary }}>
+                  style={{ textAlign: "center", color: colors.textSecondary }}
+                >
                   <Frame
                     size={120}
                     color={colors.borderInput}
@@ -1653,14 +1917,16 @@ function App() {
                       fontWeight: "600",
                       color: colors.textPrimary,
                       marginBottom: "8px",
-                    }}>
+                    }}
+                  >
                     Ready to Create!
                   </p>
                   <p
                     style={{
                       fontSize: "14px",
                       color: colors.textSecondary,
-                    }}>
+                    }}
+                  >
                     Enter a GitHub username and click **Generate** to see your
                     avatar.
                   </p>
@@ -1827,14 +2093,8 @@ function App() {
             }
             
         }
-
-        /* Desktop Layout: Apply 50%/50% split above 769px */
-        @media (min-width: 769px) {
-            .main-grid-container {
-                grid-template-columns: 50% 50%; 
-            }
-        }
       `}</style>
+      {/* Community Modal */}
     </div>
   } />
   <Route path="*" element={<NotFound />} />

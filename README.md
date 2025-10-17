@@ -233,7 +233,7 @@ https://github-avatar-frame-api.onrender.com/api/framed-avatar/octocat?theme=bas
 <tr>
 <td>eternity</td>
 <td>light / circle / 0</td>
-<td><img src="https://github-avatar-frame-api.onrender.com/api/framed-avatar/octocat?theme=ocean&size=100&canvas=light&shape=circle&radius=0" width="80"></td>
+<td><img src="https://github-avatar-frame-api.onrender.com/api/framed-avatar/as?theme=ocean&size=100&canvas=light&shape=circle&radius=0" width="80"></td>
 <td>Classic eternity theme, light background, circular avatar</td>
 </tr>
 <tr>

@@ -1,0 +1,96 @@
+/* Global Reset to ensure no fixed width/padding causes overflow */
+*, ::before, ::after {
+  box-sizing: border-box;
+}
+/* Using a standard font like Inter/system-ui for overall text, but inputs use monospace */
+body, html, #root {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden !important;
+  width: 100%;
+}
+
+/* General Utilities & Animations */
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+@keyframes pulse-anim { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+@keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
+.spinner { animation: spin 1s linear infinite; }
+.pulse-text { animation: pulse-anim 2s infinite; }
+.error-shake { animation: shake 0.4s ease-out; }
+
+/* Customizing the range slider thumb (using injected colors) */
+.range-slider::-webkit-slider-thumb {
+  -webkit-appearance: none; appearance: none; width: 20px; height: 20px; border-radius: 50%;
+  background: var(--accent-bg);
+  cursor: pointer; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+.range-slider::-moz-range-thumb {
+  width: 20px; height: 20px; border-radius: 50%; border: none;
+  background: var(--accent-bg);
+  cursor: pointer; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Theme Scroll Container Styling */
+.themes-scroll-container {
+  -ms-overflow-style: none; scrollbar-width: none;
+}
+.themes-scroll-container::-webkit-scrollbar { height: 8px; }
+.themes-scroll-container::-webkit-scrollbar-track { background: var(--scroll-track); border-radius: 4px; }
+.themes-scroll-container::-webkit-scrollbar-thumb { background: var(--accent-primary); border-radius: 4px; }
+.themes-scroll-container::-webkit-scrollbar-thumb:hover { background: var(--accent-secondary); }
+
+/* --- RESPONSIVE LAYOUT RULES --- */
+
+/* Default: Mobile-First Single Column */
+.main-grid-container {
+  grid-template-columns: 1fr;
+}
+
+@media (max-width: 768px) {
+  /* Header and Button Layout: Stack title and community button */
+  .header-container {
+    flex-direction: column;
+    align-items: center !important;
+    gap: 24px !important;
+    width: 100%;
+    max-width: 100%;
+  }
+  .header-container > div:first-child {
+    order: 1 !important;
+    width: 100%;
+  }
+  .community-button {
+    order: 2 !important;
+    width: 100%;
+    margin-left: 0 !important;
+  }
+
+  /* Title Size Reduction for Mobile */
+  .main-title {
+    font-size: 36px !important;
+  }
+
+  /* Control Group (Canvas/Shape) : Force stacking columns */
+  .control-group {
+    flex-direction: column;
+    gap: 16px !important;
+    width: 100%;
+  }
+  /* IMPORTANT: Ensure sub-flex containers (the button sets) can wrap if content is too wide */
+  .control-button-set {
+    flex-wrap: wrap;
+  }
+  /* IMPORTANT: Ensure the two sub-columns take full width */
+  .control-group > div {
+    width: 100%;
+  }
+
+}
+
+/* Desktop Layout: Apply 50%/50% split above 769px */
+@media (min-width: 769px) {
+  .main-grid-container {
+    grid-template-columns: 50% 50%;
+  }
+}
