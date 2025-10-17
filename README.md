@@ -1,7 +1,7 @@
  <img src="https://user-images.githubusercontent.com/74038190/212284100-561aa473-3905-4a80-b561-0d28506553ee.gif" width="100%">
 <!-- GSSoC Banner -->
 <h1 align="center" style="font-size: 3em; color: #ff4081;">
-  GitHub Avatar Frame API
+  🖼️ GitHub Avatar Frame API
 </h1>
 
 <p align="center" style="font-size: 1.3em;">
@@ -18,10 +18,6 @@
     <br />
   
 [Report Bug](https://github.com/TechQuanta/github-avatar-frame-api/issues) • [Request Feature](https://github.com/TechQuanta/github-avatar-frame-api/issues)
-
-<img src="https://user-images.githubusercontent.com/74038190/212284100-561aa473-3905-4a80-b561-0d28506553ee.gif" width="100%">
-
-<img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&pause=1000&color=FF0000&width=435&lines=Welcome+to+GitHub+Avatar+Frame+API;Contribute+to+open+source" alt="Typing SVG" />
 
 </div>
 
@@ -199,7 +195,7 @@ https://github-avatar-frame-api.onrender.com/api/framed-avatar/octocat?theme=bas
 <td>circle</td>
 <td>-</td>
 <td><a href="https://github-avatar-frame-api.onrender.com/api/framed-avatar/octocat?canvas=dark&shape=circle" target="_blank">URL</a></td>
-<td><img src="https://github-avatar-frame-api.onrender.com/api/framed-avatar/octocat?theme=classic&size=256&shape=circle&radius=15&canvas=dark" width="80"></td>
+<td><img src="https://github-avatar-frame-api.onrender.com/api/framed-avatar/octocat?theme=gitblaze&size=256&shape=circle&radius=15&canvas=dark" width="80"></td>
 </tr>
 <tr>
 <td>light</td>
@@ -213,7 +209,7 @@ https://github-avatar-frame-api.onrender.com/api/framed-avatar/octocat?theme=bas
 <td>rounded</td>
 <td>50</td>
 <td><a href="https://github-avatar-frame-api.onrender.com/api/framed-avatar/octocat?canvas=dark&shape=rounded&radius=50" target="_blank">URL</a></td>
-<td><img src="https://github-avatar-frame-api.onrender.com/api/framed-avatar/octocat?theme=classic&size=256&shape=rounded&radius=20&canvas=dark" width="80"></td>
+<td><img src="https://github-avatar-frame-api.onrender.com/api/framed-avatar/octocat?theme=starry&size=256&shape=rounded&radius=20&canvas=dark" width="80"></td>
 </tr>
 </tbody>
 </table>
@@ -237,7 +233,7 @@ https://github-avatar-frame-api.onrender.com/api/framed-avatar/octocat?theme=bas
 <tr>
 <td>eternity</td>
 <td>light / circle / 0</td>
-<td><img src="https://github-avatar-frame-api.onrender.com/api/framed-avatar/octocat?theme=eternity&size=100&canvas=light&shape=circle&radius=0" width="80"></td>
+<td><img src="https://github-avatar-frame-api.onrender.com/api/framed-avatar/octocat?theme=ocean&size=100&canvas=light&shape=circle&radius=0" width="80"></td>
 <td>Classic eternity theme, light background, circular avatar</td>
 </tr>
 <tr>
@@ -249,7 +245,7 @@ https://github-avatar-frame-api.onrender.com/api/framed-avatar/octocat?theme=bas
 <tr>
 <td>base</td>
 <td>light / rounded / 20</td>
-<td><img src="https://github-avatar-frame-api.onrender.com/api/framed-avatar/octocat?theme=base&size=100&canvas=light&shape=rounded&radius=20" width="80"></td>
+<td><img src="https://github-avatar-frame-api.onrender.com/api/framed-avatar/octocat?theme=darkmode&size=100&canvas=light&shape=rounded&radius=20" width="80"></td>
 <td>Base theme, light background, rounded corners 20px</td>
 </tr>
 <tr>
@@ -267,7 +263,7 @@ https://github-avatar-frame-api.onrender.com/api/framed-avatar/octocat?theme=bas
 <tr>
 <td>flamingo</td>
 <td>light / rounded / 30</td>
-<td><img src="https://github-avatar-frame-api.onrender.com/api/framed-avatar/octocat?theme=flamingo&size=100&canvas=light&shape=rounded&radius=30" width="80"></td>
+<td><img src="https://github-avatar-frame-api.onrender.com/api/framed-avatar/octocat?theme=macros&size=100&canvas=light&shape=rounded&radius=30" width="80"></td>
 <td>Flamingo theme, light canvas, rounded corners 30px</td>
 </tr>
 </tbody>
@@ -316,10 +312,10 @@ For Development/Contributing:
 <h2 style="color:#673ab7;">⚙ Tech Stack</h2>
 
 <ul style="font-size:1.05em;">
-<li>🟢Node.js & Express.js (TypeScript)</li>
-<li>🖼️Sharp (image processing)</li>
+<li>🟢 Node.js & Express.js (TypeScript)</li>
+<li>🖼️ Sharp (image processing)</li>
 <li>☁️ Render (hosting)</li>
-<li>📘TypeScript</li>
+<li>📘 TypeScript</li>
 </ul>
 
  <img src="https://user-images.githubusercontent.com/74038190/212284100-561aa473-3905-4a80-b561-0d28506553ee.gif" width="100%">
@@ -385,8 +381,8 @@ Kill process or change port in server config
 <a href="https://github.com/TechQuanta/github-avatar-frame-api?tab=MIT-1-ov-file">MIT License </a>
 
 <div align="center">
-  <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&pause=1000&color=FF0000&width=435&lines=Thanks+for+visiting++;GitHub+Avatar+Frame+API+%F0%9F%99%8C;Star+the+repo;Contribute+and+Grow+%F0%9F%8C%8D;Happy+Coding+%E2%9C%A8" alt="Typing SVG" />
+  <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&pause=1000&color=FF0000&width=435&lines=Thanks+for+visiting++;GitHub+Avatar+Frame+API+%F0%9F%99%8C;Star+the+repo+%E2%AD%90;Contribute+and+Grow+%F0%9F%8C%8D;Happy+Coding+%E2%9C%A8" alt="Typing SVG" />
 </div>
 <div align="center">
-<img src="https://user-images.githubusercontent.com/74038190/212284158-e840e285-664b-44d7-b79b-e264b5e54825.gif" width="200">
+<img src="https://user-images.githubusercontent.com/74038190/212284158-e840e285-664b-44d7-b79b-e264b5e54825.gif" width="400">
 <br><br>
