@@ -20,6 +20,10 @@ import {
   Moon,
   Users,
   X,
+  Share2,
+  Twitter,
+  Linkedin,
+  Award,
 } from "lucide-react";
 import ThemeSlider from "./components/ThemeSlider.jsx";
 
@@ -190,6 +194,185 @@ const CommunityModal = ({ isOpen, onClose, colors }) => {
   );
 };
 
+// --- Share Modal Component ---
+const ShareModal = ({ isOpen, onClose, colors, shareUrl, username }) => {
+  if (!isOpen) return null;
+
+  const shareText = `Check out my custom GitHub avatar frame for @${username}! Created with GitHub Avatar Frames.`;
+
+  const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`;
+
+  const linkedinUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`;
+
+  const copyLink = () => {
+    navigator.clipboard.writeText(shareUrl);
+    // Show toast notification
+    // Assuming showToastNotification is available in scope, but since it's inside component, need to pass or handle differently
+    // For now, just copy
+  };
+
+  return (
+    <div
+      style={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundColor: "rgba(0, 0, 0, 0.7)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        zIndex: 1000,
+        padding: "16px",
+        backdropFilter: "blur(5px)",
+      }}
+    >
+      <div
+        style={{
+          background: colors.bgCard,
+          borderRadius: "16px",
+          padding: "32px",
+          maxWidth: "450px",
+          width: "100%",
+          boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.5)",
+          position: "relative",
+          border: `1px solid ${colors.border}`,
+        }}
+      >
+        <button
+          onClick={onClose}
+          style={{
+            position: "absolute",
+            top: "12px",
+            right: "12px",
+            background: "transparent",
+            border: "none",
+            cursor: "pointer",
+            color: colors.textSecondary,
+            transition: "color 0.2s",
+          }}
+          onMouseEnter={(e) =>
+            (e.currentTarget.style.color = colors.textPrimary)
+          }
+          onMouseLeave={(e) =>
+            (e.currentTarget.style.color = colors.textSecondary)
+          }
+        >
+          <X size={24} />
+        </button>
+
+        <div style={{ textAlign: "center", marginBottom: "24px" }}>
+          <Share2
+            size={48}
+            color={colors.accentPrimary}
+            style={{ marginBottom: "12px" }}
+          />
+          <h3
+            style={{
+              fontSize: "24px",
+              fontWeight: "bold",
+              color: colors.textPrimary,
+              margin: 0,
+            }}
+          >
+            Share Your Avatar
+          </h3>
+        </div>
+
+        <p
+          style={{
+            color: colors.textSecondary,
+            textAlign: "center",
+            marginBottom: "32px",
+          }}
+        >
+          Share your custom GitHub avatar frame with the world!
+        </p>
+
+        <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+          <a
+            href={twitterUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={onClose}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "12px",
+              padding: "12px",
+              background: "#1da1f2",
+              color: "white",
+              borderRadius: "8px",
+              textDecoration: "none",
+              fontWeight: "600",
+              transition: "opacity 0.2s",
+            }}
+            onMouseEnter={(e) => (e.currentTarget.style.opacity = 0.9)}
+            onMouseLeave={(e) => (e.currentTarget.style.opacity = 1)}
+          >
+            <Twitter size={20} />
+            Share on Twitter
+          </a>
+          <a
+            href={linkedinUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={onClose}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "12px",
+              padding: "12px",
+              background: "#0077b5",
+              color: "white",
+              borderRadius: "8px",
+              textDecoration: "none",
+              fontWeight: "600",
+              transition: "opacity 0.2s",
+            }}
+            onMouseEnter={(e) => (e.currentTarget.style.opacity = 0.9)}
+            onMouseLeave={(e) => (e.currentTarget.style.opacity = 1)}
+          >
+            <Linkedin size={20} />
+            Share on LinkedIn
+          </a>
+          <button
+            onClick={() => {
+              copyLink();
+              onClose();
+            }}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "12px",
+              padding: "12px",
+              background: colors.bgCard,
+              border: `1px solid ${colors.border}`,
+              borderRadius: "8px",
+              color: colors.textPrimary,
+              fontWeight: "600",
+              cursor: "pointer",
+              transition: "all 0.2s",
+            }}
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.background = colors.accentPrimary) &&
+              (e.currentTarget.style.color = "white")
+            }
+            onMouseLeave={(e) =>
+              (e.currentTarget.style.background = colors.bgCard) &&
+              (e.currentTarget.style.color = colors.textPrimary)
+            }
+          >
+            <Copy size={20} />
+            Copy Link
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 // --- Main App Component ---
 function App() {
   useEffect(() => {
@@ -221,6 +404,9 @@ function App() {
   const [emojiSize, setEmojiSize] = useState(40);
   const [emojiPosition, setEmojiPosition] = useState("top");
 
+  // Download format state
+  const [downloadFormat, setDownloadFormat] = useState("png");
+
   const [loading, setLoading] = useState(false);
   const [themesLoading, setThemesLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -232,8 +418,17 @@ function App() {
   const [toastMessage, setToastMessage] = useState("");
   const [showToast, setShowToast] = useState(false);
 
+  // Sharing state
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+
   // System Theme State
   const [isDark, setIsDark] = useState(false);
+
+  // Badge Generator State
+  const [badgeLabel, setBadgeLabel] = useState("GitHub Avatar");
+  const [badgeColor, setBadgeColor] = useState("#7c3aed");
+  const [badgeStyle, setBadgeStyle] = useState("flat");
+  const [badgeCopied, setBadgeCopied] = useState(false);
 
   // Live Preview Canvas Ref
   const previewCanvasRef = useRef(null);
@@ -331,7 +526,7 @@ function App() {
     if (framedAvatarUrl) {
       const link = document.createElement("a");
       link.href = framedAvatarUrl;
-      link.download = `github-avatar-frame-${username}.png`;
+      link.download = `github-avatar-frame-${username}.${downloadFormat}`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -340,22 +535,22 @@ function App() {
 
   const copyApiUrl = () => {
     let apiUrl = `${API_BASE_URL}/api/framed-avatar/${username}?theme=${selectedTheme}&size=${size}&canvas=${canvas}&shape=${shape}&radius=${finalRadiusForDisplay}&style=${frameStyle}`;
-    
+
     // Add custom accent color if selected
     if (customAccentColor) {
       apiUrl += `&accentColor=${encodeURIComponent(customAccentColor)}`;
     }
-    
+
     // Add text parameters if provided
     if (text.trim()) {
       apiUrl += `&text=${encodeURIComponent(text)}&textColor=${encodeURIComponent(textColor)}&textSize=${textSize}&textPosition=${textPosition}`;
     }
-    
+
     // Add emoji parameters if provided
     if (emojis.trim()) {
       apiUrl += `&emojis=${encodeURIComponent(emojis)}&emojiSize=${emojiSize}&emojiPosition=${emojiPosition}`;
     }
-    
+
     try {
       // Use document.execCommand('copy') for better compatibility in iframe environments
       const tempInput = document.createElement("textarea");
@@ -369,6 +564,23 @@ function App() {
     } catch (err) {
       console.error("Failed to copy text: ", err);
       // Fallback message if copying fails
+    }
+  };
+
+  const copyBadgeMarkdown = () => {
+    const badgeMarkdown = `[![${badgeLabel}](https://img.shields.io/badge/${encodeURIComponent(badgeLabel)}-${badgeColor.replace('#', '')}?style=${badgeStyle})](${framedAvatarUrl})`;
+
+    try {
+      const tempInput = document.createElement("textarea");
+      tempInput.value = badgeMarkdown;
+      document.body.appendChild(tempInput);
+      tempInput.select();
+      document.execCommand("copy");
+      document.body.removeChild(tempInput);
+      setBadgeCopied(true);
+      setTimeout(() => setBadgeCopied(false), 2000);
+    } catch (err) {
+      console.error("Failed to copy badge markdown: ", err);
     }
   };
 
@@ -386,18 +598,18 @@ function App() {
     try {
       const finalRadius = shape === "circle" ? maxRadius : radius;
 
-      let url = `${API_BASE_URL}/api/framed-avatar/${username}?theme=${selectedTheme}&size=${size}&canvas=${canvas}&shape=${shape}&radius=${finalRadius}&style=${frameStyle}`;
-      
+      let url = `${API_BASE_URL}/api/framed-avatar/${username}?theme=${selectedTheme}&size=${size}&canvas=${canvas}&shape=${shape}&radius=${finalRadius}&style=${frameStyle}&format=${downloadFormat}`;
+
       // Add custom accent color if selected
       if (customAccentColor) {
         url += `&accentColor=${encodeURIComponent(customAccentColor)}`;
       }
-      
+
       // Add text parameters if provided
       if (text.trim()) {
         url += `&text=${encodeURIComponent(text)}&textColor=${encodeURIComponent(textColor)}&textSize=${textSize}&textPosition=${textPosition}`;
       }
-      
+
       // Add emoji parameters if provided
       if (emojis.trim()) {
         url += `&emojis=${encodeURIComponent(emojis)}&emojiSize=${emojiSize}&emojiPosition=${emojiPosition}`;
@@ -415,6 +627,9 @@ function App() {
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
+        if (response.status === 404 && errorData.error === "User not found") {
+          throw new Error("User not found — please check the spelling");
+        }
         throw new Error(
           errorData.error ||
             errorData.message ||
@@ -442,6 +657,7 @@ function App() {
 
   const handleUsernameChange = (e) => {
     setUsername(e.target.value);
+    setPreviewError(null); // Clear preview error when username changes
     if (e.target.value.trim()) {
       setCurrentStep(2);
     } else {
@@ -505,7 +721,12 @@ function App() {
   const fetchAvatar = async (username) => {
     const avatarUrl = `https://avatars.githubusercontent.com/${username}?size=${size}`;
     const response = await fetch(avatarUrl, { cache: 'no-cache' });
-    if (!response.ok) throw new Error('Avatar not found');
+    if (!response.ok) {
+      if (response.status === 404) {
+        throw new Error('User not found — please check the spelling');
+      }
+      throw new Error('Avatar not found');
+    }
     const blob = await response.blob();
     return createImageBitmap(blob);
   };
@@ -535,10 +756,12 @@ function App() {
       ctx.clearRect(0, 0, size, size);
 
       // Set canvas background
-      let bgColor = { r: 240, g: 240, b: 240, alpha: 1 }; // light default
-      if (canvas === "dark") bgColor = { r: 34, g: 34, b: 34, alpha: 1 };
-      ctx.fillStyle = `rgba(${bgColor.r}, ${bgColor.g}, ${bgColor.b}, ${bgColor.alpha})`;
-      ctx.fillRect(0, 0, size, size);
+      if (canvas !== "transparent") {
+        let bgColor = { r: 240, g: 240, b: 240, alpha: 1 }; // light default
+        if (canvas === "dark") bgColor = { r: 34, g: 34, b: 34, alpha: 1 };
+        ctx.fillStyle = `rgba(${bgColor.r}, ${bgColor.g}, ${bgColor.b}, ${bgColor.alpha})`;
+        ctx.fillRect(0, 0, size, size);
+      }
 
       // Fetch avatar
       let avatarImage;
@@ -804,12 +1027,12 @@ function App() {
                 const isActive = currentStep >= step.num;
                 const Icon = step.icon;
 
-                const activeBg = isDark ? "#d1d5db" : colors.bgCard;
-                const activeBorder = isDark ? "#d1d5db" : "#111827";
-                const inactiveBg = isDark ? "#374151" : "#f3f4f6";
-                const inactiveBorder = isDark ? "#4b5563" : "#e5e7eb";
-                const activeColor = isDark ? "#111827" : "#111827";
-                const inactiveColor = isDark ? "#9ca3af" : "#9ca3af";
+                  const activeBg = "white"; 
+                  const inactiveBg = isDark ? "#374151" : "#f3f4f6";
+                  const activeColor = "#111827"; 
+                  const inactiveColor = "white";  
+                   const activeBorder = "#a855f7"; 
+                   const inactiveBorder = isDark ? "#4b5563" : "#e5e7eb";
 
                 return (
                   <React.Fragment key={step.num}>
@@ -823,22 +1046,53 @@ function App() {
                       }}
                     >
                       <div
-                        style={{
-                          width: "48px",
-                          height: "48px",
-                          borderRadius: "50%",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          marginBottom: "8px",
-                          transition: "all 0.3s",
-                          background: isActive ? activeBg : inactiveBg,
-                          color: isActive ? activeColor : inactiveColor,
-                          border: `2px solid ${
-                            isActive ? activeBorder : inactiveBorder
-                          }`,
-                        }}
-                      >
+
+                       onClick={() => {
+    const sectionIds = [
+      "#username-section",
+      "#theme-section",
+      "#settings-section",
+      "#generate-section",
+    ];
+    const targetId = sectionIds[idx];
+    const target = document.querySelector(targetId);
+    if (target) target.scrollIntoView({ behavior: "smooth" });
+  }}
+  style={{
+    width: "48px",
+    height: "48px",
+    borderRadius: "50%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: "8px",
+    transition: "all 0.3s ease",
+    background: isActive ? activeBg : inactiveBg,
+    color: isActive ? activeColor : inactiveColor,
+    border: `2px solid ${
+      isActive ? activeBorder : inactiveBorder
+    }`,
+    cursor: "pointer",
+  }}
+  onMouseEnter={(e) => {
+    e.currentTarget.style.transform = "scale(1.1)";
+    e.currentTarget.style.boxShadow =
+      "0 0 10px rgba(168, 85, 247, 0.5)";
+       if (!isActive) {
+              e.currentTarget.style.background = "white"; 
+              e.currentTarget.style.color = "#111827"; 
+            }
+  }}
+  onMouseLeave={(e) => {
+    e.currentTarget.style.transform = "scale(1)";
+    e.currentTarget.style.boxShadow = "none";
+    if (!isActive) {
+              e.currentTarget.style.background = inactiveBg;
+              e.currentTarget.style.color = inactiveColor; 
+            }
+  }}
+>
+
                         <Icon size={20} />
                       </div>
                       <div
@@ -846,11 +1100,13 @@ function App() {
                           fontSize: "12px",
                           fontWeight: "600",
                           textAlign: "center",
-                          color: isActive
-                            ? colors.textPrimary
-                            : colors.textSecondary,
-                        }}
-                      >
+
+                          // color: isActive ? activeColor : inactiveColor,
+                           color: isActive ? "white" : "#9ca3af"
+                        }}>
+
+                        
+
                         {step.label}
                       </div>
                     </div>
@@ -877,7 +1133,7 @@ function App() {
           }}
         >
           {/* Left: Configuration Panel (50%) */}
-          <div data-aos="flip-right"
+          <div id="username-section" data-aos="flip-right"
             style={{
               background: colors.bgCard,
               borderRadius: "12px",
@@ -1480,7 +1736,8 @@ function App() {
             </div>
 
             {/* Generate Button */}
-            <button
+          <div id="generate-section"> 
+             <button
               onClick={generateFramedAvatar}
               disabled={loading || !username.trim()}
               style={{
@@ -1529,9 +1786,9 @@ function App() {
                   Generate Framed Avatar
                 </>
               )}
-            </button>
+             </button>
 
-            {error && (
+             {error && (
               <div
                 className="error-shake"
                 style={{
@@ -1555,6 +1812,7 @@ function App() {
                 </div>
               </div>
             )}
+            </div>
           </div>
 
           {/* Right: Preview Panel (50%) */}
@@ -1608,24 +1866,48 @@ function App() {
             >
               {/* Preview Logic (Conditional) */}
               {loading ? (
-                <div style={{ textAlign: "center" }}>
-                  <Loader2
-                    size={64}
-                    color={colors.accentPrimary}
-                    strokeWidth={2.5}
-                    className="spinner"
-                  />
-                  <p
-                    className="pulse-text"
+                <div
+                  style={{
+                    textAlign: "center",
+                    position: "relative",
+                    padding: "40px",
+                    borderRadius: "16px",
+                    background: `linear-gradient(45deg, ${colors.accentPrimary}, ${colors.accentSecondary}, ${colors.accentPrimary})`,
+                    animation: "rotate-gradient 3s linear infinite",
+                    overflow: "hidden",
+                  }}
+                >
+                  <div
                     style={{
-                      color: colors.textSecondary,
-                      fontWeight: "600",
-                      fontSize: "16px",
-                      marginTop: "16px",
+                      position: "absolute",
+                      inset: "4px",
+                      background: colors.bgCard,
+                      borderRadius: "12px",
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      padding: "20px",
                     }}
                   >
-                    Creating your framed avatar...
-                  </p>
+                    <Loader2
+                      size={64}
+                      color={colors.accentPrimary}
+                      strokeWidth={2.5}
+                      className="spinner pulse-spinner"
+                    />
+                    <p
+                      className="pulse-text"
+                      style={{
+                        color: colors.textSecondary,
+                        fontWeight: "600",
+                        fontSize: "16px",
+                        marginTop: "16px",
+                      }}
+                    >
+                      Creating your framed avatar...
+                    </p>
+                  </div>
                 </div>
               ) : framedAvatarUrl ? (
                 <div style={{ textAlign: "center", width: "100%" }}>
@@ -1659,32 +1941,85 @@ function App() {
                       margin: "0 auto",
                     }}
                   >
-                    <button
-                      onClick={downloadImage}
+                    <div
                       style={{
-                        width: "100%",
-                        background:
-                          "linear-gradient(to right, #16a34a, #059669)",
-                        color: "white",
-                        padding: "14px",
-                        borderRadius: "8px",
-                        border: "none",
-                        fontWeight: "600",
-                        fontSize: "16px",
-                        cursor: "pointer",
-                        transition: "all 0.2s",
                         display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        gap: "8px",
+                        gap: "12px",
                         marginBottom: "12px",
-                        boxShadow:
-                          "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1)",
                       }}
                     >
-                      <Download size={20} />
-                      Download Image
-                    </button>
+                      <select
+                        value={downloadFormat}
+                        onChange={(e) => setDownloadFormat(e.target.value)}
+                        style={{
+                          flex: 1,
+                          padding: "12px",
+                          borderRadius: "8px",
+                          border: `2px solid ${colors.border}`,
+                          background: colors.bgInput,
+                          color: colors.textPrimary,
+                          fontSize: "14px",
+                          fontWeight: "500",
+                          outline: "none",
+                          cursor: "pointer",
+                          transition: "border-color 0.2s",
+                        }}
+                      >
+                        <option value="png">PNG</option>
+                        <option value="jpg">JPG</option>
+                        <option value="svg">SVG</option>
+                      </select>
+                      <button
+                        onClick={downloadImage}
+                        style={{
+                          flex: 1,
+                          background:
+                            "linear-gradient(to right, #16a34a, #059669)",
+                          color: "white",
+                          padding: "12px",
+                          borderRadius: "8px",
+                          border: "none",
+                          fontWeight: "600",
+                          fontSize: "14px",
+                          cursor: "pointer",
+                          transition: "all 0.2s",
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          gap: "8px",
+                          boxShadow:
+                            "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1)",
+                        }}
+                      >
+                        <Download size={18} />
+                        Download
+                      </button>
+                      <button
+                        onClick={() => setIsShareModalOpen(true)}
+                        style={{
+                          flex: 1,
+                          background:
+                            "linear-gradient(to right, #1d4ed8, #2563eb)",
+                          color: "white",
+                          padding: "12px",
+                          borderRadius: "8px",
+                          border: "none",
+                          fontWeight: "600",
+                          fontSize: "14px",
+                          cursor: "pointer",
+                          transition: "all 0.2s",
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          gap: "8px",
+                          boxShadow:
+                            "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1)",
+                        }}
+                      >
+                        <Share2 size={18} />
+                        Share
+                      </button>
+                    </div>
 
                     {/* API URL Section (Monospace Font Applied Here) */}
                     <div
@@ -1761,6 +2096,128 @@ function App() {
                           }
                           return apiUrl;
                         })()}
+                      </div>
+                    </div>
+
+                    {/* Badge Generator Section */}
+                    <div
+                      style={{
+                        padding: "16px",
+                        background: isDark ? "#334155" : "#f9fafb",
+                        borderRadius: "8px",
+                        border: `1px solid ${colors.border}`,
+                        marginTop: "16px",
+                      }}
+                    >
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "space-between",
+                          marginBottom: "8px",
+                        }}
+                      >
+                        <div
+                          style={{
+                            fontSize: "12px",
+                            fontWeight: "600",
+                            color: colors.textPrimary,
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "6px",
+                          }}
+                        >
+                          <Award size={16} />
+                          Badge Generator
+                        </div>
+                        <button
+                          onClick={copyBadgeMarkdown}
+                          style={{
+                            padding: "6px 12px",
+                            background: colors.bgCard,
+                            border: `1px solid ${colors.borderInput}`,
+                            borderRadius: "6px",
+                            color: colors.textPrimary,
+                            fontSize: "12px",
+                            fontWeight: "500",
+                            cursor: "pointer",
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "6px",
+                            transition: "all 0.1s",
+                          }}
+                        >
+                          {badgeCopied ? (
+                            <Check size={14} color="#16a34a" />
+                          ) : (
+                            <Copy size={14} color={colors.textPrimary} />
+                          )}
+                          {badgeCopied ? "Copied!" : "Copy Markdown"}
+                        </button>
+                      </div>
+                      <div style={{ display: "flex", gap: "12px", marginBottom: "12px" }}>
+                        <input
+                          type="text"
+                          placeholder="Badge label"
+                          value={badgeLabel}
+                          onChange={(e) => setBadgeLabel(e.target.value)}
+                          style={{
+                            flex: 1,
+                            padding: "8px 10px",
+                            borderRadius: "6px",
+                            border: `1px solid ${colors.borderInput}`,
+                            background: colors.bgInput,
+                            color: colors.textPrimary,
+                            fontSize: "12px",
+                            outline: "none",
+                          }}
+                        />
+                        <input
+                          type="color"
+                          value={badgeColor}
+                          onChange={(e) => setBadgeColor(e.target.value)}
+                          style={{
+                            width: "50px",
+                            height: "36px",
+                            borderRadius: "6px",
+                            border: `1px solid ${colors.borderInput}`,
+                            cursor: "pointer",
+                          }}
+                        />
+                        <select
+                          value={badgeStyle}
+                          onChange={(e) => setBadgeStyle(e.target.value)}
+                          style={{
+                            padding: "8px 10px",
+                            borderRadius: "6px",
+                            border: `1px solid ${colors.borderInput}`,
+                            background: colors.bgInput,
+                            color: colors.textPrimary,
+                            fontSize: "12px",
+                            outline: "none",
+                            cursor: "pointer",
+                          }}
+                        >
+                          <option value="flat">Flat</option>
+                          <option value="plastic">Plastic</option>
+                          <option value="flat-square">Flat Square</option>
+                          <option value="for-the-badge">For The Badge</option>
+                          <option value="social">Social</option>
+                        </select>
+                      </div>
+                      <div
+                        style={{
+                          fontSize: "11px",
+                          fontFamily: "monospace",
+                          color: colors.textSecondary,
+                          wordBreak: "break-all",
+                          background: colors.bgInput,
+                          padding: "10px",
+                          borderRadius: "6px",
+                          border: `1px solid ${colors.borderInput}`,
+                        }}
+                      >
+                        {`[![${badgeLabel}](https://img.shields.io/badge/${encodeURIComponent(badgeLabel)}-${badgeColor.replace('#', '')}?style=${badgeStyle})](${framedAvatarUrl})`}
                       </div>
                     </div>
                   </div>
@@ -1854,6 +2311,15 @@ function App() {
         colors={colors}
       />
 
+      {/* Share Modal Injection */}
+      <ShareModal
+        isOpen={isShareModalOpen}
+        onClose={() => setIsShareModalOpen(false)}
+        colors={colors}
+        shareUrl={framedAvatarUrl}
+        username={username}
+      />
+
       {/* Toast Notification */}
       {showToast && (
         <div
@@ -1916,8 +2382,11 @@ function App() {
         @keyframes pulse-anim { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
         @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
         @keyframes slideInRight { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        @keyframes rotate-gradient { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @keyframes pulse-spinner { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
         .spinner { animation: spin 1s linear infinite; }
         .pulse-text { animation: pulse-anim 2s infinite; }
+        .pulse-spinner { animation: pulse-spinner 1.5s ease-in-out infinite; }
         .error-shake { animation: shake 0.4s ease-out; }
 
         /* Customizing the range slider thumb (using injected colors) */

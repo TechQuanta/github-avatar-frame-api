@@ -120,7 +120,7 @@ async function createEmojiOverlay(emojis: string, emojiSize: number, emojiPositi
 }
 /**
  * GET /api/framed-avatar/:username
- * Example: /api/framed-avatar/octocat?theme=base&size=256&accentColor=%23ff6b6b
+ * Example: /api/framed-avatar/octocat?theme=base&size=256&accentColor=%23ff6b6b&format=png
  * Parameters:
  * - username: GitHub username (required)
  * - theme: Frame theme (default: "base")
@@ -136,6 +136,7 @@ async function createEmojiOverlay(emojis: string, emojiSize: number, emojiPositi
  * - emojis: Comma-separated list of emojis (e.g., 🚀,💻,🔥)
  * - emojiSize: Size of emojis in pixels (default: 40)
  * - emojiPosition: Position of emojis — top | bottom | corners (default: top)
+ * - format: Output format — png | jpg | svg (default: png)
  */
 app.get("/api/framed-avatar/:username", async (req: Request, res: Response) => {
   try {
@@ -157,6 +158,9 @@ app.get("/api/framed-avatar/:username", async (req: Request, res: Response) => {
     const emojis = req.query.emojis ? decodeURIComponent(req.query.emojis as string) : undefined;
     const emojiSizeStr = (req.query.emojiSize as string) || "40";
     const emojiPosition = ((req.query.emojiPosition as string) || "top").toLowerCase();
+
+    // Format parameter
+    const format = ((req.query.format as string) || "png").toLowerCase();
 
     // Validate username
     if (!username || typeof username !== "string" || username.trim() === "") {
@@ -208,6 +212,14 @@ app.get("/api/framed-avatar/:username", async (req: Request, res: Response) => {
       });
     }
 
+    // Validate format parameter
+    if (!["png", "jpg", "svg"].includes(format)) {
+      return res.status(400).json({
+        error: "Bad Request",
+        message: "format must be 'png', 'jpg', or 'svg'.",
+      });
+    }
+
     // determine corner radius
     let cornerRadius: number;
     if (shape === "circle") cornerRadius = Math.floor(size / 2);
@@ -236,8 +248,7 @@ app.get("/api/framed-avatar/:username", async (req: Request, res: Response) => {
       return res.status(404).json({ error: `Theme '${theme}' not found.` });
     }
 
-    // --- MODIFICATION START ---
-    // Fetch avatar or use fallback if user not found
+    // Fetch avatar
     let avatarBuffer: Buffer;
     const avatarUrl = `https://github.com/${username}.png?size=${size}`;
 
@@ -253,25 +264,16 @@ app.get("/api/framed-avatar/:username", async (req: Request, res: Response) => {
       avatarBuffer = Buffer.from(avatarResponse.data);
     } catch (axiosError) {
       if (axios.isAxiosError(axiosError) && axiosError.response?.status === 404) {
-        // User not found, so we load the fallback placeholder image
-        const fallbackAvatarPath = path.join(
-          ASSET_BASE_PATH,
-          "public",
-          "not-found.png"
-        );
-        if (!fs.existsSync(fallbackAvatarPath)) {
-          console.error("Fallback avatar not-found.png is missing!");
-          return res
-            .status(500)
-            .json({ error: "Internal Server Error: Fallback image is missing." });
-        }
-        avatarBuffer = fs.readFileSync(fallbackAvatarPath);
+        // User not found, return error instead of fallback
+        return res.status(404).json({
+          error: "User not found",
+          message: "The GitHub user does not exist. Please check the spelling and try again."
+        });
       } else {
         // For other network errors, let the outer catch block handle it
         throw axiosError;
       }
     }
-    // --- MODIFICATION END ---
 
     // Load frame
     const frameBuffer = fs.readFileSync(framePath);
@@ -346,22 +348,80 @@ app.get("/api/framed-avatar/:username", async (req: Request, res: Response) => {
       compositeLayers.push({ input: emojiOverlay, gravity: "center" });
     }
 
-    // Compose final image on custom canvas color
-    const finalImage = await sharp({
-      create: {
-        width: size,
-        height: size,
-        channels: 4,
-        background: canvasColor,
-      },
-    })
-      .composite(compositeLayers)
-      .png()
-      .toBuffer();
+    // Generate response based on format
+    if (format === "svg") {
+      // Convert images to base64 for SVG embedding
+      const avatarBase64 = avatarMasked.toString('base64');
+      const frameBase64 = paddedFrame.toString('base64');
 
-    res.set("Content-Type", "image/png");
-    res.set("Cache-Control", "public, max-age=3600");
-    res.send(finalImage);
+      // Create SVG with embedded images
+      let svgContent = `<svg width="${size}" height="${size}" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+        <defs>
+          <filter id="textShadow" x="-50%" y="-50%" width="200%" height="200%">
+            <feDropShadow dx="1" dy="1" stdDeviation="1" flood-color="rgba(0,0,0,0.5)"/>
+          </filter>
+          <clipPath id="avatarClip">
+            <rect x="0" y="0" width="${size}" height="${size}" rx="${cornerRadius}" ry="${cornerRadius}"/>
+          </clipPath>
+        </defs>
+        <!-- Canvas background -->
+        <rect width="${size}" height="${size}" fill="rgb(${canvasColor.r}, ${canvasColor.g}, ${canvasColor.b})"/>
+        <!-- Avatar -->
+        <image x="0" y="0" width="${size}" height="${size}" xlink:href="data:image/png;base64,${avatarBase64}" clip-path="url(#avatarClip)"/>
+        <!-- Frame -->
+        <image x="0" y="0" width="${size}" height="${size}" xlink:href="data:image/png;base64,${frameBase64}"/>`;
+
+      // Add text overlay if provided
+      if (textOverlay) {
+        const textSvg = textOverlay.toString();
+        const textMatch = textSvg.match(/<text[^>]*>[\s\S]*?<\/text>/);
+        if (textMatch) {
+          svgContent += textMatch[0];
+        }
+      }
+
+      // Add emoji overlay if provided
+      if (emojiOverlay) {
+        const emojiSvg = emojiOverlay.toString();
+        const emojiMatches = emojiSvg.match(/<text[^>]*>[\s\S]*?<\/text>/g);
+        if (emojiMatches) {
+          emojiMatches.forEach(match => svgContent += match);
+        }
+      }
+
+      svgContent += "</svg>";
+
+      res.set("Content-Type", "image/svg+xml");
+      res.set("Content-Disposition", `attachment; filename="${username}-avatar.svg"`);
+      res.set("Cache-Control", "public, max-age=3600");
+      res.send(svgContent);
+    } else {
+      // PNG or JPG format using Sharp
+      const sharpInstance = sharp({
+        create: {
+          width: size,
+          height: size,
+          channels: 4,
+          background: canvasColor,
+        },
+      }).composite(compositeLayers);
+
+      let finalImage: Buffer;
+      let filename: string;
+      if (format === "jpg") {
+        finalImage = await sharpInstance.jpeg({ quality: 90 }).toBuffer();
+        res.set("Content-Type", "image/jpeg");
+        filename = `${username}-avatar.jpg`;
+      } else {
+        finalImage = await sharpInstance.png().toBuffer();
+        res.set("Content-Type", "image/png");
+        filename = `${username}-avatar.png`;
+      }
+
+      res.set("Content-Disposition", `attachment; filename="${filename}"`);
+      res.set("Cache-Control", "public, max-age=3600");
+      res.send(finalImage);
+    }
   } catch (error) {
     console.error("Error creating framed avatar:", error);
     if (axios.isAxiosError(error)) {
@@ -541,6 +601,74 @@ function generateRecommendations(analysis: any) {
 }
 
 /**
+ * GET /api/badge/:username
+ * Generates dynamic badge URLs for GitHub stats
+ */
+app.get("/api/badge/:username", async (req: Request, res: Response) => {
+  try {
+    const username = req.params.username;
+    const style = (req.query.style as string) || "flat";
+
+    // Validate username
+    if (!username || typeof username !== "string" || username.trim() === "") {
+      return res
+        .status(400)
+        .json({ error: "Bad Request", message: "Username is required." });
+    }
+
+    // Fetch GitHub user data
+    let userData;
+    try {
+      const userResponse = await axios.get(`https://api.github.com/users/${username}`, {
+        timeout: 10000,
+        headers: {
+          "User-Agent": "GitHub-Avatar-Frame-API/1.0.0",
+        },
+      });
+      userData = userResponse.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.status === 404) {
+        return res.status(404).json({ error: "User not found", message: "GitHub user does not exist." });
+      }
+      throw error;
+    }
+
+    // Generate badge URLs using shields.io
+    const baseUrl = "https://img.shields.io";
+    const badges = {
+      followers: `${baseUrl}/github/followers/${username}?style=${style}&label=Followers&color=blue`,
+      repos: `${baseUrl}/github/repos/${username}?style=${style}&label=Repos&color=green`,
+      stars: `${baseUrl}/github/stars/${username}?style=${style}&label=Stars&color=yellow`,
+      contributions: `${baseUrl}/github/commit-activity/m/${username}?style=${style}&label=Commits&color=orange`,
+      profile: `${baseUrl}/github/followers/${username}?style=${style}&label=Profile&color=purple&logo=github`,
+    };
+
+    // Also include current stats
+    const stats = {
+      followers: userData.followers,
+      public_repos: userData.public_repos,
+      // Note: stars and contributions require additional API calls, simplified here
+    };
+
+    res.json({
+      username,
+      badges,
+      stats,
+    });
+  } catch (error) {
+    console.error("Error generating badges:", error);
+    if (axios.isAxiosError(error)) {
+      if (error.code === "ECONNRESET" || error.code === "ETIMEDOUT") {
+        return res.status(503).json({
+          error: "Service temporarily unavailable. Please try again later.",
+        });
+      }
+    }
+    res.status(500).json({ error: "Internal Server Error during badge generation." });
+  }
+});
+
+/**
  * GET /api/themes
  * Lists all available themes + metadata
  */
@@ -611,5 +739,6 @@ app.listen(PORT, () => {
   console.log(`   GET /api/themes - List available themes`);
   console.log(`   GET /api/framed-avatar/:username - Generate framed avatar`);
   console.log(`   GET /api/smart-frame/:username - AI-powered smart frame suggestions`);
+  console.log(`   GET /api/badge/:username - Generate GitHub stats badges`);
   console.log(`   GET /api/health - Health check`);
 });
