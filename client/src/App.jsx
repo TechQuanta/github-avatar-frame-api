@@ -20,6 +20,10 @@ import {
   Moon,
   Users,
   X,
+  Share2,
+  Twitter,
+  Linkedin,
+  Award,
 } from "lucide-react";
 import ThemeSlider from "./components/ThemeSlider.jsx";
 
@@ -190,6 +194,185 @@ const CommunityModal = ({ isOpen, onClose, colors }) => {
   );
 };
 
+// --- Share Modal Component ---
+const ShareModal = ({ isOpen, onClose, colors, shareUrl, username }) => {
+  if (!isOpen) return null;
+
+  const shareText = `Check out my custom GitHub avatar frame for @${username}! Created with GitHub Avatar Frames.`;
+
+  const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`;
+
+  const linkedinUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`;
+
+  const copyLink = () => {
+    navigator.clipboard.writeText(shareUrl);
+    // Show toast notification
+    // Assuming showToastNotification is available in scope, but since it's inside component, need to pass or handle differently
+    // For now, just copy
+  };
+
+  return (
+    <div
+      style={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundColor: "rgba(0, 0, 0, 0.7)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        zIndex: 1000,
+        padding: "16px",
+        backdropFilter: "blur(5px)",
+      }}
+    >
+      <div
+        style={{
+          background: colors.bgCard,
+          borderRadius: "16px",
+          padding: "32px",
+          maxWidth: "450px",
+          width: "100%",
+          boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.5)",
+          position: "relative",
+          border: `1px solid ${colors.border}`,
+        }}
+      >
+        <button
+          onClick={onClose}
+          style={{
+            position: "absolute",
+            top: "12px",
+            right: "12px",
+            background: "transparent",
+            border: "none",
+            cursor: "pointer",
+            color: colors.textSecondary,
+            transition: "color 0.2s",
+          }}
+          onMouseEnter={(e) =>
+            (e.currentTarget.style.color = colors.textPrimary)
+          }
+          onMouseLeave={(e) =>
+            (e.currentTarget.style.color = colors.textSecondary)
+          }
+        >
+          <X size={24} />
+        </button>
+
+        <div style={{ textAlign: "center", marginBottom: "24px" }}>
+          <Share2
+            size={48}
+            color={colors.accentPrimary}
+            style={{ marginBottom: "12px" }}
+          />
+          <h3
+            style={{
+              fontSize: "24px",
+              fontWeight: "bold",
+              color: colors.textPrimary,
+              margin: 0,
+            }}
+          >
+            Share Your Avatar
+          </h3>
+        </div>
+
+        <p
+          style={{
+            color: colors.textSecondary,
+            textAlign: "center",
+            marginBottom: "32px",
+          }}
+        >
+          Share your custom GitHub avatar frame with the world!
+        </p>
+
+        <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+          <a
+            href={twitterUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={onClose}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "12px",
+              padding: "12px",
+              background: "#1da1f2",
+              color: "white",
+              borderRadius: "8px",
+              textDecoration: "none",
+              fontWeight: "600",
+              transition: "opacity 0.2s",
+            }}
+            onMouseEnter={(e) => (e.currentTarget.style.opacity = 0.9)}
+            onMouseLeave={(e) => (e.currentTarget.style.opacity = 1)}
+          >
+            <Twitter size={20} />
+            Share on Twitter
+          </a>
+          <a
+            href={linkedinUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={onClose}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "12px",
+              padding: "12px",
+              background: "#0077b5",
+              color: "white",
+              borderRadius: "8px",
+              textDecoration: "none",
+              fontWeight: "600",
+              transition: "opacity 0.2s",
+            }}
+            onMouseEnter={(e) => (e.currentTarget.style.opacity = 0.9)}
+            onMouseLeave={(e) => (e.currentTarget.style.opacity = 1)}
+          >
+            <Linkedin size={20} />
+            Share on LinkedIn
+          </a>
+          <button
+            onClick={() => {
+              copyLink();
+              onClose();
+            }}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "12px",
+              padding: "12px",
+              background: colors.bgCard,
+              border: `1px solid ${colors.border}`,
+              borderRadius: "8px",
+              color: colors.textPrimary,
+              fontWeight: "600",
+              cursor: "pointer",
+              transition: "all 0.2s",
+            }}
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.background = colors.accentPrimary) &&
+              (e.currentTarget.style.color = "white")
+            }
+            onMouseLeave={(e) =>
+              (e.currentTarget.style.background = colors.bgCard) &&
+              (e.currentTarget.style.color = colors.textPrimary)
+            }
+          >
+            <Copy size={20} />
+            Copy Link
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 // --- Main App Component ---
 function App() {
   useEffect(() => {
@@ -235,8 +418,17 @@ function App() {
   const [toastMessage, setToastMessage] = useState("");
   const [showToast, setShowToast] = useState(false);
 
+  // Sharing state
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+
   // System Theme State
   const [isDark, setIsDark] = useState(false);
+
+  // Badge Generator State
+  const [badgeLabel, setBadgeLabel] = useState("GitHub Avatar");
+  const [badgeColor, setBadgeColor] = useState("#7c3aed");
+  const [badgeStyle, setBadgeStyle] = useState("flat");
+  const [badgeCopied, setBadgeCopied] = useState(false);
 
   // Live Preview Canvas Ref
   const previewCanvasRef = useRef(null);
@@ -343,22 +535,22 @@ function App() {
 
   const copyApiUrl = () => {
     let apiUrl = `${API_BASE_URL}/api/framed-avatar/${username}?theme=${selectedTheme}&size=${size}&canvas=${canvas}&shape=${shape}&radius=${finalRadiusForDisplay}&style=${frameStyle}`;
-    
+
     // Add custom accent color if selected
     if (customAccentColor) {
       apiUrl += `&accentColor=${encodeURIComponent(customAccentColor)}`;
     }
-    
+
     // Add text parameters if provided
     if (text.trim()) {
       apiUrl += `&text=${encodeURIComponent(text)}&textColor=${encodeURIComponent(textColor)}&textSize=${textSize}&textPosition=${textPosition}`;
     }
-    
+
     // Add emoji parameters if provided
     if (emojis.trim()) {
       apiUrl += `&emojis=${encodeURIComponent(emojis)}&emojiSize=${emojiSize}&emojiPosition=${emojiPosition}`;
     }
-    
+
     try {
       // Use document.execCommand('copy') for better compatibility in iframe environments
       const tempInput = document.createElement("textarea");
@@ -372,6 +564,23 @@ function App() {
     } catch (err) {
       console.error("Failed to copy text: ", err);
       // Fallback message if copying fails
+    }
+  };
+
+  const copyBadgeMarkdown = () => {
+    const badgeMarkdown = `[![${badgeLabel}](https://img.shields.io/badge/${encodeURIComponent(badgeLabel)}-${badgeColor.replace('#', '')}?style=${badgeStyle})](${framedAvatarUrl})`;
+
+    try {
+      const tempInput = document.createElement("textarea");
+      tempInput.value = badgeMarkdown;
+      document.body.appendChild(tempInput);
+      tempInput.select();
+      document.execCommand("copy");
+      document.body.removeChild(tempInput);
+      setBadgeCopied(true);
+      setTimeout(() => setBadgeCopied(false), 2000);
+    } catch (err) {
+      console.error("Failed to copy badge markdown: ", err);
     }
   };
 
@@ -547,10 +756,12 @@ function App() {
       ctx.clearRect(0, 0, size, size);
 
       // Set canvas background
-      let bgColor = { r: 240, g: 240, b: 240, alpha: 1 }; // light default
-      if (canvas === "dark") bgColor = { r: 34, g: 34, b: 34, alpha: 1 };
-      ctx.fillStyle = `rgba(${bgColor.r}, ${bgColor.g}, ${bgColor.b}, ${bgColor.alpha})`;
-      ctx.fillRect(0, 0, size, size);
+      if (canvas !== "transparent") {
+        let bgColor = { r: 240, g: 240, b: 240, alpha: 1 }; // light default
+        if (canvas === "dark") bgColor = { r: 34, g: 34, b: 34, alpha: 1 };
+        ctx.fillStyle = `rgba(${bgColor.r}, ${bgColor.g}, ${bgColor.b}, ${bgColor.alpha})`;
+        ctx.fillRect(0, 0, size, size);
+      }
 
       // Fetch avatar
       let avatarImage;
@@ -1793,6 +2004,31 @@ function App() {
                         <Download size={18} />
                         Download
                       </button>
+                      <button
+                        onClick={() => setIsShareModalOpen(true)}
+                        style={{
+                          flex: 1,
+                          background:
+                            "linear-gradient(to right, #1d4ed8, #2563eb)",
+                          color: "white",
+                          padding: "12px",
+                          borderRadius: "8px",
+                          border: "none",
+                          fontWeight: "600",
+                          fontSize: "14px",
+                          cursor: "pointer",
+                          transition: "all 0.2s",
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          gap: "8px",
+                          boxShadow:
+                            "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1)",
+                        }}
+                      >
+                        <Share2 size={18} />
+                        Share
+                      </button>
                     </div>
 
                     {/* API URL Section (Monospace Font Applied Here) */}
@@ -1870,6 +2106,128 @@ function App() {
                           }
                           return apiUrl;
                         })()}
+                      </div>
+                    </div>
+
+                    {/* Badge Generator Section */}
+                    <div
+                      style={{
+                        padding: "16px",
+                        background: isDark ? "#334155" : "#f9fafb",
+                        borderRadius: "8px",
+                        border: `1px solid ${colors.border}`,
+                        marginTop: "16px",
+                      }}
+                    >
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "space-between",
+                          marginBottom: "8px",
+                        }}
+                      >
+                        <div
+                          style={{
+                            fontSize: "12px",
+                            fontWeight: "600",
+                            color: colors.textPrimary,
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "6px",
+                          }}
+                        >
+                          <Award size={16} />
+                          Badge Generator
+                        </div>
+                        <button
+                          onClick={copyBadgeMarkdown}
+                          style={{
+                            padding: "6px 12px",
+                            background: colors.bgCard,
+                            border: `1px solid ${colors.borderInput}`,
+                            borderRadius: "6px",
+                            color: colors.textPrimary,
+                            fontSize: "12px",
+                            fontWeight: "500",
+                            cursor: "pointer",
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "6px",
+                            transition: "all 0.1s",
+                          }}
+                        >
+                          {badgeCopied ? (
+                            <Check size={14} color="#16a34a" />
+                          ) : (
+                            <Copy size={14} color={colors.textPrimary} />
+                          )}
+                          {badgeCopied ? "Copied!" : "Copy Markdown"}
+                        </button>
+                      </div>
+                      <div style={{ display: "flex", gap: "12px", marginBottom: "12px" }}>
+                        <input
+                          type="text"
+                          placeholder="Badge label"
+                          value={badgeLabel}
+                          onChange={(e) => setBadgeLabel(e.target.value)}
+                          style={{
+                            flex: 1,
+                            padding: "8px 10px",
+                            borderRadius: "6px",
+                            border: `1px solid ${colors.borderInput}`,
+                            background: colors.bgInput,
+                            color: colors.textPrimary,
+                            fontSize: "12px",
+                            outline: "none",
+                          }}
+                        />
+                        <input
+                          type="color"
+                          value={badgeColor}
+                          onChange={(e) => setBadgeColor(e.target.value)}
+                          style={{
+                            width: "50px",
+                            height: "36px",
+                            borderRadius: "6px",
+                            border: `1px solid ${colors.borderInput}`,
+                            cursor: "pointer",
+                          }}
+                        />
+                        <select
+                          value={badgeStyle}
+                          onChange={(e) => setBadgeStyle(e.target.value)}
+                          style={{
+                            padding: "8px 10px",
+                            borderRadius: "6px",
+                            border: `1px solid ${colors.borderInput}`,
+                            background: colors.bgInput,
+                            color: colors.textPrimary,
+                            fontSize: "12px",
+                            outline: "none",
+                            cursor: "pointer",
+                          }}
+                        >
+                          <option value="flat">Flat</option>
+                          <option value="plastic">Plastic</option>
+                          <option value="flat-square">Flat Square</option>
+                          <option value="for-the-badge">For The Badge</option>
+                          <option value="social">Social</option>
+                        </select>
+                      </div>
+                      <div
+                        style={{
+                          fontSize: "11px",
+                          fontFamily: "monospace",
+                          color: colors.textSecondary,
+                          wordBreak: "break-all",
+                          background: colors.bgInput,
+                          padding: "10px",
+                          borderRadius: "6px",
+                          border: `1px solid ${colors.borderInput}`,
+                        }}
+                      >
+                        {`[![${badgeLabel}](https://img.shields.io/badge/${encodeURIComponent(badgeLabel)}-${badgeColor.replace('#', '')}?style=${badgeStyle})](${framedAvatarUrl})`}
                       </div>
                     </div>
                   </div>
@@ -1961,6 +2319,15 @@ function App() {
         isOpen={isCommunityModalOpen}
         onClose={() => setIsCommunityModalOpen(false)}
         colors={colors}
+      />
+
+      {/* Share Modal Injection */}
+      <ShareModal
+        isOpen={isShareModalOpen}
+        onClose={() => setIsShareModalOpen(false)}
+        colors={colors}
+        shareUrl={framedAvatarUrl}
+        username={username}
       />
 
       {/* Toast Notification */}

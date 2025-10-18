@@ -601,6 +601,74 @@ function generateRecommendations(analysis: any) {
 }
 
 /**
+ * GET /api/badge/:username
+ * Generates dynamic badge URLs for GitHub stats
+ */
+app.get("/api/badge/:username", async (req: Request, res: Response) => {
+  try {
+    const username = req.params.username;
+    const style = (req.query.style as string) || "flat";
+
+    // Validate username
+    if (!username || typeof username !== "string" || username.trim() === "") {
+      return res
+        .status(400)
+        .json({ error: "Bad Request", message: "Username is required." });
+    }
+
+    // Fetch GitHub user data
+    let userData;
+    try {
+      const userResponse = await axios.get(`https://api.github.com/users/${username}`, {
+        timeout: 10000,
+        headers: {
+          "User-Agent": "GitHub-Avatar-Frame-API/1.0.0",
+        },
+      });
+      userData = userResponse.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.status === 404) {
+        return res.status(404).json({ error: "User not found", message: "GitHub user does not exist." });
+      }
+      throw error;
+    }
+
+    // Generate badge URLs using shields.io
+    const baseUrl = "https://img.shields.io";
+    const badges = {
+      followers: `${baseUrl}/github/followers/${username}?style=${style}&label=Followers&color=blue`,
+      repos: `${baseUrl}/github/repos/${username}?style=${style}&label=Repos&color=green`,
+      stars: `${baseUrl}/github/stars/${username}?style=${style}&label=Stars&color=yellow`,
+      contributions: `${baseUrl}/github/commit-activity/m/${username}?style=${style}&label=Commits&color=orange`,
+      profile: `${baseUrl}/github/followers/${username}?style=${style}&label=Profile&color=purple&logo=github`,
+    };
+
+    // Also include current stats
+    const stats = {
+      followers: userData.followers,
+      public_repos: userData.public_repos,
+      // Note: stars and contributions require additional API calls, simplified here
+    };
+
+    res.json({
+      username,
+      badges,
+      stats,
+    });
+  } catch (error) {
+    console.error("Error generating badges:", error);
+    if (axios.isAxiosError(error)) {
+      if (error.code === "ECONNRESET" || error.code === "ETIMEDOUT") {
+        return res.status(503).json({
+          error: "Service temporarily unavailable. Please try again later.",
+        });
+      }
+    }
+    res.status(500).json({ error: "Internal Server Error during badge generation." });
+  }
+});
+
+/**
  * GET /api/themes
  * Lists all available themes + metadata
  */
@@ -671,5 +739,6 @@ app.listen(PORT, () => {
   console.log(`   GET /api/themes - List available themes`);
   console.log(`   GET /api/framed-avatar/:username - Generate framed avatar`);
   console.log(`   GET /api/smart-frame/:username - AI-powered smart frame suggestions`);
+  console.log(`   GET /api/badge/:username - Generate GitHub stats badges`);
   console.log(`   GET /api/health - Health check`);
 });
