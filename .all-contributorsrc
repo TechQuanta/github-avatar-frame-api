@@ -185,6 +185,18 @@
         "code",
         "infra"
       ]
+    },
+    {
+      "login": "code-w-arsh",
+      "name": "Arsh Choudhary",
+      "avatar_url": "https://avatars.githubusercontent.com/u/71726849?v=4",
+      "profile": "https://arshfs.tech",
+      "contributions": [
+        "maintenance",
+        "infra",
+        "code",
+        "ideas"
+      ]
     }
   ],
   "commitConvention": "angular",
