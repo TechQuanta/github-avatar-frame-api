@@ -920,84 +920,100 @@ function App() {
               </h2>
             </div>
 
-            {/* Username Input (Monospace Font Applied Here) */}
+            {/* Search Bar and Theme Selector Container */}
             <div
+              className="search-theme-container"
               style={{
-                marginBottom: "24px",
                 display: "flex",
-                flexDirection: "column",
-                gap: "8px",
+                gap: "24px",
+                alignItems: "flex-start",
+                flexWrap: "wrap",
+                marginBottom: "8px",
               }}
             >
-              <label
-                style={{
-                  fontSize: "14px",
-                  fontWeight: "600",
-                  color: colors.textPrimary,
-                }}
-              >
-                GitHub Username
-              </label>
+              {/* Username Input (Monospace Font Applied Here) */}
               <div
                 style={{
-                  position: "relative",
+                  flex: 1,
+                  minWidth: "200px",
                   display: "flex",
-                  alignItems: "center",
+                  flexDirection: "column",
+                  gap: "8px",
                 }}
               >
-                <input
-                  type="text"
-                  value={username}
-                  onChange={handleUsernameChange}
-                  placeholder="Enter username (e.g., torvalds)"
+                <label
                   style={{
-                    width: "100%",
-                    padding: "12px 16px",
-                    fontSize: "16px",
-                    border: `1px solid ${colors.borderInput}`,
-                    borderRadius: "8px",
-                    outline: "none",
-                    transition: "all 0.2s",
+                    fontSize: "14px",
+                    fontWeight: "600",
                     color: colors.textPrimary,
-                    background: colors.bgInput,
-                    boxSizing: "border-box",
-                    fontFamily: "monospace", // Applied monospace font
                   }}
-                />
-                <Github
-                  size={20}
-                  color={colors.textSecondary}
+                >
+                  GitHub Username
+                </label>
+                <div
                   style={{
-                    position: "absolute",
-                    left: "14px",
-                    top: "50%",
-                    transform: "translateY(-50%)",
-                    pointerEvents: "none",
+                    position: "relative",
+                    display: "flex",
+                    alignItems: "center",
                   }}
-                  onFocus={(e) => {
-                    e.target.style.borderColor = colors.accentPrimary;
-                    e.target.style.boxShadow = `0 0 0 2px ${colors.accentPrimary}33`;
-                  }}
-                  onBlur={(e) => {
-                    e.target.style.borderColor = colors.borderInput;
-                    e.target.style.boxShadow = "none";
-                  }}
+                >
+                  <input
+                    type="text"
+                    value={username}
+                    onChange={handleUsernameChange}
+                    placeholder="Enter username (e.g., torvalds)"
+                    style={{
+                      maxWidth: "300px",
+                      width: "100%",
+                      padding: "12px 16px",
+                      fontSize: "16px",
+                      border: `1px solid ${colors.borderInput}`,
+                      borderRadius: "8px",
+                      outline: "none",
+                      transition: "all 0.2s",
+                      color: colors.textPrimary,
+                      background: colors.bgInput,
+                      boxSizing: "border-box",
+                      fontFamily: "monospace", // Applied monospace font
+                    }}
+                  />
+                  <Github
+                    size={20}
+                    color={colors.textSecondary}
+                    style={{
+                      position: "absolute",
+                      left: "14px",
+                      top: "50%",
+                      transform: "translateY(-50%)",
+                      pointerEvents: "none",
+                    }}
+                    onFocus={(e) => {
+                      e.target.style.borderColor = colors.accentPrimary;
+                      e.target.style.boxShadow = `0 0 0 2px ${colors.accentPrimary}33`;
+                    }}
+                    onBlur={(e) => {
+                      e.target.style.borderColor = colors.borderInput;
+                      e.target.style.boxShadow = "none";
+                    }}
+                  />
+                </div>
+              </div>
+
+              {/* Theme Selection Slider */}
+              <div style={{ flex: 1, minWidth: "250px" }}>
+                <ThemeSlider
+                  themes={themes}
+                  themesLoading={themesLoading}
+                  selectedTheme={selectedTheme}
+                  handleThemeSelect={handleThemeSelect}
+                  colors={colors}
+                  isDark={isDark}
                 />
               </div>
             </div>
 
-            {/* Theme Selection Slider */}
-            <ThemeSlider
-            themes={themes}
-            themesLoading={themesLoading}
-            selectedTheme={selectedTheme}
-            handleThemeSelect={handleThemeSelect}
-            colors={colors}
-            isDark={isDark}
-            />
-
             {/* Custom Color Picker and Random Theme Generator */}
-            <div style={{ marginBottom: "24px" }}>
+            <div style={{ marginBottom: "16px" }}>
               <label
                 style={{
                   display: "block",
@@ -1200,105 +1216,11 @@ function App() {
         </div>
       </div>
   </div>
-    
-            {/* Frame Style Control Group(Border Focus) */}
-            <div
-              style={{
-                marginBottom: "24px",
-                transition: "all 0.3s",
-                cursor: "pointer",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.05)";
-                e.currentTarget.style.borderRadius = "8px";
-                e.currentTarget.style.padding = "8px";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = "transparent";
-                e.currentTarget.style.borderRadius = "0";
-                e.currentTarget.style.padding = "0";
-              }}>
-              <label
-                style={{
-                  display: "block",
-                  fontSize: "14px",
-                  fontWeight: "600",
-                  color: colors.textPrimary,
-                  marginBottom: "8px",
-                }}>
-                Frame Style (Param : `style`)
-              </label>
-                <div style={{maxWidth: "fit-content"}}>
-                <div 
-                  className='control-button-set'
-                  style={{display: "flex", gap: "12px"}}>
-                    <ControlButton
-                    onClick={() => setFrameStyle("default")}
-                    isSelected={frameStyle === "default"}
-                    isDark={isDark}>
-                      Default
-                  </ControlButton>
-                  <ControlButton
-                    onClick={() => setFrameStyle("border-focus")}
-                    isSelected={frameStyle === "border-focus"}
-                    isDark={isDark}>
-                    Border Focus
-                  </ControlButton>
-                  </div>
-            </div>
-            </div>
-            {/* Frame Style Control Group(Border Focus) */}
-            <div style={{ marginBottom: "24px" }}>
-              <label
-                style={{
-                  display: "block",
-                  fontSize: "14px",
-                  fontWeight: "600",
-                  color: colors.textPrimary,
-                  marginBottom: "8px",
-                }}
-              >
-                Frame Style (Param : `style`)
-              </label>
-              <div style={{ maxWidth: "fit-content" }}>
-                <div
-                  className="control-button-set"
-                  style={{ display: "flex", gap: "12px" }}
-                >
-                  <ControlButton
-                    onClick={() => setFrameStyle("default")}
-                    isSelected={frameStyle === "default"}
-                    isDark={isDark}
-                  >
-                    Default
-                  </ControlButton>
-                  <ControlButton
-                    onClick={() => setFrameStyle("border-focus")}
-                    isSelected={frameStyle === "border-focus"}
-                    isDark={isDark}
-                  >
-                    Border Focus
-                  </ControlButton>
-                </div>
-              </div>
-            </div>
 
             {/* Size Slider */}
             <div
               style={{
                 marginBottom: "24px",
-                transition: "all 0.3s",
-                cursor: "pointer",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.05)";
-                e.currentTarget.style.borderRadius = "8px";
-                e.currentTarget.style.padding = "8px";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = "transparent";
-                e.currentTarget.style.borderRadius = "0";
-                e.currentTarget.style.padding = "0";
               }}>
               <label
                 style={{
@@ -1341,18 +1263,6 @@ function App() {
               <div
                 style={{
                   marginBottom: "24px",
-                  transition: "all 0.3s",
-                  cursor: "pointer",
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.background = isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.05)";
-                  e.currentTarget.style.borderRadius = "8px";
-                  e.currentTarget.style.padding = "8px";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = "transparent";
-                  e.currentTarget.style.borderRadius = "0";
-                  e.currentTarget.style.padding = "0";
                 }}>
                 <label
                   style={{
@@ -2047,10 +1957,10 @@ function App() {
 
 
         /* --- RESPONSIVE LAYOUT RULES --- */
-        
+
         /* Default: Mobile-First Single Column */
         .main-grid-container {
-            grid-template-columns: 1fr; 
+            grid-template-columns: 1fr;
         }
 
         @media (max-width: 768px) {
@@ -2067,7 +1977,7 @@ function App() {
                 width: 100%;
             }
             .community-button {
-                order: 2 !important; 
+                order: 2 !important;
                 width: 100%;
                 margin-left: 0 !important;
             }
@@ -2076,7 +1986,18 @@ function App() {
             .main-title {
                 font-size: 36px !important;
             }
-            
+
+            /* Search Theme Container: Stack vertically on mobile */
+            .search-theme-container {
+                flex-direction: column !important;
+                gap: 16px !important;
+            }
+            .search-theme-container > div {
+                flex: none !important;
+                width: 100% !important;
+                min-width: 0 !important;
+            }
+
             /* Control Group (Canvas/Shape) : Force stacking columns */
             .control-group {
                 flex-direction: column;
@@ -2085,13 +2006,13 @@ function App() {
             }
             /* IMPORTANT: Ensure sub-flex containers (the button sets) can wrap if content is too wide */
             .control-button-set {
-                flex-wrap: wrap; 
+                flex-wrap: wrap;
             }
             /* IMPORTANT: Ensure the two sub-columns take full width */
             .control-group > div {
                 width: 100%;
             }
-            
+
         }
       `}</style>
       {/* Community Modal */}
