@@ -197,6 +197,16 @@
         "code",
         "ideas"
       ]
+    },
+    {
+      "login": "Akshayaqueen",
+      "name": "B AKSHAYA",
+      "avatar_url": "https://avatars.githubusercontent.com/u/170915685?v=4",
+      "profile": "https://github.com/Akshayaqueen",
+      "contributions": [
+        "code",
+        "infra"
+      ]
     }
   ],
   "commitConvention": "angular",
