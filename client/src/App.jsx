@@ -962,46 +962,84 @@ function App() {
             </p>
           </div>
 
-          {/* Open Community Button (Top Right) */}
-          <button data-aos="fade-right"
-            onClick={() => setIsCommunityModalOpen(true)}
-            className="community-button"
-            style={{
-              padding: "10px 20px",
-              borderRadius: "8px",
-              background: isDark ? "#374151" : "#f0f4f8",
-              border: `2px solid ${
-                isDark ? colors.accentDark : colors.accentPrimary
-              }`,
-              color: isDark ? colors.accentDark : colors.accentPrimary,
-              fontWeight: "800",
-              fontSize: "14px",
-              cursor: "pointer",
-              transition: "all 0.3s",
-              display: "flex",
-              alignItems: "center",
-              gap: "8px",
-              boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
-              marginLeft: "auto",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = isDark
-                ? "#475569"
-                : colors.accentPrimary;
-              e.currentTarget.style.color = isDark ? "white" : "white";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = isDark ? "#374151" : "#f0f4f8";
-              e.currentTarget.style.color = isDark
-                ? colors.accentDark
-                : colors.accentPrimary;
-            }}
-          >
-            <Users size={20} />
-            <span style={{ fontFamily: "Times New Roman, serif" }}>
-              Open Community
-            </span>
-          </button>
+          {/* API Docs and Community Buttons */}
+          <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
+            <button data-aos="fade-right"
+              onClick={() => setIsCommunityModalOpen(true)}
+              className="community-button"
+              style={{
+                padding: "10px 20px",
+                borderRadius: "8px",
+                background: isDark ? "#374151" : "#f0f4f8",
+                border: `2px solid ${
+                  isDark ? colors.accentDark : colors.accentPrimary
+                }`,
+                color: isDark ? colors.accentDark : colors.accentPrimary,
+                fontWeight: "800",
+                fontSize: "14px",
+                cursor: "pointer",
+                transition: "all 0.3s",
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+                boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = isDark
+                  ? "#475569"
+                  : colors.accentPrimary;
+                e.currentTarget.style.color = isDark ? "white" : "white";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = isDark ? "#374151" : "#f0f4f8";
+                e.currentTarget.style.color = isDark
+                  ? colors.accentDark
+                  : colors.accentPrimary;
+              }}
+            >
+              <Users size={20} />
+              <span style={{ fontFamily: "Times New Roman, serif" }}>
+                Open Community
+              </span>
+            </button>
+            <a
+              href={`${API_BASE_URL}/api-docs`}
+              target="_blank"
+              rel="noopener noreferrer"
+              data-aos="fade-right"
+              style={{
+                padding: "10px 20px",
+                borderRadius: "8px",
+                background: isDark ? "#374151" : "#f0f4f8",
+                border: `2px solid ${
+                  isDark ? colors.accentDark : colors.accentPrimary
+                }`,
+                color: isDark ? colors.accentDark : colors.accentPrimary,
+                fontWeight: "800",
+                fontSize: "14px",
+                textDecoration: "none",
+                transition: "all 0.3s",
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+                boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = isDark
+                  ? "#475569"
+                  : colors.accentPrimary;
+                e.currentTarget.style.color = isDark ? "white" : "white";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = isDark ? "#374151" : "#f0f4f8";
+                e.currentTarget.style.color = isDark
+                  ? colors.accentDark
+                  : colors.accentPrimary;
+              }}
+            >
+              📖 API Docs
+            </a>
+          </div>
         </div>
 
         {/* --- 2. Progress Steps --- */}
@@ -2435,22 +2473,22 @@ function App() {
         }
 
         @media (max-width: 768px) {
-            /* Header and Button Layout: Stack title and community button */
+            /* Header and Button Layout: Keep title and community button on same row */
             .header-container {
-                flex-direction: column;
-                align-items: center !important;
-                gap: 24px !important;
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+                gap: 16px;
                 width: 100%;
                 max-width: 100%;
             }
             .header-container > div:first-child {
-                order: 1 !important;
-                width: 100%;
+                flex-grow: 1;
+                text-align: center;
+                min-width: 200px;
             }
             .community-button {
-                order: 2 !important;
-                width: 100%;
-                margin-left: 0 !important;
+                flex-shrink: 0;
             }
 
             /* Title Size Reduction for Mobile */

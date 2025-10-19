@@ -7,10 +7,354 @@ import cors from "cors";
 import path from "path";
 import fs from "fs";
 import { fileURLToPath } from "url";
+import swaggerJsdoc from "swagger-jsdoc";
+import swaggerUi from "swagger-ui-express";
 
 const app = express();
 
 app.use(cors());
+
+// Swagger configuration
+const swaggerOptions = {
+  swaggerDefinition: {
+    openapi: "3.0.0",
+    info: {
+      title: "GitHub Avatar Frame API",
+      version: "1.0.0",
+      description: "Use this API to generate custom framed GitHub avatars with different themes and styles.",
+    },
+    servers: [
+      {
+        url: "http://localhost:3000",
+        description: "Development server",
+      },
+      {
+        url: "https://github-avatar-frame-api.vercel.app",
+        description: "Production server",
+      },
+    ],
+    components: {
+      schemas: {
+        Error: {
+          type: "object",
+          properties: {
+            error: {
+              type: "string",
+              description: "Error type"
+            },
+            message: {
+              type: "string",
+              description: "Error message"
+            }
+          }
+        },
+        Theme: {
+          type: "object",
+          properties: {
+            theme: {
+              type: "string",
+              description: "Theme identifier"
+            },
+            name: {
+              type: "string",
+              description: "Display name of the theme"
+            },
+            description: {
+              type: "string",
+              description: "Description of the theme"
+            }
+          }
+        },
+        BadgeResponse: {
+          type: "object",
+          properties: {
+            username: {
+              type: "string",
+              description: "GitHub username"
+            },
+            badges: {
+              type: "object",
+              properties: {
+                followers: {
+                  type: "string",
+                  description: "Followers badge URL"
+                },
+                repos: {
+                  type: "string",
+                  description: "Repositories badge URL"
+                },
+                stars: {
+                  type: "string",
+                  description: "Stars badge URL"
+                },
+                contributions: {
+                  type: "string",
+                  description: "Contributions badge URL"
+                },
+                profile: {
+                  type: "string",
+                  description: "Profile badge URL"
+                }
+              }
+            },
+            stats: {
+              type: "object",
+              properties: {
+                followers: {
+                  type: "integer",
+                  description: "Number of followers"
+                },
+                public_repos: {
+                  type: "integer",
+                  description: "Number of public repositories"
+                }
+              }
+            }
+          }
+        },
+        SmartFrameResponse: {
+          type: "object",
+          properties: {
+            username: {
+              type: "string",
+              description: "GitHub username"
+            },
+            recommendedFrame: {
+              type: "string",
+              description: "Recommended frame theme"
+            },
+            accentColor: {
+              type: "string",
+              description: "Recommended accent color (hex)"
+            },
+            emojis: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "Recommended emojis"
+            },
+            previewURL: {
+              type: "string",
+              description: "Preview URL for the recommended frame"
+            }
+          }
+        },
+        HealthResponse: {
+          type: "object",
+          properties: {
+            status: {
+              type: "string",
+              example: "ok"
+            },
+            timestamp: {
+              type: "string",
+              format: "date-time",
+              example: "2024-01-01T00:00:00.000Z"
+            }
+          }
+        }
+      },
+      parameters: {
+        Username: {
+          name: "username",
+          in: "path",
+          required: true,
+          schema: {
+            type: "string"
+          },
+          description: "GitHub username",
+          example: "octocat"
+        },
+        Theme: {
+          name: "theme",
+          in: "query",
+          schema: {
+            type: "string",
+            default: "base"
+          },
+          description: "Frame theme to apply",
+          example: "galaxy"
+        },
+        Size: {
+          name: "size",
+          in: "query",
+          schema: {
+            type: "integer",
+            minimum: 64,
+            maximum: 1024,
+            default: 256
+          },
+          description: "Image size in pixels (64-1024)",
+          example: 300
+        },
+        Shape: {
+          name: "shape",
+          in: "query",
+          schema: {
+            type: "string",
+            enum: ["circle", "rounded", "rect"],
+            default: "circle"
+          },
+          description: "Avatar shape",
+          example: "circle"
+        },
+        Canvas: {
+          name: "canvas",
+          in: "query",
+          schema: {
+            type: "string",
+            enum: ["light", "dark", "transparent"],
+            default: "light"
+          },
+          description: "Background canvas color",
+          example: "light"
+        },
+        AccentColor: {
+          name: "accentColor",
+          in: "query",
+          schema: {
+            type: "string",
+            pattern: "^#[0-9A-Fa-f]{6}$"
+          },
+          description: "Custom accent color in hex format (e.g., #FF5733)",
+          example: "#FF5733"
+        },
+        Text: {
+          name: "text",
+          in: "query",
+          schema: {
+            type: "string"
+          },
+          description: "Custom text to overlay on the avatar",
+          example: "Darshan Parmar"
+        },
+        TextColor: {
+          name: "textColor",
+          in: "query",
+          schema: {
+            type: "string",
+            default: "#ffffff"
+          },
+          description: "Text color in hex or keyword",
+          example: "#ffffff"
+        },
+        TextSize: {
+          name: "textSize",
+          in: "query",
+          schema: {
+            type: "integer",
+            minimum: 8,
+            maximum: 100,
+            default: 20
+          },
+          description: "Text size in pixels",
+          example: 24
+        },
+        TextPosition: {
+          name: "textPosition",
+          in: "query",
+          schema: {
+            type: "string",
+            enum: ["top", "bottom", "center"],
+            default: "bottom"
+          },
+          description: "Text position on the avatar",
+          example: "bottom"
+        },
+        Emojis: {
+          name: "emojis",
+          in: "query",
+          schema: {
+            type: "string"
+          },
+          description: "Comma-separated list of emojis",
+          example: "🚀,💻,🔥"
+        },
+        EmojiSize: {
+          name: "emojiSize",
+          in: "query",
+          schema: {
+            type: "integer",
+            minimum: 16,
+            maximum: 120,
+            default: 40
+          },
+          description: "Emoji size in pixels",
+          example: 48
+        },
+        EmojiPosition: {
+          name: "emojiPosition",
+          in: "query",
+          schema: {
+            type: "string",
+            enum: ["top", "bottom", "corners"],
+            default: "top"
+          },
+          description: "Emoji position on the avatar",
+          example: "top"
+        },
+        Format: {
+          name: "format",
+          in: "query",
+          schema: {
+            type: "string",
+            enum: ["png", "jpg", "svg"],
+            default: "png"
+          },
+          description: "Output image format",
+          example: "png"
+        },
+        BadgeStyle: {
+          name: "style",
+          in: "query",
+          schema: {
+            type: "string",
+            default: "flat"
+          },
+          description: "Badge style for shields.io",
+          example: "flat"
+        }
+      }
+    }
+  },
+  apis: ["./api/server.ts"], // Path to the API docs
+};
+
+const swaggerSpec = swaggerJsdoc(swaggerOptions);
+
+// Serve Swagger UI
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
+  customCss: `
+    .swagger-ui .topbar { display: none; }
+    .swagger-ui .info .title { color: #3b4151; }
+    .swagger-ui .top-left-button {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      z-index: 1000;
+      background: #007bff;
+      color: white;
+      padding: 8px 16px;
+      text-decoration: none;
+      border-radius: 4px;
+      font-weight: bold;
+      font-size: 14px;
+    }
+    .swagger-ui .top-left-button:hover {
+      background: #0056b3;
+    }
+  `,
+  customJs: `
+    window.addEventListener('load', function() {
+      var button = document.createElement('a');
+      button.className = 'top-left-button';
+      button.href = '/';
+      button.textContent = 'Back to Home';
+      document.body.appendChild(button);
+    });
+  `
+}));
 
 
 // Use environment PORT for hosting environments like Render, default to 3000 for local dev
@@ -119,24 +463,91 @@ async function createEmojiOverlay(emojis: string, emojiSize: number, emojiPositi
   return Buffer.from(svg);
 }
 /**
- * GET /api/framed-avatar/:username
- * Example: /api/framed-avatar/octocat?theme=base&size=256&accentColor=%23ff6b6b&format=png
- * Parameters:
- * - username: GitHub username (required)
- * - theme: Frame theme (default: "base")
- * - size: Image size 64-1024 (default: 256)
- * - shape: "circle", "rounded", or "rect" (default: "circle")
- * - radius: Corner radius for rounded/rect shapes
- * - canvas: "light", "dark", or "transparent" (default: "light")
- * - accentColor: Custom color for frame tinting (hex format, e.g., "#ff6b6b")
- * - text: Custom text to display (e.g., "Darshan Parmar")
- * - textColor: Color of text in HEX or keyword (default: #ffffff)
- * - textSize: Size of text in pixels (default: 20)
- * - textPosition: Position of text — top | bottom | center (default: bottom)
- * - emojis: Comma-separated list of emojis (e.g., 🚀,💻,🔥)
- * - emojiSize: Size of emojis in pixels (default: 40)
- * - emojiPosition: Position of emojis — top | bottom | corners (default: top)
- * - format: Output format — png | jpg | svg (default: png)
+ * @swagger
+ * /api/framed-avatar/{username}:
+ *   get:
+ *     summary: Generate a framed GitHub avatar with custom styling
+ *     description: Creates a custom framed avatar by combining a GitHub profile picture with decorative frames, text overlays, emojis, and various styling options.
+ *     tags:
+ *       - Avatar Generation
+ *     parameters:
+ *       - $ref: '#/components/parameters/Username'
+ *       - $ref: '#/components/parameters/Theme'
+ *       - $ref: '#/components/parameters/Size'
+ *       - $ref: '#/components/parameters/Shape'
+ *       - name: radius
+ *         in: query
+ *         schema:
+ *           type: integer
+ *           minimum: 0
+ *           maximum: 512
+ *         description: Corner radius for rounded/rect shapes (auto-calculated if not provided)
+ *         example: 32
+ *       - $ref: '#/components/parameters/Canvas'
+ *       - $ref: '#/components/parameters/AccentColor'
+ *       - $ref: '#/components/parameters/Text'
+ *       - $ref: '#/components/parameters/TextColor'
+ *       - $ref: '#/components/parameters/TextSize'
+ *       - $ref: '#/components/parameters/TextPosition'
+ *       - $ref: '#/components/parameters/Emojis'
+ *       - $ref: '#/components/parameters/EmojiSize'
+ *       - $ref: '#/components/parameters/EmojiPosition'
+ *       - $ref: '#/components/parameters/Format'
+ *     responses:
+ *       200:
+ *         description: Successfully generated framed avatar
+ *         content:
+ *           image/png:
+ *             schema:
+ *               type: string
+ *               format: binary
+ *           image/jpeg:
+ *             schema:
+ *               type: string
+ *               format: binary
+ *           image/svg+xml:
+ *             schema:
+ *               type: string
+ *               format: binary
+ *       400:
+ *         description: Bad request - invalid parameters
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *             example:
+ *               error: "Bad Request"
+ *               message: "Username is required."
+ *       404:
+ *         description: User or theme not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *             examples:
+ *               userNotFound:
+ *                 value:
+ *                   error: "User not found"
+ *                   message: "The GitHub user does not exist. Please check the spelling and try again."
+ *               themeNotFound:
+ *                 value:
+ *                   error: "Theme 'invalid-theme' not found."
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *     examples:
+ *       - summary: Basic framed avatar
+ *         description: Generate a basic framed avatar with default settings
+ *         value: "/api/framed-avatar/octocat"
+ *       - summary: Custom styled avatar
+ *         description: Generate avatar with custom theme, size, and text overlay
+ *         value: "/api/framed-avatar/octocat?theme=galaxy&size=300&text=Hello%20World&textColor=%23ffffff&format=png"
+ *       - summary: Avatar with emojis
+ *         description: Generate avatar with emoji decorations
+ *         value: "/api/framed-avatar/octocat?theme=neon&emojis=🚀,💻,🔥&emojiPosition=top&accentColor=%23FF5733"
  */
 app.get("/api/framed-avatar/:username", async (req: Request, res: Response) => {
   try {
@@ -441,8 +852,63 @@ app.get("/api/framed-avatar/:username", async (req: Request, res: Response) => {
 });
 
 /**
- * GET /api/smart-frame/:username
- * AI-powered smart frame suggestions based on GitHub profile analysis
+ * @swagger
+ * /api/smart-frame/{username}:
+ *   get:
+ *     summary: Get AI-powered smart frame recommendations
+ *     description: Analyzes a GitHub user's profile and repositories to provide personalized frame, color, and emoji recommendations for their avatar.
+ *     tags:
+ *       - Smart Recommendations
+ *     parameters:
+ *       - $ref: '#/components/parameters/Username'
+ *     responses:
+ *       200:
+ *         description: Successfully generated smart frame recommendations
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/SmartFrameResponse'
+ *             example:
+ *               username: "octocat"
+ *               recommendedFrame: "tech-minimal"
+ *               accentColor: "#61DAFB"
+ *               emojis: ["💻", "🚀"]
+ *               previewURL: "https://github-avatar-frame-api.onrender.com/api/framed-avatar/octocat?accentColor=%2361DAFB&theme=tech-minimal&emojis=%F0%9F%92%BB%2C%F0%9F%9A%80"
+ *       400:
+ *         description: Bad request - invalid username
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *             example:
+ *               error: "Bad Request"
+ *               message: "Username is required."
+ *       404:
+ *         description: GitHub user not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *             example:
+ *               error: "User not found"
+ *               message: "GitHub user does not exist."
+ *       500:
+ *         description: Internal server error during analysis
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *             example:
+ *               error: "Internal Server Error"
+ *               message: "Internal Server Error during analysis."
+ *       503:
+ *         description: Service temporarily unavailable
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *             example:
+ *               error: "Service temporarily unavailable. Please try again later."
  */
 app.get("/api/smart-frame/:username", async (req: Request, res: Response) => {
   try {
