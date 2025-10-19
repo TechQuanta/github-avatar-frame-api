@@ -1236,11 +1236,11 @@ function App() {
                 }}
               >
                 <label
+                  htmlFor="username-input"
                   style={{
                     width: "100%",
-                    fontsize: "14px",
+                    fontSize: "14px",
                     fontWeight: "600",
-
                     color: colors.textPrimary,
                   }}
                 >
@@ -1253,26 +1253,44 @@ function App() {
                     alignItems: "center",
                   }}
                 >
-                  <input
-                    type="text"
-                    value={username}
-                    onChange={handleUsernameChange}
-                    placeholder="Enter username (e.g., torvalds)"
-                    style={{
-                      maxWidth: "300px",
-                      width: "100%",
-                      padding: "12px 16px 12px 48px",
-                      fontSize: "16px",
-                      border: `1px solid ${colors.borderInput}`,
-                      borderRadius: "8px",
-                      outline: "none",
-                      transition: "all 0.2s",
-                      color: colors.textPrimary,
-                      background: colors.bgInput,
-                      boxSizing: "border-box",
-                      fontFamily: "monospace", // Applied monospace font
-                    }}
-                  />
+                <input
+                  id="username-input"
+                  type="text"
+                  value={username}
+                  onChange={handleUsernameChange}
+                  placeholder="Enter username (e.g., torvalds)"
+                  aria-describedby="username-help"
+                  style={{
+                    maxWidth: "300px",
+                    width: "100%",
+                    padding: "12px 16px 12px 48px",
+                    fontSize: "16px",
+                    border: `1px solid ${colors.borderInput}`,
+                    borderRadius: "8px",
+                    outline: "none",
+                    transition: "all 0.2s",
+                    color: colors.textPrimary,
+                    background: colors.bgInput,
+                    boxSizing: "border-box",
+                    fontFamily: "monospace", // Applied monospace font
+                  }}
+                  onFocus={(e) => {
+                    e.target.style.borderColor = colors.accentPrimary;
+                    e.target.style.boxShadow = `0 0 0 2px ${colors.accentPrimary}33`;
+                  }}
+                  onBlur={(e) => {
+                    e.target.style.borderColor = colors.borderInput;
+                    e.target.style.boxShadow = "none";
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault();
+                      if (username.trim()) {
+                        generateFramedAvatar();
+                      }
+                    }
+                  }}
+                />
                   <Github
                     size={20}
                     color={colors.textSecondary}
@@ -1283,15 +1301,10 @@ function App() {
                       transform: "translateY(-50%)",
                       pointerEvents: "none",
                     }}
-                    onFocus={(e) => {
-                      e.target.style.borderColor = colors.accentPrimary;
-                      e.target.style.boxShadow = `0 0 0 2px ${colors.accentPrimary}33`;
-                    }}
-                    onBlur={(e) => {
-                      e.target.style.borderColor = colors.borderInput;
-                      e.target.style.boxShadow = "none";
-                    }}
                   />
+                </div>
+                <div id="username-help" style={{ display: "none" }}>
+                  Enter your GitHub username to generate a framed avatar. Press Enter to generate if a username is entered.
                 </div>
               </div>
 

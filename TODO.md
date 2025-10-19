@@ -1,26 +1,12 @@
-# API Documentation Enhancement Tasks
+# TODO: Add ARIA Labels and Keyboard Navigation Support
 
-## Phase 1: Swagger Configuration Enhancement
-- [ ] Update swaggerOptions with comprehensive OpenAPI 3.0 definitions
-- [ ] Add components section with reusable schemas and parameters
-- [ ] Define response schemas for all endpoints
-- [ ] Add security definitions if needed
+## Overview
+Add ARIA labels, focus indicators, and keyboard navigation support to interactive elements in the GitHub Avatar Frame website.
 
-## Phase 2: Endpoint Documentation
-- [ ] Convert /api/framed-avatar JSDoc to detailed @swagger annotations
-- [ ] Add comprehensive documentation for /api/smart-frame endpoint
-- [ ] Add detailed documentation for /api/badge endpoint
-- [ ] Add documentation for /api/themes endpoint
-- [ ] Add documentation for /api/health endpoint
-
-## Phase 3: Custom Theming & UI
-- [ ] Add custom CSS for consistent theming with app colors
-- [ ] Add custom HTML for page title and footer
-- [ ] Add "Back to Home" button functionality
-- [ ] Ensure responsive design
-
-## Phase 4: Testing & Validation
-- [ ] Test all endpoints have proper parameter definitions
-- [ ] Verify "Try it out" functionality works for all endpoints
-- [ ] Test example responses are displayed correctly
-- [ ] Validate custom styling matches app theme
+## Tasks
+- [ ] Update client/src/App.jsx: Add ARIA labels, focus indicators, and keyboard support to all interactive elements (inputs, buttons, selects, sliders, modals, progress steps).
+- [ ] Update client/src/components/ThemeSlider.jsx: Add ARIA labels, focus indicators, and keyboard support to theme buttons and scroll buttons.
+- [ ] Update client/src/pages/NotFound.jsx: Add ARIA labels, focus indicators, and keyboard support to the home button.
+- [ ] Test keyboard navigation (tab order, Enter/Space keys).
+- [ ] Verify focus indicators are visible.
+- [ ] Ensure modals trap focus and can be closed with Escape.
