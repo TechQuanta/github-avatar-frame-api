@@ -1223,7 +1223,7 @@ function App() {
                     style={{
                       maxWidth: "300px",
                       width: "100%",
-                      padding: "12px 16px",
+                      padding: "12px 16px 12px 48px",
                       fontSize: "16px",
                       border: `1px solid ${colors.borderInput}`,
                       borderRadius: "8px",
