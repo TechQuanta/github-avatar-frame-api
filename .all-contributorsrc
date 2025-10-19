@@ -207,6 +207,15 @@
         "code",
         "infra"
       ]
+    },
+    {
+      "login": "ishanraj953",
+      "name": "Ishan Raj",
+      "avatar_url": "https://avatars.githubusercontent.com/u/179708459?v=4",
+      "profile": "https://github.com/ishanraj953",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "commitConvention": "angular",
