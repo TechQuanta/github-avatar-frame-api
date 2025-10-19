@@ -960,6 +960,7 @@ function App() {
                 display: "flex",
                 flexDirection: "column",
                 gap: "8px",
+                
               }}
             >
               <label
@@ -985,7 +986,7 @@ function App() {
                   placeholder="Enter username (e.g., torvalds)"
                   style={{
                     width: "100%",
-                    padding: "12px 16px",
+                  padding: "12px 16px 12px 48px",
                     fontSize: "16px",
                     border: `1px solid ${colors.borderInput}`,
                     borderRadius: "8px",
