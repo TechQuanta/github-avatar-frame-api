@@ -154,7 +154,6 @@ The frontend will start on `http://localhost:5173` (or another port if 5173 is i
 3. Enter a GitHub username (e.g., "torvalds")
 4. Select a theme and click "Generate"
 5. If successful, your framed avatar will appear
-
 ---
 
 ## 📂 Project Structure
@@ -193,7 +192,6 @@ The frontend will start on `http://localhost:5173` (or another port if 5173 is i
 ├── ⚙️ render.yml
 └── 📄 tsconfig.server.json
 ```
----
  
 <h2 style="color:#ff5722;">💡 Why GitHub Avatar Frame API?</h2>
 <p style="font-size: 1.1em;">

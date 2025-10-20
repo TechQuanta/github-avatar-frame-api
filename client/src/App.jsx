@@ -31,7 +31,7 @@ import ThemeSlider from "./components/ThemeSlider.jsx";
 const API_BASE_URL =
   process.env.NODE_ENV === "production"
     ? "https://github-avatar-frame-api.onrender.com"
-    : "http://localhost:3000";
+    : "http://localhost:3001";
 
 // Utility component for consistent button styling (Canvas and Shape)
 const ControlButton = ({ onClick, isSelected, children, isDark }) => (
@@ -150,7 +150,7 @@ const CommunityModal = ({ isOpen, onClose, colors }) => {
               margin: 0,
             }}
           >
-            Join the 𝕆𝕡𝕖𝕟 ℂ𝕠𝕞𝕞𝕦𝕟𝕚𝕥𝕪
+            Join the Open Community
           </h3>
         </div>
 
@@ -687,10 +687,10 @@ function App() {
       const randomColors = ["#7c3aed", "#ec4899", "#f97316", "#10b981", "#3b82f6", "#8b5cf6", "#ef4444", "#f59e0b"];
       const randomColor = randomColors[Math.floor(Math.random() * randomColors.length)];
       setCustomAccentColor(randomColor);
-      showToastNotification("🎲 Random Theme + Color Applied!");
+      showToastNotification("Random theme and color applied");
     } else {
       setCustomAccentColor(null);
-      showToastNotification("✨ Surprise Style Loaded!");
+      showToastNotification("Surprise style loaded");
     }
     
     setOriginalThemeColor(null);
@@ -712,7 +712,7 @@ function App() {
   const resetToDefaultColor = () => {
     setCustomAccentColor(null);
     setOriginalThemeColor(null);
-    showToastNotification("🎨 Reset to Default Color");
+  showToastNotification("Reset to default color");
   };
 
   const finalRadiusForDisplay = shape === "circle" ? maxRadius : radius;
@@ -747,10 +747,10 @@ function App() {
     setIsPreviewUpdating(true);
 
     try {
-      const canvas = previewCanvasRef.current;
-      const ctx = canvas.getContext('2d');
-      canvas.width = size;
-      canvas.height = size;
+  const canvasEl = previewCanvasRef.current;
+  const ctx = canvasEl.getContext('2d');
+  canvasEl.width = size;
+  canvasEl.height = size;
 
       // Clear canvas
       ctx.clearRect(0, 0, size, size);
@@ -790,7 +790,7 @@ function App() {
       }
       ctx.closePath();
       ctx.clip();
-      ctx.drawImage(avatarImage, 0, 0, avatarSize, avatarSize);
+  ctx.drawImage(avatarImage, 0, 0, avatarSize, avatarSize);
       ctx.restore();
 
       // Draw frame with tint if custom color
@@ -798,11 +798,11 @@ function App() {
       if (customAccentColor) {
         // Apply tint by drawing frame with globalCompositeOperation
         ctx.globalCompositeOperation = 'source-over';
-        ctx.drawImage(frameImage, 0, 0, size, size);
+  ctx.drawImage(frameImage, 0, 0, size, size);
         ctx.globalCompositeOperation = 'multiply';
         const [r, g, b] = customAccentColor.match(/\w\w/g).map(x => parseInt(x, 16));
         ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
-        ctx.fillRect(0, 0, size, size);
+  ctx.fillRect(0, 0, size, size);
         ctx.globalCompositeOperation = 'source-over';
       } else {
         ctx.drawImage(frameImage, 0, 0, size, size);
@@ -880,11 +880,11 @@ function App() {
               padding: "24px 16px",
               color: colors.textPrimary,
             }}>
-            <div
-              style={{
-                maxWidth: "1200px",
-                margin: "0 auto",
-              }}>
+            <div className="layout-wrapper"
+                    style={{
+                      maxWidth: "1200px",
+                      margin: "0 auto",
+                    }}>
         {/* --- 1. Top Bar: Title + Community Button --- */}
         <div
           style={{
@@ -948,7 +948,7 @@ function App() {
                   backgroundClip: "text",
                   margin: 0,
                 }} data-aos="zoom-in">
-                𝕲𝖎𝖙𝕳𝖚𝖇 𝔸𝕧𝕒𝕥𝕒𝕣 𝕱𝖗𝖆𝖒𝖊𝖘
+                GitHub Avatar Frames
               </h1>
             </div>
             <p
@@ -1011,11 +1011,9 @@ function App() {
                 padding: "10px 20px",
                 borderRadius: "8px",
                 background: isDark ? "#374151" : "#f0f4f8",
-                border: `2px solid ${
-                  isDark ? colors.accentDark : colors.accentPrimary
-                }`,
+                border: `2px solid ${isDark ? colors.accentDark : colors.accentPrimary}`,
                 color: isDark ? colors.accentDark : colors.accentPrimary,
-                fontWeight: "800",
+                fontWeight: "700",
                 fontSize: "14px",
                 textDecoration: "none",
                 transition: "all 0.3s",
@@ -1024,20 +1022,8 @@ function App() {
                 gap: "8px",
                 boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
               }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = isDark
-                  ? "#475569"
-                  : colors.accentPrimary;
-                e.currentTarget.style.color = isDark ? "white" : "white";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = isDark ? "#374151" : "#f0f4f8";
-                e.currentTarget.style.color = isDark
-                  ? colors.accentDark
-                  : colors.accentPrimary;
-              }}
             >
-              📖 API Docs
+              API Docs
             </a>
           </div>
         </div>
@@ -1343,7 +1329,7 @@ function App() {
                       color: colors.textSecondary,
                       whiteSpace: "nowrap",
                     }}>
-                    🎨 Accent Color:
+                      Accent Color:
                   </label>
                   <input
                     type="color"
@@ -1378,7 +1364,7 @@ function App() {
                         transition: "all 0.2s",
                       }}
                       title="Reset to default color">
-                      ↻ Reset
+                      Reset
                     </button>
                   )}
                 </div>
@@ -1449,7 +1435,7 @@ function App() {
                       e.currentTarget.style.boxShadow = "0 2px 4px rgba(0, 0, 0, 0.1)";
                     }
                   }}>
-                  🎲 Random Theme
+                  Random Theme
                 </button>
               </div>
             </div>
@@ -1721,7 +1707,7 @@ function App() {
               <div style={{ display: "flex", gap: "12px", marginBottom: "12px" }}>
                 <input
                   type="text"
-                  placeholder="Enter emojis (e.g., 🚀,💻,🔥)"
+                  placeholder="Enter emojis (comma-separated)"
                   value={emojis}
                   onChange={(e) => setEmojis(e.target.value)}
                   style={{
@@ -1969,22 +1955,8 @@ function App() {
                     key={previewKey}
                     src={framedAvatarUrl}
                     alt="Framed Avatar"
-                    style={{
-                      borderRadius:
-                        shape === "circle"
-                          ? "50%"
-                          : `${finalRadiusForDisplay}px`,
-                      boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.2)",
-                      border: `3px solid ${isDark ? "#374151" : "white"}`,
-                      width: "100%", // Take full width of its parent container
-                      height: "auto", // Ensure aspect ratio is maintained
-                      maxWidth: "384px", // Respect the max size for larger screens
-                      maxHeight: "384px",
-                      display: "block",
-                      marginLeft: "auto",
-                      marginRight: "auto",
-                      marginBottom: "24px",
-                    }}
+                    className="preview-img"
+                    style={{ borderRadius: shape === "circle" ? "50%" : `${finalRadiusForDisplay}px`, border: `3px solid ${isDark ? "#374151" : "white"}` }}
                   />
 
                   <div
@@ -2125,7 +2097,7 @@ function App() {
                           {copied ? "Copied!" : "Copy"}
                         </button>
                       </div>
-                      <div
+                      <div className="api-url-box mono-box"
                         style={{
                           fontSize: "11px",
                           fontFamily: "monospace", // Applied monospace font
@@ -2296,19 +2268,8 @@ function App() {
                   )}
                   <canvas
                     ref={previewCanvasRef}
-                    style={{
-                      borderRadius:
-                        shape === "circle"
-                          ? "50%"
-                          : `${finalRadiusForDisplay}px`,
-                      boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.2)",
-                      border: `3px solid ${isDark ? "#374151" : "white"}`,
-                      width: "100%",
-                      height: "auto",
-                      maxWidth: "384px",
-                      maxHeight: "384px",
-                      marginBottom: "24px",
-                    }}
+                    className="preview-canvas"
+                    style={{ borderRadius: shape === "circle" ? "50%" : `${finalRadiusForDisplay}px`, border: `3px solid ${isDark ? "#374151" : "white"}` }}
                   />
                   {previewError && (
                     <p
@@ -2416,127 +2377,7 @@ function App() {
         </div>
       )}
 
-      <style>{`
-        /* Global Reset to ensure no fixed width/padding causes overflow */
-        *, ::before, ::after {
-            box-sizing: border-box;
-        }
-        /* Using a standard font like Inter/system-ui for overall text, but inputs use monospace */
-        body, html, #root {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-            margin: 0;
-            padding: 0;
-            overflow-x: hidden !important; 
-            width: 100%;
-        }
-        
-        /* General Utilities & Animations */
-        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        @keyframes pulse-anim { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
-        @keyframes slideInRight { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-        @keyframes rotate-gradient { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        @keyframes pulse-spinner { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
-        .spinner { animation: spin 1s linear infinite; }
-        .pulse-text { animation: pulse-anim 2s infinite; }
-        .pulse-spinner { animation: pulse-spinner 1.5s ease-in-out infinite; }
-        .error-shake { animation: shake 0.4s ease-out; }
-
-        /* Customizing the range slider thumb (using injected colors) */
-        .range-slider::-webkit-slider-thumb {
-          -webkit-appearance: none; appearance: none; width: 20px; height: 20px; border-radius: 50%;
-          background: ${
-            isDark
-              ? colors.accentDark
-              : `linear-gradient(135deg, ${colors.accentPrimary} 0%, ${colors.accentSecondary} 100%)`
-          };
-          cursor: pointer; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        }
-        .range-slider::-moz-range-thumb {
-          width: 20px; height: 20px; border-radius: 50%; border: none;
-          background: ${
-            isDark
-              ? colors.accentDark
-              : `linear-gradient(135deg, ${colors.accentPrimary} 0%, ${colors.accentSecondary} 100%)`
-          };
-          cursor: pointer; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        }
-        
-        /* Theme Scroll Container Styling */
-        .themes-scroll-container {
-            -ms-overflow-style: none; scrollbar-width: none;
-        }
-        .themes-scroll-container::-webkit-scrollbar { height: 8px; }
-        .themes-scroll-container::-webkit-scrollbar-track { background: ${
-          isDark ? "#374151" : "#f3f4f6"
-        }; border-radius: 4px; }
-        .themes-scroll-container::-webkit-scrollbar-thumb { background: ${
-          colors.accentPrimary
-        }; border-radius: 4px; }
-        .themes-scroll-container::-webkit-scrollbar-thumb:hover { background: ${
-          colors.accentSecondary
-        }; }
-
-
-        /* --- RESPONSIVE LAYOUT RULES --- */
-
-        /* Default: Mobile-First Single Column */
-        .main-grid-container {
-            grid-template-columns: 1fr;
-        }
-
-        @media (max-width: 768px) {
-            /* Header and Button Layout: Keep title and community button on same row */
-            .header-container {
-                flex-direction: row;
-                justify-content: space-between;
-                align-items: center;
-                gap: 16px;
-                width: 100%;
-                max-width: 100%;
-            }
-            .header-container > div:first-child {
-                flex-grow: 1;
-                text-align: center;
-                min-width: 200px;
-            }
-            .community-button {
-                flex-shrink: 0;
-            }
-
-            /* Title Size Reduction for Mobile */
-            .main-title {
-                font-size: 36px !important;
-            }
-
-            /* Search Theme Container: Stack vertically on mobile */
-            .search-theme-container {
-                flex-direction: column !important;
-                gap: 16px !important;
-            }
-            .search-theme-container > div {
-                flex: none !important;
-                width: 100% !important;
-                min-width: 0 !important;
-            }
-
-            /* Control Group (Canvas/Shape) : Force stacking columns */
-            .control-group {
-                flex-direction: column;
-                gap: 16px !important;
-                width: 100%;
-            }
-            /* IMPORTANT: Ensure sub-flex containers (the button sets) can wrap if content is too wide */
-            .control-button-set {
-                flex-wrap: wrap;
-            }
-            /* IMPORTANT: Ensure the two sub-columns take full width */
-            .control-group > div {
-                width: 100%;
-            }
-
-        }
-      `}</style>
+      {/* Styles are provided by ./App.css */}
       {/* Community Modal */}
     </div>
   } />

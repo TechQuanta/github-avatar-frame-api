@@ -1,96 +1,95 @@
-/* Global Reset to ensure no fixed width/padding causes overflow */
-*, ::before, ::after {
-  box-sizing: border-box;
-}
-/* Using a standard font like Inter/system-ui for overall text, but inputs use monospace */
-body, html, #root {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-  margin: 0;
-  padding: 0;
-  overflow-x: hidden !important;
-  width: 100%;
+/* ==========================
+   App-wide design tokens
+   ========================== */
+:root {
+  --radius-md: 12px;
+  --shadow-sm: 0 4px 12px rgba(2,6,23,0.06);
+  --accent-primary: #7c3aed;
+  --accent-secondary: #a855f7;
+  --muted: #9ca3af;
+  --glass: rgba(255,255,255,0.6);
+  --glass-dark: rgba(0,0,0,0.25);
 }
 
-/* General Utilities & Animations */
-@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-@keyframes pulse-anim { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-@keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
+*,
+*::before,
+*::after { box-sizing: border-box; }
+html,body,#root { height: 100%; margin: 0; }
+body {
+   font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: #111827;
+  background: linear-gradient(135deg, #f3f0ff 0%, #fff6fb 100%);
+}
+
+/* ==========================
+   Animations
+   ========================== */
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes pulse-anim { 50% { opacity: .6; } }
+@keyframes slideInRight { from { transform: translateX(8px); opacity: 0 } to { transform: translateX(0); opacity: 1 } }
 .spinner { animation: spin 1s linear infinite; }
 .pulse-text { animation: pulse-anim 2s infinite; }
 .error-shake { animation: shake 0.4s ease-out; }
 
-/* Customizing the range slider thumb (using injected colors) */
-.range-slider::-webkit-slider-thumb {
-  -webkit-appearance: none; appearance: none; width: 20px; height: 20px; border-radius: 50%;
-  background: var(--accent-bg);
-  cursor: pointer; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-.range-slider::-moz-range-thumb {
-  width: 20px; height: 20px; border-radius: 50%; border: none;
-  background: var(--accent-bg);
-  cursor: pointer; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+/* ==========================
+   Layout helpers
+   ========================== */
+.layout-wrapper { padding: 24px 16px; max-width: 1200px; margin: 0 auto; }
+.header-container { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
+.main-title { font-size: 48px; line-height: 1; margin: 0; }
+.main-grid-container { display: grid; gap: 24px; grid-template-columns: 1fr; }
+.section-card { background: white; border-radius: var(--radius-md); padding: 28px; box-shadow: var(--shadow-sm); border: 1px solid rgba(15,23,42,0.03); }
+
+/* Prevent long content from causing horizontal overflow */
+html, body { overflow-x: hidden; }
+.mono-box, .main-title, .section-card, input, select, textarea { word-break: break-word; }
+.truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.wrap { white-space: normal; }
+
+/* header title responsiveness */
+.title-block { flex: 1 1 auto; min-width: 0; }
+.main-title { max-width: 100%; word-wrap: break-word; }
+.api-url-box { width: 100%; }
+
+/* Two column layout on desktop */
+@media(min-width: 769px) { .main-grid-container { grid-template-columns: 1fr 1fr; } }
+
+/* ==========================
+   Form & Controls
+   ========================== */
+label { display: block; font-weight: 600; margin-bottom: 8px; }
+input[type="text"], input[type="color"], select, .range-slider { width: 100%; font-size: 14px; padding: 10px 12px; border-radius: 10px; border: 1px solid #e6e9ee; }
+input[type="color"] { padding: 3px; height: 40px; }
+.control-group { display: flex; gap: 24px; align-items: flex-start; }
+.control-button-set { display:flex; gap: 12px; }
+.control-button-set button { min-width: 100px; }
+
+.button-primary { background: linear-gradient(90deg,var(--accent-primary),var(--accent-secondary)); color: white; border: none; padding: 12px 16px; border-radius: 10px; cursor: pointer; font-weight: 700; }
+.button-ghost { background: transparent; border: 1px solid rgba(0,0,0,0.06); padding: 10px 12px; border-radius: 8px; }
+
+/* ==========================
+   Preview & Image
+   ========================== */
+.preview-canvas, .preview-img { width: 100%; height: auto; max-width: 384px; max-height: 384px; display: block; margin: 0 auto 24px; box-shadow: 0 10px 25px rgba(2,6,23,0.12); border: 3px solid white; }
+
+/* API/Badge boxes - monospace and subtle background */
+.mono-box { font-family: monospace; font-size: 12px; padding: 10px; border-radius: 8px; background: #f8fafc; border: 1px solid #e6e9ee; color: #374151; word-break: break-all; }
+
+/* small responsive tweaks */
+@media(max-width: 768px) {
+  .main-title { font-size: 36px; }
+  .control-group { flex-direction: column; }
+  .section-card { padding: 20px; }
 }
 
-/* Theme Scroll Container Styling */
-.themes-scroll-container {
-  -ms-overflow-style: none; scrollbar-width: none;
-}
+/* range thumb styling */
+.range-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; border-radius: 50%; background: var(--accent-primary); box-shadow: 0 2px 6px rgba(0,0,0,0.12); }
+.range-slider::-moz-range-thumb { width: 18px; height: 18px; border-radius: 50%; background: var(--accent-primary); }
+
+/* scrollbar styling for horizontal theme list */
+.themes-scroll-container { overflow-x: auto; -ms-overflow-style: none; scrollbar-width: thin; }
 .themes-scroll-container::-webkit-scrollbar { height: 8px; }
-.themes-scroll-container::-webkit-scrollbar-track { background: var(--scroll-track); border-radius: 4px; }
-.themes-scroll-container::-webkit-scrollbar-thumb { background: var(--accent-primary); border-radius: 4px; }
-.themes-scroll-container::-webkit-scrollbar-thumb:hover { background: var(--accent-secondary); }
+.themes-scroll-container::-webkit-scrollbar-thumb { background: linear-gradient(90deg,var(--accent-primary),var(--accent-secondary)); border-radius: 999px; }
 
-/* --- RESPONSIVE LAYOUT RULES --- */
-
-/* Default: Mobile-First Single Column */
-.main-grid-container {
-  grid-template-columns: 1fr;
-}
-
-@media (max-width: 768px) {
-  /* Header and Button Layout: Stack title and community button */
-  .header-container {
-    flex-direction: column;
-    align-items: center !important;
-    gap: 24px !important;
-    width: 100%;
-    max-width: 100%;
-  }
-  .header-container > div:first-child {
-    order: 1 !important;
-    width: 100%;
-  }
-  .community-button {
-    order: 2 !important;
-    width: 100%;
-    margin-left: 0 !important;
-  }
-
-  /* Title Size Reduction for Mobile */
-  .main-title {
-    font-size: 36px !important;
-  }
-
-  /* Control Group (Canvas/Shape) : Force stacking columns */
-  .control-group {
-    flex-direction: column;
-    gap: 16px !important;
-    width: 100%;
-  }
-  /* IMPORTANT: Ensure sub-flex containers (the button sets) can wrap if content is too wide */
-  .control-button-set {
-    flex-wrap: wrap;
-  }
-  /* IMPORTANT: Ensure the two sub-columns take full width */
-  .control-group > div {
-    width: 100%;
-  }
-
-}
-
-/* Desktop Layout: Apply 50%/50% split above 769px */
-@media (min-width: 769px) {
-  .main-grid-container {
-    grid-template-columns: 50% 50%;
-  }
-}

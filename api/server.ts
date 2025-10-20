@@ -357,8 +357,8 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
 }));
 
 
-// Use environment PORT for hosting environments like Render, default to 3000 for local dev
-const PORT = process.env.PORT || 3000;
+// Use environment PORT for hosting environments like Render, default to 3001 for local dev
+const PORT = process.env.PORT || 3001;
 
 // Helper to determine the base directory for assets, reliable across compilation (dist)
 // Assumes 'public' is located one level up from the compiled script location.
