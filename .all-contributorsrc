@@ -216,6 +216,17 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "Gupta-02",
+      "name": "C Sai Prathyun Gupta",
+      "avatar_url": "https://avatars.githubusercontent.com/u/182321898?v=4",
+      "profile": "https://github.com/Gupta-02",
+      "contributions": [
+        "infra",
+        "code",
+        "doc"
+      ]
     }
   ],
   "commitConvention": "angular",
