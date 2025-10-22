@@ -32,6 +32,9 @@
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/Akshayaqueen"><img src="https://avatars.githubusercontent.com/u/170915685?v=4?s=100" width="100px;" alt="B AKSHAYA"/><br /><sub><b>B AKSHAYA</b></sub></a><br /><a href="https://github.com/TechQuanta/github-avatar-frame-api/commits?author=Akshayaqueen" title="Code">💻</a> <a href="#infra-Akshayaqueen" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/ishanraj953"><img src="https://avatars.githubusercontent.com/u/179708459?v=4?s=100" width="100px;" alt="Ishan Raj"/><br /><sub><b>Ishan Raj</b></sub></a><br /><a href="https://github.com/TechQuanta/github-avatar-frame-api/commits?author=ishanraj953" title="Code">💻</a></td>
     </tr>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/Gupta-02"><img src="https://avatars.githubusercontent.com/u/182321898?v=4?s=100" width="100px;" alt="C Sai Prathyun Gupta"/><br /><sub><b>C Sai Prathyun Gupta</b></sub></a><br /><a href="#infra-Gupta-02" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="https://github.com/TechQuanta/github-avatar-frame-api/commits?author=Gupta-02" title="Code">💻</a> <a href="https://github.com/TechQuanta/github-avatar-frame-api/commits?author=Gupta-02" title="Documentation">📖</a></td>
+    </tr>
   </tbody>
 </table>
 
