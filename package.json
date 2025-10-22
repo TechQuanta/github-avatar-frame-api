@@ -7,7 +7,9 @@
     "dev": "npm run build && npm start",
     "dev:watch": "nodemon --exec \"npm run build && npm start\" --ext ts,json",
     "build": "tsc -p tsconfig.server.json",
-    "start": "node dist/server.js"
+    "build:cli": "cd cli && npm run build",
+    "start": "node dist/server.js",
+    "cli": "cd cli && npm start"
   },
   "dependencies": {
     "aos": "^2.3.4",

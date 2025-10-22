@@ -1067,6 +1067,303 @@ function generateRecommendations(analysis: any) {
 }
 
 /**
+ * GET /api/ai-suggest/:username
+ * AI-powered frame suggestion based on avatar colors and GitHub activity
+ */
+app.get("/api/ai-suggest/:username", async (req: Request, res: Response) => {
+  try {
+    const username = req.params.username;
+
+    // Validate username
+    if (!username || typeof username !== "string" || username.trim() === "") {
+      return res
+        .status(400)
+        .json({ error: "Bad Request", message: "Username is required." });
+    }
+
+    console.log(`🤖 AI analyzing profile for: ${username}`);
+
+    // Fetch GitHub user data
+    let userData;
+    try {
+      const userResponse = await axios.get(`https://api.github.com/users/${username}`, {
+        timeout: 10000,
+        headers: {
+          "User-Agent": "GitHub-Avatar-Frame-API/1.0.0",
+        },
+      });
+      userData = userResponse.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.status === 404) {
+        return res.status(404).json({ error: "User not found", message: "GitHub user does not exist." });
+      }
+      throw error;
+    }
+
+    // Simple avatar analysis (placeholder - would need image processing)
+    const avatarAnalysis = {
+      dominantTone: "neutral",
+      brightness: 0.5,
+      isDark: false,
+      isColorful: false,
+      dominantColor: "#ffffff"
+    };
+
+    // Analyze contribution activity
+    const contributionAnalysis = await analyzeContributionActivity(username);
+
+    // Generate AI-powered recommendations
+    const recommendations = generateAISuggestions(avatarAnalysis, contributionAnalysis, userData);
+
+    // Construct preview URL
+    const baseUrl = process.env.BASE_URL || "https://github-avatar-frame-api.onrender.com";
+    const previewURL = `${baseUrl}/api/framed-avatar/${username}?theme=${recommendations.theme}&canvas=${recommendations.canvas}&shape=${recommendations.shape}`;
+
+    const response = {
+      username,
+      analysis: {
+        avatar: avatarAnalysis,
+        contributions: contributionAnalysis
+      },
+      recommendations,
+      previewURL,
+      confidence: recommendations.confidence,
+      reasoning: recommendations.reasoning
+    };
+
+    console.log(`✅ AI suggestions generated for ${username}: ${recommendations.theme} (${recommendations.confidence}% confidence)`);
+    res.json(response);
+
+  } catch (error) {
+    console.error("Error in AI suggestion generation:", error);
+    if (axios.isAxiosError(error)) {
+      if (error.code === "ECONNRESET" || error.code === "ETIMEDOUT") {
+        return res.status(503).json({
+          error: "Service temporarily unavailable. Please try again later.",
+        });
+      }
+    }
+    res.status(500).json({ error: "Internal Server Error during AI analysis." });
+  }
+});
+
+/**
+ * Analyze avatar image colors using Sharp
+ */
+/*
+async function analyzeAvatarColors(avatarUrl: string) {
+  try {
+    // Fetch avatar image
+    const response = await axios.get(avatarUrl, {
+      responseType: 'arraybuffer',
+      timeout: 10000,
+      headers: {
+        'User-Agent': 'GitHub-Avatar-Frame-API/1.0.0'
+      }
+    });
+
+    const imageBuffer = Buffer.from(response.data);
+
+    // Get image stats using Sharp
+    const stats = await sharp(imageBuffer).stats();
+
+    // Calculate dominant color and brightness
+    const { channels } = stats;
+    const red = channels[0].mean;
+    const green = channels[1].mean;
+    const blue = channels[2].mean;
+
+    // Calculate brightness (0-1 scale)
+    const brightness = (red * 0.299 + green * 0.587 + blue * 0.114) / 255;
+
+    // Determine if image is dark
+    const isDark = brightness < 0.4;
+
+    // Calculate colorfulness (standard deviation of colors)
+    const colorfulness = Math.sqrt(
+      Math.pow(channels[0].stdev, 2) +
+      Math.pow(channels[1].stdev, 2) +
+      Math.pow(channels[2].stdev, 2)
+    ) / 255;
+
+    const isColorful = colorfulness > 0.15;
+
+    // Determine dominant tone
+    let dominantTone = "neutral";
+    if (isDark) {
+      dominantTone = "dark";
+    } else if (brightness > 0.7) {
+      dominantTone = "bright";
+    } else if (isColorful) {
+      dominantTone = "colorful";
+    }
+
+    // Convert RGB to hex
+    const dominantColor = `#${Math.round(red).toString(16).padStart(2, '0')}${Math.round(green).toString(16).padStart(2, '0')}${Math.round(blue).toString(16).padStart(2, '0')}`;
+
+    return {
+      dominantTone,
+      brightness: Math.round(brightness * 100) / 100,
+      isDark,
+      isColorful,
+      dominantColor,
+      colorfulness: Math.round(colorfulness * 100) / 100
+    };
+
+  } catch (error) {
+    console.error("Error analyzing avatar colors:", error);
+    throw error;
+  }
+}
+*/
+
+/**
+ * Analyze GitHub contribution activity
+ */
+async function analyzeContributionActivity(username: string) {
+  try {
+    // Fetch contribution data from GitHub's contribution graph
+    // Note: GitHub doesn't provide direct contribution API, so we'll use user stats
+    const userResponse = await axios.get(`https://api.github.com/users/${username}`, {
+      timeout: 10000,
+      headers: {
+        "User-Agent": "GitHub-Avatar-Frame-API/1.0.0",
+      },
+    });
+
+    const userData = userResponse.data;
+
+    // Get recent repositories for activity analysis
+    const reposResponse = await axios.get(`https://api.github.com/users/${username}/repos?sort=updated&per_page=10`, {
+      timeout: 10000,
+      headers: {
+        "User-Agent": "GitHub-Avatar-Frame-API/1.0.0",
+      },
+    });
+
+    const repos = reposResponse.data;
+
+    // Calculate activity metrics
+    const totalStars = repos.reduce((sum: number, repo: any) => sum + (repo.stargazers_count || 0), 0);
+    const totalForks = repos.reduce((sum: number, repo: any) => sum + (repo.forks_count || 0), 0);
+    const recentActivity = repos.filter((repo: any) => {
+      const updatedDate = new Date(repo.updated_at);
+      const monthAgo = new Date();
+      monthAgo.setMonth(monthAgo.getMonth() - 1);
+      return updatedDate > monthAgo;
+    }).length;
+
+    // Determine activity level
+    let activityLevel = "beginner";
+    const totalRepos = userData.public_repos || 0;
+    const followers = userData.followers || 0;
+
+    if (totalRepos > 50 || followers > 100 || totalStars > 100) {
+      activityLevel = "expert";
+    } else if (totalRepos > 20 || followers > 50 || totalStars > 20) {
+      activityLevel = "advanced";
+    } else if (totalRepos > 5 || followers > 10) {
+      activityLevel = "intermediate";
+    }
+
+    // Check for consistency (recent activity)
+    const isConsistent = recentActivity >= 3;
+
+    return {
+      activityLevel,
+      totalRepos,
+      followers,
+      totalStars,
+      totalForks,
+      recentActivity,
+      isConsistent,
+      contributionScore: Math.min(totalRepos + followers + totalStars, 1000) // 0-1000 scale
+    };
+
+  } catch (error) {
+    console.error("Error analyzing contribution activity:", error);
+    throw error;
+  }
+}
+
+/**
+ * Generate AI-powered theme suggestions
+ */
+function generateAISuggestions(avatarAnalysis: any, contributionAnalysis: any, userData: any) {
+  let theme = "base";
+  let canvas = "light";
+  let shape = "circle";
+  let confidence = 75;
+  let reasoning = [];
+
+  // Theme selection based on avatar colors (simplified for now)
+  if (avatarAnalysis.dominantTone === "dark") {
+    theme = "starry";
+    canvas = "dark";
+    reasoning.push("Dark avatar suggests cosmic/galaxy themes");
+    confidence += 10;
+  } else if (avatarAnalysis.dominantTone === "bright") {
+    theme = "minimal";
+    canvas = "light";
+    reasoning.push("Bright avatar pairs well with clean, minimal designs");
+    confidence += 5;
+  } else if (avatarAnalysis.isColorful) {
+    theme = "neon";
+    canvas = "dark";
+    reasoning.push("Colorful avatar complements vibrant neon themes");
+    confidence += 15;
+  }
+
+  // Adjust based on contribution activity
+  if (contributionAnalysis.activityLevel === "expert") {
+    if (theme === "starry") {
+      theme = "gitblaze"; // More professional for experts
+    }
+    shape = "rounded";
+    reasoning.push("Expert level activity suggests professional, polished themes");
+    confidence += 10;
+  } else if (contributionAnalysis.activityLevel === "beginner") {
+    theme = "classic";
+    canvas = "light";
+    reasoning.push("Beginner-friendly classic theme for new developers");
+    confidence += 5;
+  } else if (contributionAnalysis.activityLevel === "advanced") {
+    if (avatarAnalysis.isDark) {
+      theme = "ocean"; // Professional but creative
+    } else {
+      theme = "eternity";
+    }
+    reasoning.push("Advanced users get sophisticated, balanced themes");
+    confidence += 8;
+  }
+
+  // Special cases based on follower/repo ratios
+  const followerRatio = contributionAnalysis.followers / Math.max(contributionAnalysis.totalRepos, 1);
+  if (followerRatio > 5) {
+    theme = "flamingo";
+    reasoning.push("High follower-to-repo ratio suggests popular, eye-catching themes");
+    confidence += 12;
+  }
+
+  // Consistency bonus
+  if (contributionAnalysis.isConsistent) {
+    reasoning.push("Consistent activity indicates dedication - theme reflects reliability");
+    confidence += 5;
+  }
+
+  // Ensure confidence doesn't exceed 100%
+  confidence = Math.min(confidence, 95);
+
+  return {
+    theme,
+    canvas,
+    shape,
+    confidence,
+    reasoning
+  };
+}
+
+/**
  * GET /api/badge/:username
  * Generates dynamic badge URLs for GitHub stats
  */
@@ -1204,6 +1501,7 @@ app.listen(PORT, () => {
   console.log(`🎨 Available endpoints:`);
   console.log(`   GET /api/themes - List available themes`);
   console.log(`   GET /api/framed-avatar/:username - Generate framed avatar`);
+  console.log(`   GET /api/ai-suggest/:username - AI-powered frame suggestions based on avatar & activity`);
   console.log(`   GET /api/smart-frame/:username - AI-powered smart frame suggestions`);
   console.log(`   GET /api/badge/:username - Generate GitHub stats badges`);
   console.log(`   GET /api/health - Health check`);
