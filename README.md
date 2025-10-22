@@ -62,7 +62,8 @@
 - [📂 Project Structure](#-project-structure)
 - [📌 API Usage](#-api-usage)
 - [🧮 Query Parameters](#-query-parameters)
-- [💡 Why GitHub Avatar Frame API?](#-why-github-avatar-frame-api)
+- [� CLI Usage](#-cli-usage)
+- [�💡 Why GitHub Avatar Frame API?](#-why-github-avatar-frame-api)
 - [🤝 Contributing](#-contributing)
 - [🛠️ Troubleshooting](#️-troubleshooting)
 - [📜 License](#-license)
@@ -182,7 +183,11 @@ The frontend will start on `http://localhost:5173` (or another port if 5173 is i
 ├── 🖼️ public
 │   └── assets
 │       └── 🖼️ gssoc.png
-├── 📄 README.md
+├── � cli
+│   ├── 📄 package.json
+│   ├── ⚙️ tsconfig.json
+│   └── 🚀 src/index.ts
+├── �📄 README.md
 ├── 📄 LICENSE
 ├── 📄 CODE_OF_CONDUCT.md
 ├── 📄 CONTRIBUTING.md
@@ -192,7 +197,131 @@ The frontend will start on `http://localhost:5173` (or another port if 5173 is i
 ├── ⚙️ render.yml
 └── 📄 tsconfig.server.json
 ```
- 
+
+ <img src="https://user-images.githubusercontent.com/74038190/212284100-561aa473-3905-4a80-b561-0d28506553ee.gif" width="100%">
+
+<h2 style="color:#2196f3;">💻 CLI Usage</h2>
+
+<p style="font-size: 1.1em;">
+The GitHub Avatar Frame API comes with a command-line interface (CLI) for easy avatar generation directly from your terminal. Perfect for developers who prefer working in code editors and terminals.
+</p>
+
+<h3 style="color:#ff4081;">🚀 Installation</h3>
+
+<p style="font-size: 1.05em;"><b>Option 1: Install globally from npm</b></p>
+```bash
+npm install -g github-avatar-frame-cli
+```
+
+<p style="font-size: 1.05em;"><b>Option 2: Use locally (from project root)</b></p>
+```bash
+# Build the CLI
+npm run build:cli
+
+# Use the CLI
+npm run cli -- <command>
+```
+
+<h3 style="color:#ff4081;">📖 Usage</h3>
+
+<p style="font-size: 1.05em;"><b>Generate an avatar:</b></p>
+```bash
+github-avatar-frame generate <username> [options]
+```
+
+<p style="font-size: 1.05em;"><b>Examples:</b></p>
+
+```bash
+# Basic usage
+github-avatar-frame generate octocat
+
+# With custom theme and size
+github-avatar-frame generate octocat --theme flamingo --size 512
+
+# With text overlay
+github-avatar-frame generate octocat --text "GitHub User" --text-color "#ff0000"
+
+# With emojis
+github-avatar-frame generate octocat --emojis "🚀,💻,🔥" --emoji-position corners
+
+# Save to custom file
+github-avatar-frame generate octocat --output my-avatar.png
+
+# Use local API server
+github-avatar-frame generate octocat --url http://localhost:3000
+```
+
+<h3 style="color:#ff4081;">⚙️ CLI Options</h3>
+
+<table style="width:100%; border-collapse:collapse; font-size:1.05em;">
+<thead style="background-color:#f5f5f5; text-align:center;">
+<tr>
+<th>Option</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody style="text-align:center;">
+<tr><td>--theme, -t</td><td>base</td><td>Frame theme (base, classic, darkmode, eternity, flamingo, gitblaze, macros, minimal, neon, ocean, starry)</td></tr>
+<tr><td>--size, -s</td><td>256</td><td>Avatar size in pixels (64-1024)</td></tr>
+<tr><td>--canvas, -c</td><td>light</td><td>Background color (light, dark)</td></tr>
+<tr><td>--shape, -sh</td><td>circle</td><td>Avatar shape (circle, rounded)</td></tr>
+<tr><td>--radius, -r</td><td>25</td><td>Corner radius for rounded shape</td></tr>
+<tr><td>--text, -tx</td><td>none</td><td>Custom text to display</td></tr>
+<tr><td>--text-color, -tc</td><td>#ffffff</td><td>Text color in HEX format</td></tr>
+<tr><td>--text-size, -ts</td><td>20</td><td>Text size in pixels (8-100)</td></tr>
+<tr><td>--text-position, -tp</td><td>bottom</td><td>Text position (top, bottom, center)</td></tr>
+<tr><td>--emojis, -e</td><td>none</td><td>Comma-separated list of emojis</td></tr>
+<tr><td>--emoji-size, -es</td><td>40</td><td>Emoji size in pixels (16-120)</td></tr>
+<tr><td>--emoji-position, -ep</td><td>top</td><td>Emoji position (top, bottom, corners)</td></tr>
+<tr><td>--output, -o</td><td>avatar.png</td><td>Output file path</td></tr>
+<tr><td>--url, -u</td><td>https://github-avatar-frame-api.onrender.com</td><td>API base URL</td></tr>
+</tbody>
+</table>
+
+<h3 style="color:#ff4081;">📋 Other Commands</h3>
+
+```bash
+# List available themes
+github-avatar-frame themes
+
+# Show API information
+github-avatar-frame info
+
+# Show help
+github-avatar-frame --help
+```
+
+<h3 style="color:#ff4081;">🤖 AI-Powered Frame Suggestions</h3>
+
+<p style="font-size: 1.05em;">The CLI also supports AI-powered frame suggestions that analyze your GitHub profile and recommend the perfect theme:</p>
+
+```bash
+# Get AI-powered frame suggestion
+github-avatar-frame suggest <username>
+
+# Example
+github-avatar-frame suggest octocat
+```
+
+<p style="font-size: 1.05em;">The AI analyzes:</p>
+<ul style="font-size: 1.05em;">
+<li>🎨 Avatar colors and brightness</li>
+<li>📊 Contribution activity and patterns</li>
+<li>👥 Follower-to-repository ratios</li>
+<li>🔄 Consistency of activity</li>
+</ul>
+
+<p style="font-size: 1.05em;">And suggests themes like:</p>
+<ul style="font-size: 1.05em;">
+<li><b>Dark avatars</b> → Starry/Galaxy themes</li>
+<li><b>Professional photos</b> → Minimal themes</li>
+<li><b>High contributions</b> → Pro/Advanced themes</li>
+<li><b>Beginners</b> → Classic themes</li>
+</ul>
+
+ <img src="https://user-images.githubusercontent.com/74038190/212284100-561aa473-3905-4a80-b561-0d28506553ee.gif" width="100%">
+
 <h2 style="color:#ff5722;">💡 Why GitHub Avatar Frame API?</h2>
 <p style="font-size: 1.1em;">
   <ul>
