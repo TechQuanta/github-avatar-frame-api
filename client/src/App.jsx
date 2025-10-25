@@ -383,6 +383,15 @@ function App() {
     });
   }, []);
   const [username, setUsername] = useState("");
+  // helper to show alert if username missing; returns true if blocked
+  const blockIfNoUsername = () => {
+    if (!username || !username.trim()) {
+      alert("Hey! Please enter your GitHub username first 😊");
+      return true; // blocked
+    }
+    return false; // ok
+  };
+
   const [themes, setThemes] = useState([]);
   const [selectedTheme, setSelectedTheme] = useState("base");
   const [customAccentColor, setCustomAccentColor] = useState(null);
@@ -1438,6 +1447,54 @@ function App() {
                   Random Theme
                 </button>
               </div>
+            </div>
+            {/* Frame Style Control Group(Border Focus) */}
+            <div style={{marginBottom: "24px"}}>
+              <label
+                style={{
+                  display: "block",
+                  fontSize: "14px",
+                  fontWeight: "600",
+                  color: colors.textPrimary,
+                  marginBottom: "8px",
+                }}>
+                  Frame Style (Param : `style`)
+                </label>
+                <div style={{maxWidth: "fit-content"}}>
+                <div 
+                  className='control-button-set'
+                  style={{display: "flex", gap: "12px"}}>
+                  <ControlButton
+                    onClick={() => {
+                      if(blockIfNoUsername()){
+                        alert("please enter a username first!");
+                        return;
+                      }
+                      setFrameStyle("default");
+                      alert("Default frame selected!");
+                    }}
+                    isSelected={frameStyle === "default"}
+                    isDark={isDark}
+                    >
+                      Default
+                  </ControlButton>
+                  <ControlButton
+                    onClick={() => {
+                      if(blockIfNoUsername()){
+                        alert("please enter the user name first!");
+                        return;
+                      }
+                      setFrameStyle("border-focus");
+                      alert("border-focus frame selected!");
+
+                    }}
+                    isSelected={frameStyle === "border-focus"}
+                    isDark={isDark}
+                    >
+                    Border Focus
+                  </ControlButton>
+                  </div>
+            </div>
             </div>
 
             {/* Control Group: Canvas & Shape */}
