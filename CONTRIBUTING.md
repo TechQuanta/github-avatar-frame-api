@@ -1,111 +1,44 @@
-# Contributing to GitHub Avatar Frame API
+## Contributors
 
-Thank you for considering contributing to the GitHub Avatar Frame API! Whether you're a beginner or an experienced developer, your contributions are highly valued.
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+<table>
+  <tbody>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/Anvesha-24"><img src="https://avatars.githubusercontent.com/u/208858168?v=4?s=100" width="100px;" alt="Anvesha-24"/><br /><sub><b>Anvesha-24</b></sub></a><br /><a href="#ideas-Anvesha-24" title="Ideas, Planning, & Feedback">🤔</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/shivram9"><img src="https://avatars.githubusercontent.com/u/205002678?v=4?s=100" width="100px;" alt="Shivram Reddy"/><br /><sub><b>Shivram Reddy</b></sub></a><br /><a href="https://github.com/TechQuanta/github-avatar-frame-api/commits?author=shivram9" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/ashmeet07"><img src="https://avatars.githubusercontent.com/u/91828139?v=4?s=100" width="100px;" alt="$ῗἧḡḥ@sḥmⓔⓔṫ"/><br /><sub><b>$ῗἧḡḥ@sḥmⓔⓔṫ</b></sub></a><br /><a href="https://github.com/TechQuanta/github-avatar-frame-api/commits?author=ashmeet07" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/Suke2004"><img src="https://avatars.githubusercontent.com/u/137488933?v=4?s=100" width="100px;" alt="Sukesh Reddy Ustela"/><br /><sub><b>Sukesh Reddy Ustela</b></sub></a><br /><a href="https://github.com/TechQuanta/github-avatar-frame-api/commits?author=Suke2004" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/itspavant"><img src="https://avatars.githubusercontent.com/u/187398519?v=4?s=100" width="100px;" alt="T Pavan Teja &#124; Contributor"/><br /><sub><b>T Pavan Teja &#124; Contributor</b></sub></a><br /><a href="https://github.com/TechQuanta/github-avatar-frame-api/commits?author=itspavant" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/techquantacommunity"><img src="https://avatars.githubusercontent.com/u/212399388?v=4?s=100" width="100px;" alt="techquantacommunity"/><br /><sub><b>techquantacommunity</b></sub></a><br /><a href="#maintenance-techquantacommunity" title="Maintenance">🚧</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://adityasinghrathore.netlify.app/"><img src="https://avatars.githubusercontent.com/u/142787780?v=4?s=100" width="100px;" alt="aditya singh rathore"/><br /><sub><b>aditya singh rathore</b></sub></a><br /><a href="https://github.com/TechQuanta/github-avatar-frame-api/commits?author=Adez017" title="Code">💻</a></td>
+    </tr>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/aliviahossain"><img src="https://avatars.githubusercontent.com/u/211632522?v=4?s=100" width="100px;" alt="Alivia Hossain"/><br /><sub><b>Alivia Hossain</b></sub></a><br /><a href="https://github.com/TechQuanta/github-avatar-frame-api/commits?author=aliviahossain" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/vishal6268"><img src="https://avatars.githubusercontent.com/u/125592050?v=4?s=100" width="100px;" alt="VISHAL"/><br /><sub><b>VISHAL</b></sub></a><br /><a href="https://github.com/TechQuanta/github-avatar-frame-api/commits?author=vishal6268" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/dharapandya85"><img src="https://avatars.githubusercontent.com/u/109461918?v=4?s=100" width="100px;" alt="Dhara Pandya "/><br /><sub><b>Dhara Pandya </b></sub></a><br /><a href="https://github.com/TechQuanta/github-avatar-frame-api/commits?author=dharapandya85" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/shreya-mishra325"><img src="https://avatars.githubusercontent.com/u/210963725?v=4?s=100" width="100px;" alt="Shreya Mishra"/><br /><sub><b>Shreya Mishra</b></sub></a><br /><a href="https://github.com/TechQuanta/github-avatar-frame-api/commits?author=shreya-mishra325" title="Code">💻</a> <a href="#design-shreya-mishra325" title="Design">🎨</a> <a href="#infra-shreya-mishra325" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/ifthikaar24"><img src="https://avatars.githubusercontent.com/u/145851574?v=4?s=100" width="100px;" alt="ifthikaar24"/><br /><sub><b>ifthikaar24</b></sub></a><br /><a href="https://github.com/TechQuanta/github-avatar-frame-api/commits?author=ifthikaar24" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/apps/allcontributors"><img src="https://avatars.githubusercontent.com/in/23186?v=4?s=100" width="100px;" alt="allcontributors[bot]"/><br /><sub><b>allcontributors[bot]</b></sub></a><br /><a href="https://github.com/TechQuanta/github-avatar-frame-api/commits?author=allcontributors[bot]" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/arundhativaishnav"><img src="https://avatars.githubusercontent.com/u/168985050?v=4?s=100" width="100px;" alt="Arundhati Anil Vaishnav"/><br /><sub><b>Arundhati Anil Vaishnav</b></sub></a><br /><a href="https://github.com/TechQuanta/github-avatar-frame-api/commits?author=arundhativaishnav" title="Code">💻</a></td>
+    </tr>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/darshan02parmar"><img src="https://avatars.githubusercontent.com/u/180026762?v=4?s=100" width="100px;" alt="Darshan Parmar"/><br /><sub><b>Darshan Parmar</b></sub></a><br /><a href="#design-darshan02parmar" title="Design">🎨</a> <a href="#ideas-darshan02parmar" title="Ideas, Planning, & Feedback">🤔</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/Anshita-Rajput"><img src="https://avatars.githubusercontent.com/u/122893543?v=4?s=100" width="100px;" alt="Anshita Rajput"/><br /><sub><b>Anshita Rajput</b></sub></a><br /><a href="#design-Anshita-Rajput" title="Design">🎨</a> <a href="#infra-Anshita-Rajput" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/Alpana176"><img src="https://avatars.githubusercontent.com/u/99571514?v=4?s=100" width="100px;" alt="Alpana Choubey"/><br /><sub><b>Alpana Choubey</b></sub></a><br /><a href="#design-Alpana176" title="Design">🎨</a> <a href="https://github.com/TechQuanta/github-avatar-frame-api/commits?author=Alpana176" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/ananyasinha-1"><img src="https://avatars.githubusercontent.com/u/214334171?v=4?s=100" width="100px;" alt="Ananya Sinha"/><br /><sub><b>Ananya Sinha</b></sub></a><br /><a href="https://github.com/TechQuanta/github-avatar-frame-api/commits?author=ananyasinha-1" title="Code">💻</a> <a href="#infra-ananyasinha-1" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://arshfs.tech"><img src="https://avatars.githubusercontent.com/u/71726849?v=4?s=100" width="100px;" alt="Arsh Choudhary"/><br /><sub><b>Arsh Choudhary</b></sub></a><br /><a href="#maintenance-code-w-arsh" title="Maintenance">🚧</a> <a href="#infra-code-w-arsh" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="https://github.com/TechQuanta/github-avatar-frame-api/commits?author=code-w-arsh" title="Code">💻</a> <a href="#ideas-code-w-arsh" title="Ideas, Planning, & Feedback">🤔</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/Akshayaqueen"><img src="https://avatars.githubusercontent.com/u/170915685?v=4?s=100" width="100px;" alt="B AKSHAYA"/><br /><sub><b>B AKSHAYA</b></sub></a><br /><a href="https://github.com/TechQuanta/github-avatar-frame-api/commits?author=Akshayaqueen" title="Code">💻</a> <a href="#infra-Akshayaqueen" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/ishanraj953"><img src="https://avatars.githubusercontent.com/u/179708459?v=4?s=100" width="100px;" alt="Ishan Raj"/><br /><sub><b>Ishan Raj</b></sub></a><br /><a href="https://github.com/TechQuanta/github-avatar-frame-api/commits?author=ishanraj953" title="Code">💻</a></td>
+    </tr>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/Gupta-02"><img src="https://avatars.githubusercontent.com/u/182321898?v=4?s=100" width="100px;" alt="C Sai Prathyun Gupta"/><br /><sub><b>C Sai Prathyun Gupta</b></sub></a><br /><a href="#infra-Gupta-02" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="https://github.com/TechQuanta/github-avatar-frame-api/commits?author=Gupta-02" title="Code">💻</a> <a href="https://github.com/TechQuanta/github-avatar-frame-api/commits?author=Gupta-02" title="Documentation">📖</a></td>
+    </tr>
+  </tbody>
+</table>
 
----
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
 
-## 🚀 Getting Started
-
-Before contributing, please ensure you have:
-
-- A basic understanding of Git and GitHub.
-- Familiarity with the project's structure and functionality.
-- Reviewed the [README.md](./README.md) for an overview of the project.
-
----
-
-## 🛠 How to Contribute
-
-### 1. Fork the Repository
-
-Click on the **Fork** button at the top right of this repository to create a copy under your GitHub account.
-
-### 2. Clone Your Fork
-
-Clone your forked repository to your local machine:
-
-```bash
-git clone [https://github.com/your-username/github-avatar-frame-api.git](https://github.com/your-username/github-avatar-frame-api.git)
-cd github-avatar-frame-api
-```
-
-### 3\. Create a New Branch
-
-Create a new branch for your changes:
-
-Bash
-
-Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML`   git checkout -b add-new-theme   `
-
-### 4\. Add Your Theme
-
-Add your theme by:
-
-*   Creating a new folder inside public/frames/ for your theme's name.
-    
-*   Adding a frame.png (256x256 px, transparent background) inside your theme folder.
-    
-*   Optionally, adding a metadata.json to describe your theme.
-    
-
-### 5\. Commit Your Changes
-
-Commit your changes with a clear message:
-
-Bash
-
-Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML`   git add .  git commit -m "Add 'future' theme with neon elements"   `
-
-### 6\. Push to Your Fork
-
-Push your changes to your forked repository:
-
-Bash
-
-Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML`   git push origin add-new-theme   `
-
-### 7\. Create a Pull Request
-
-Go to the original repository and click on New Pull Request. Provide a descriptive title and detailed explanation of your changes.
-
-📚 Guidelines
--------------
-
-*   Ensure your theme's frame.png is a transparent PNG, ideally 256x256 px.
-    
-*   Follow the naming convention: theme folder = {theme-name}, image = frame.png.
-    
-*   Optionally, include a metadata.json with the following structure:
-    
-
-JSON
-
-Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML`   {    "name": "Future Frame",    "description": "A futuristic theme with neon elements."  }   `
-
-*   Test your theme by accessing:
-    
-
-Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML`   [https://frame-api.vercel.app/api/frame/](https://frame-api.vercel.app/api/frame/){your-theme}/{github-username}   `
-
-🤝 Code of Conduct
-------------------
-
-By participating, you agree to adhere to our Code of Conduct.
-
-📝 License
-----------
-
-This project is licensed under the MIT License.
-
-### ✅ Key Features of This Template:
-
-*   **Clear Step-by-Step Instructions**: Guides contributors through forking, cloning, creating branches, adding themes, committing, and creating pull requests.
-    
-*   **Detailed Guidelines**: Provides specific instructions on naming conventions, file formats, and optional metadata inclusion.
-    
-*   **Testing Instructions**: Encourages contributors to test their themes using the live API before submitting pull requests.
-    
-*   **Code of Conduct and License**: Links to the project's code of conduct and licensing information to ensure a respectful and legally compliant contribution process.
-    
-
-Feel free to adjust the content to better fit your project's specific requirements. If you need further assistance or additional templates (like README.md or CODE\_OF\_CONDUCT.md), don't hesitate to ask!
+<!-- ALL-CONTRIBUTORS-LIST:END -->

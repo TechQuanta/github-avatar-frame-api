@@ -13,7 +13,8 @@ export default async function handler(req, res) {
     const username = req.query.username;
     const theme = req.query.theme || "base";
     const size = Math.max(64, Math.min(Number(req.query.size || 256), 1024));
-    const canvas= req.query.canvas || "light";
+    const canvas = req.query.canvas || "light";
+    const accentColor = req.query.accentColor || null;
     // Validate username
     if (!username || typeof username !== "string" || username.trim() === "") {
       return res.status(400).json({ error: "Username is required" });
@@ -82,10 +83,24 @@ export default async function handler(req, res) {
       .toBuffer();
     // only resize frame if it was successfully loaded
     if(frameBuffer){
-     frameResized = await sharp(frameBuffer)
-      .resize(size, size)
-      .png()
-      .toBuffer();
+      let frameProcessor = sharp(frameBuffer).resize(size, size);
+      
+      // Apply custom accent color if provided
+      if (accentColor) {
+        // Convert hex color to RGB for processing
+        const hex = accentColor.replace('#', '');
+        const r = parseInt(hex.substr(0, 2), 16);
+        const g = parseInt(hex.substr(2, 2), 16);
+        const b = parseInt(hex.substr(4, 2), 16);
+        
+        // Apply color tint to the frame
+        frameProcessor = frameProcessor.modulate({
+          brightness: 1.1, // Slightly brighten
+          saturation: 1.3, // Increase saturation
+        }).tint({ r, g, b });
+      }
+      
+      frameResized = await frameProcessor.png().toBuffer();
     }
     // composition logic for transparency and avatar clipping
     let imageProcessor;
