@@ -190,6 +190,15 @@ function App() {
     });
   }, []);
   const [username, setUsername] = useState("");
+  // helper to show alert if username missing; returns true if blocked
+  const blockIfNoUsername = () => {
+    if (!username || !username.trim()) {
+      alert("Hey! Please enter your GitHub username first 😊");
+      return true; // blocked
+    }
+    return false; // ok
+  };
+
   const [themes, setThemes] = useState([]);
   const [selectedTheme, setSelectedTheme] = useState("base");
   const [size, setSize] = useState(384);
@@ -740,7 +749,13 @@ function App() {
                   {themes.map((theme) => (
                     <button
                       key={theme.theme}
-                      onClick={() => handleThemeSelect(theme.theme)}
+                      onClick={() => {
+                        if(blockIfNoUsername()){
+                          alert("please enter the user name first");
+                          return;
+                        }
+                        handleThemeSelect(theme.theme);
+                      }}
                       style={{
                         padding: "8px 12px",
                         minWidth: "100px",
@@ -807,9 +822,17 @@ function App() {
                   className='control-button-set'
                   style={{ display: "flex", gap: "12px" }}>
                   <ControlButton
-                    onClick={() => setCanvas("light")}
+                    onClick={() => {
+                      if(blockIfNoUsername()){
+                        alert("please enter the user name first!");
+                        return;
+                      }
+                      setCanvas("light");
+                      alert("light canvas selected!");
+                    }}
                     isSelected={canvas === "light"}
-                    isDark={isDark}>
+                    isDark={isDark}
+                    >
                     <Sun size={18} /> Light
                   </ControlButton>
                   <ControlButton
@@ -820,11 +843,18 @@ function App() {
                   </ControlButton>
                   {/*Transparent Button */}
                   <ControlButton
-                    onClick={()=> setCanvas("transparent")}
+                    onClick={()=> {
+                      if(blockIfNoUsername()){
+                        alert("please enter the user name first!");
+                        return;
+                      }
+                      setCanvas("transparent");
+                      alert("Transparent canvas selected!");
+                    }}
                     isSelected={canvas === "transparent"}
                     isDark={isDark}>
                       <Sparkles size={18}/> Tranparent
-                    </ControlButton>
+                  </ControlButton>
                 </div>
               </div>
               <div style={{ flex: 1 }}>
@@ -842,15 +872,31 @@ function App() {
                   className='control-button-set'
                   style={{ display: "flex", gap: "12px" }}>
                   <ControlButton
-                    onClick={() => setShape("circle")}
+                    onClick={() => {
+                      if(blockIfNoUsername()){
+                        alert("Please enter the user name first!");
+                        return;
+                      }
+                      setShape("circle");
+                      alert("Circle shape selected!");
+                    }}
                     isSelected={shape === "circle"}
                     isDark={isDark}>
                     <Circle size={18} /> Circle
                   </ControlButton>
                   <ControlButton
-                    onClick={() => setShape("rect")}
+                    onClick={() => {
+                      if(blockIfNoUsername()){
+                        alert("please enter the user name first!");
+                        return;
+                      }
+                      setShape("rect");
+                      alert("Square shape selected!");
+                    }}
+                      
                     isSelected={shape === "rect"}
-                    isDark={isDark}>
+                    isDark={isDark}
+                    >
                     <Square size={18} /> Square
                   </ControlButton>
                 </div>
@@ -872,16 +918,33 @@ function App() {
                 <div 
                   className='control-button-set'
                   style={{display: "flex", gap: "12px"}}>
-                    <ControlButton
-                    onClick={() => setFrameStyle("default")}
+                  <ControlButton
+                    onClick={() => {
+                      if(blockIfNoUsername()){
+                        alert("please enter a username first!");
+                        return;
+                      }
+                      setFrameStyle("default");
+                      alert("Default frame selected!");
+                    }}
                     isSelected={frameStyle === "default"}
-                    isDark={isDark}>
+                    isDark={isDark}
+                    >
                       Default
                   </ControlButton>
                   <ControlButton
-                    onClick={() => setFrameStyle("border-focus")}
+                    onClick={() => {
+                      if(blockIfNoUsername()){
+                        alert("please enter the user name first!");
+                        return;
+                      }
+                      setFrameStyle("border-focus");
+                      alert("border-focus frame selected!");
+
+                    }}
                     isSelected={frameStyle === "border-focus"}
-                    isDark={isDark}>
+                    isDark={isDark}
+                    >
                     Border Focus
                   </ControlButton>
                   </div>
@@ -967,7 +1030,10 @@ function App() {
 
             {/* Generate Button */}
             <button
-              onClick={generateFramedAvatar}
+              onClick={() =>{
+                if (blockIfNoUsername()) return;
+                generateFramedAvatar();
+              }}
               disabled={loading || !username.trim()}
               style={{
                 width: "100%",
@@ -1133,7 +1199,10 @@ function App() {
                       margin: "0 auto",
                     }}>
                     <button
-                      onClick={downloadImage}
+                      onClick={()=>{
+                        if (blockIfNoUsername()) return;
+                        downloadImage();
+                      }}
                       style={{
                         width: "100%",
                         background:
