@@ -1500,29 +1500,38 @@ function App() {
             }}>
             Background Canvas (Param: `canvas`)
         </label>
-        <div
-            className='control-button-set'
-            style={{ display: "wrap", gap: "12px" }}>
+      <div
+            className="control-button-set flex flex-col sm:flex-row" // Stacks on mobile, Rows on small screens (640px+)
+            style={{ 
+              display: "flex", // Must be "flex"
+              flexWrap: "wrap", // Allows wrapping if they don't fit in one row
+              gap: "12px" 
+            }}
+          >
             <ControlButton
-                onClick={() => setCanvas("light")}
-                isSelected={canvas === "light"}
-                isDark={isDark}>
-                <Sun size={18} /> Light
+              onClick={() => setCanvas("light")}
+              isSelected={canvas === "light"}
+              isDark={isDark}
+            >
+              <Sun size={18} /> Light
             </ControlButton>
+          
             <ControlButton
-                onClick={() => setCanvas("dark")}
-                isSelected={canvas === "dark"}
-                isDark={isDark}>
-                <Moon size={18} /> Dark
+              onClick={() => setCanvas("dark")}
+              isSelected={canvas === "dark"}
+              isDark={isDark}
+            >
+              <Moon size={18} /> Dark
             </ControlButton>
-            {/*Transparent Button */}
+          
             <ControlButton
-                onClick={()=> setCanvas("transparent")}
-                isSelected={canvas === "transparent"}
-                isDark={isDark}>
-                <Sparkles size={18}/> Transparent
+              onClick={() => setCanvas("transparent")}
+              isSelected={canvas === "transparent"}
+              isDark={isDark}
+            >
+              <Sparkles size={18} /> Transparent
             </ControlButton>
-        </div>
+          </div>
     </div>
     {/* Avatar Shape (Param: `shape`) - Now appears below the Background Canvas */}
     <div style={{ flex: 1 }}>
@@ -1536,22 +1545,30 @@ function App() {
             }}>
             Avatar Shape (Param: `shape`)
         </label>
-        <div
-            className='control-button-set'
-            style={{ display: "wrap", gap: "12px" }}>
+       <div
+            className="control-button-set flex flex-col sm:flex-row" 
+            style={{ 
+              display: "flex", 
+              flexWrap: "wrap", 
+              gap: "12px" 
+            }}
+          >
             <ControlButton
-                onClick={() => setShape("circle")}
-                isSelected={shape === "circle"}
-                isDark={isDark}>
-                <Circle size={18} /> Circle
+              onClick={() => setShape("circle")}
+              isSelected={shape === "circle"}
+              isDark={isDark}
+            >
+              <Circle size={18} /> Circle
             </ControlButton>
+          
             <ControlButton
-                onClick={() => setShape("rect")}
-                isSelected={shape === "rect"}
-                isDark={isDark}>
-                <Square size={18} /> Square
+              onClick={() => setShape("rect")}
+              isSelected={shape === "rect"}
+              isDark={isDark}
+            >
+              <Square size={18} /> Square
             </ControlButton>
-        </div>
+          </div>
       </div>
   </div>
 
@@ -1711,26 +1728,38 @@ function App() {
                   <label style={{ fontSize: "12px", color: colors.textSecondary, marginBottom: "4px", display: "block" }}>
                     Position
                   </label>
-                  <div style={{ display: "flex", gap: "8px" }}>
-                    <ControlButton
-                      onClick={() => setTextPosition("top")}
-                      isSelected={textPosition === "top"}
-                      isDark={isDark}>
-                      Top
-                    </ControlButton>
-                    <ControlButton
-                      onClick={() => setTextPosition("center")}
-                      isSelected={textPosition === "center"}
-                      isDark={isDark}>
-                      Center
-                    </ControlButton>
-                    <ControlButton
-                      onClick={() => setTextPosition("bottom")}
-                      isSelected={textPosition === "bottom"}
-                      isDark={isDark}>
-                      Bottom
-                    </ControlButton>
-                  </div>
+                 <div 
+                      className="flex flex-col sm:flex-row" // Stacks on mobile, goes horizontal on small screens+
+                      style={{ 
+                        display: "flex", 
+                        flexWrap: "wrap", 
+                        gap: "8px" 
+                      }}
+                    >
+                      <ControlButton
+                        onClick={() => setTextPosition("top")}
+                        isSelected={textPosition === "top"}
+                        isDark={isDark}
+                      >
+                        Top
+                      </ControlButton>
+                      
+                      <ControlButton
+                        onClick={() => setTextPosition("center")}
+                        isSelected={textPosition === "center"}
+                        isDark={isDark}
+                      >
+                        Center
+                      </ControlButton>
+                      
+                      <ControlButton
+                        onClick={() => setTextPosition("bottom")}
+                        isSelected={textPosition === "bottom"}
+                        isDark={isDark}
+                      >
+                        Bottom
+                      </ControlButton>
+                    </div>
                 </div>
               </div>
             </div>
