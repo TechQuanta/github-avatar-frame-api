@@ -1151,172 +1151,157 @@ function App() {
           </div>
         </div>
 
-        {/* --- 3. Main Left/Right Container (50/50 Split Desktop, Column Mobile) --- */}
-          <div
-            className="main-grid-container"
+      <div
+  className="main-grid-container"
+  style={{
+    display: "grid",
+    gap: "24px",
+    /* Logic: Automatically fits as many 350px columns as possible. 
+       On mobile (~400px), only one fits, so they stack! */
+    gridTemplateColumns: "repeat(auto-fit, minmax(350px, 1fr))", 
+    alignItems: "start",
+    justifyContent: "center",
+    maxWidth: "1200px",
+    margin: "0 auto",
+    padding: "32px 16px",
+  }}
+>
+  {/* Left: Configuration Panel (50%) */}
+  <div 
+    id="username-section" 
+    data-aos="flip-right"
+    style={{
+      background: colors.bgCard,
+      borderRadius: "12px",
+      border: `1px solid ${colors.border}`,
+      padding: "32px",
+      display: "flex",
+      maxWidth: "100%",
+      flexDirection: "column",
+      gap: "24px",
+      boxShadow: "0 4px 12px rgba(0,0,0,0.05)",
+      minWidth: "0", /* Prevents internal elements from breaking the grid */
+    }}
+  >
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        gap: "12px",
+        marginBottom: "24px",
+      }}
+    >
+      <div
+        style={{
+          background: `linear-gradient(135deg, ${colors.accentPrimary} 0%, ${colors.accentSecondary} 100%)`,
+          padding: "10px",
+          borderRadius: "8px",
+        }}
+      >
+        <Github size={20} color="white" />
+      </div>
+      <h2
+        style={{
+          fontSize: "20px",
+          fontWeight: "bold",
+          color: colors.textPrimary,
+          margin: 0,
+        }}
+      >
+        Configuration & Params
+      </h2>
+    </div>
+
+    {/* Search Bar and Theme Selector Container */}
+    <div
+      className="search-theme-container"
+      style={{
+        display: "flex",
+        gap: "24px",
+        alignItems: "flex-start",
+        flexWrap: "wrap", /* Ensures inputs stack inside the card on small phones */
+        marginBottom: "8px",
+      }}
+    >
+      {/* Username Input */}
+      <div
+        style={{
+          flex: 1,
+          minWidth: "200px",
+          display: "flex",
+          flexDirection: "column",
+          gap: "8px",
+        }}
+      >
+        <label
+          htmlFor="username-input"
+          style={{
+            width: "100%",
+            fontSize: "14px",
+            fontWeight: "600",
+            color: colors.textPrimary,
+          }}
+        >
+          GitHub Username
+        </label>
+        <div
+          style={{
+            position: "relative",
+            display: "flex",
+            alignItems: "center",
+          }}
+        >
+          <input
+            id="username-input"
+            type="text"
+            value={username}
+            onChange={handleUsernameChange}
+            placeholder="Enter username (e.g., torvalds)"
             style={{
-              display: "grid",
-              gap: "24px",
-              /* This is the magic line that fixes mobile wrapping */
-              gridTemplateColumns: "repeat(auto-fit, minmax(350px, 1fr))", 
-              alignItems: "start",
-              justifyContent: "center",
-              maxWidth: "1200px",
-              margin: "0 auto",
-              padding: "32px 16px",
-            }}
-          >
-          {/* Left: Configuration Panel (50%) */}
-          <div id="username-section" data-aos="flip-right"
-            style={{
-              background: colors.bgCard,
-              borderRadius: "12px",
-              border: `1px solid ${colors.border}`,
-              padding: "32px",
-              display: "flex",
               maxWidth: "100%",
-              flexDirection: "column",
-              gap: "24px",
-              boxShadow: "0 4px 12px rgba(0,0,0,0.05)",
-              minWidth: "0" /* Critical for layout flexibility */,
+              width: "100%",
+              padding: "12px 16px 12px 48px",
+              fontSize: "16px",
+              border: `1px solid ${colors.borderInput}`,
+              borderRadius: "8px",
+              outline: "none",
+              color: colors.textPrimary,
+              background: colors.bgInput,
+              boxSizing: "border-box",
+              fontFamily: "monospace",
             }}
-          >
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "12px",
-                marginBottom: "24px",
-              }}
-            >
-              <div
-                style={{
-                  background: `linear-gradient(135deg, ${colors.accentPrimary} 0%, ${colors.accentSecondary} 100%)`,
-                  padding: "10px",
-                  borderRadius: "8px",
-                }}
-              >
-                <Github size={20} color="white" />
-              </div>
-              <h2
-                style={{
-                  fontSize: "20px",
-                  fontWeight: "bold",
-                  color: colors.textPrimary,
-                  margin: 0,
-                }}
-              >
-                Configuration & Params
-              </h2>
-            </div>
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && username.trim()) {
+                generateFramedAvatar();
+              }
+            }}
+          />
+          <Github
+            size={20}
+            color={colors.textSecondary}
+            style={{
+              position: "absolute",
+              left: "14px",
+              top: "50%",
+              transform: "translateY(-50%)",
+              pointerEvents: "none",
+            }}
+          />
+        </div>
+      </div>
 
-            {/* Search Bar and Theme Selector Container */}
-            <div
-              className="search-theme-container"
-              style={{
-                display: "flex",
-                gap: "24px",
-                alignItems: "flex-start",
-                flexWrap: "wrap",
-                marginBottom: "8px",
-              }}
-            >
-              {/* Username Input (Monospace Font Applied Here) */}
-              <div
-                style={{
-                  flex: 1,
-                  minWidth: "200px",
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "8px",
-                }}
-              >
-                <label
-                  htmlFor="username-input"
-                  style={{
-                    width: "100%",
-                    fontSize: "14px",
-                    fontWeight: "600",
-                    color: colors.textPrimary,
-                  }}
-                >
-                  GitHub Username
-                </label>
-                <div
-                  style={{
-                    position: "relative",
-                    display: "flex",
-                    alignItems: "center",
-                  }}
-                >
-                <input
-                  id="username-input"
-                  type="text"
-                  value={username}
-                  onChange={handleUsernameChange}
-                  placeholder="Enter username (e.g., torvalds)"
-                  aria-describedby="username-help"
-                  style={{
-                    maxWidth: "300px",
-                    width: "100%",
-                    padding: "12px 16px 12px 48px",
-                    fontSize: "16px",
-                    border: `1px solid ${colors.borderInput}`,
-                    borderRadius: "8px",
-                    outline: "none",
-                    transition: "all 0.2s",
-                    color: colors.textPrimary,
-                    background: colors.bgInput,
-                    boxSizing: "border-box",
-                    fontFamily: "monospace", // Applied monospace font
-                  }}
-                  onFocus={(e) => {
-                    e.target.style.borderColor = colors.accentPrimary;
-                    e.target.style.boxShadow = `0 0 0 2px ${colors.accentPrimary}33`;
-                  }}
-                  onBlur={(e) => {
-                    e.target.style.borderColor = colors.borderInput;
-                    e.target.style.boxShadow = "none";
-                  }}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                      e.preventDefault();
-                      if (username.trim()) {
-                        generateFramedAvatar();
-                      }
-                    }
-                  }}
-                />
-                  <Github
-                    size={20}
-                    color={colors.textSecondary}
-                    style={{
-                      position: "absolute",
-                      left: "14px",
-                      top: "50%",
-                      transform: "translateY(-50%)",
-                      pointerEvents: "none",
-                    }}
-                  />
-                </div>
-                <div id="username-help" style={{ display: "none" }}>
-                  Enter your GitHub username to generate a framed avatar. Press Enter to generate if a username is entered.
-                </div>
-              </div>
-
-              {/* Theme Selection Slider */}
-              <div style={{ flex: 1, minWidth: "250px" }}>
-                <ThemeSlider
-                  themes={themes}
-                  themesLoading={themesLoading}
-                  selectedTheme={selectedTheme}
-                  handleThemeSelect={handleThemeSelect}
-                  colors={colors}
-                  isDark={isDark}
-                />
-              </div>
-            </div>
-
+      {/* Theme Selection Slider */}
+      <div style={{ flex: 1, minWidth: "250px" }}>
+        <ThemeSlider
+          themes={themes}
+          themesLoading={themesLoading}
+          selectedTheme={selectedTheme}
+          handleThemeSelect={handleThemeSelect}
+          colors={colors}
+          isDark={isDark}
+        />
+      </div>
+    </div>
             {/* Custom Color Picker and Random Theme Generator */}
             <div style={{ marginBottom: "16px" }}>
               <label
