@@ -886,13 +886,11 @@ function App() {
             style={{
               minHeight: "100vh",
               background: colors.bgBody,
-              padding: "24px 16px",
               color: colors.textPrimary,
             }}>
             <div className="layout-wrapper"
                     style={{
                       maxWidth: "1200px",
-                      margin: "0 auto",
                     }}>
         {/* --- 1. Top Bar: Title + Community Button --- */}
         <div
