@@ -211,3 +211,17 @@ input:focus {
     flex-direction: column;
   }
 }
+/* This container holds the Settings (Left) and Preview (Right) */
+.main-content-layout {
+  display: flex;
+  flex-direction: row; /* Side-by-side on desktop */
+  gap: 24px;
+  width: 100%;
+}
+
+/* When the screen is smaller than 768px (Mobile/Tablet) */
+@media (max-width: 768px) {
+  .main-content-layout {
+    flex-direction: column; /* Stacked top-to-bottom */
+  }
+}
