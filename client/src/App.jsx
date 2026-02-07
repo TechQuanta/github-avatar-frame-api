@@ -1502,7 +1502,7 @@ function App() {
         </label>
         <div
             className='control-button-set'
-            style={{ display: "flex", gap: "12px" }}>
+            style={{ display: "wrap", gap: "12px" }}>
             <ControlButton
                 onClick={() => setCanvas("light")}
                 isSelected={canvas === "light"}
@@ -1538,7 +1538,7 @@ function App() {
         </label>
         <div
             className='control-button-set'
-            style={{ display: "flex", gap: "12px" }}>
+            style={{ display: "wrap", gap: "12px" }}>
             <ControlButton
                 onClick={() => setShape("circle")}
                 isSelected={shape === "circle"}
