@@ -4,6 +4,7 @@ import App from './App.jsx'
 import AOS from 'aos'
 import 'aos/dist/aos.css'
 import './main.css'
+import './App.css'
 
 AOS.init({
   duration: 1000, 
