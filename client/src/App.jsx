@@ -1492,7 +1492,7 @@ function App() {
     <div style={{ flex: 1, marginBottom: "24px" }}>
         <label
             style={{
-                display: "block",
+                display: "flex",
                 fontSize: "14px",
                 fontWeight: "600",
                 color: colors.textPrimary,
@@ -1528,7 +1528,7 @@ function App() {
     <div style={{ flex: 1 }}>
         <label
             style={{
-                display: "block",
+                display: "flex",
                 fontSize: "14px",
                 fontWeight: "600",
                 color: colors.textPrimary,
@@ -1562,7 +1562,7 @@ function App() {
               }}>
               <label
                 style={{
-                  display: "block",
+                  display: "flex",
                   fontSize: "14px",
                   fontWeight: "600",
                   color: colors.textPrimary,
@@ -1604,7 +1604,7 @@ function App() {
                 }}>
                 <label
                   style={{
-                    display: "block",
+                    display: "flex",
                     fontSize: "14px",
                     fontWeight: "600",
                     color: colors.textPrimary,
@@ -1645,7 +1645,7 @@ function App() {
             <div style={{ marginBottom: "24px" }}>
               <label
                 style={{
-                  display: "block",
+                  display: "flex",
                   fontSize: "14px",
                   fontWeight: "600",
                   color: colors.textPrimary,
