@@ -2027,6 +2027,7 @@ function App() {
                       style={{
                         display: "flex",
                         gap: "12px",
+                        flexDirection: "column",
                         marginBottom: "12px",
                       }}
                     >
@@ -2237,7 +2238,7 @@ function App() {
                           {badgeCopied ? "Copied!" : "Copy Markdown"}
                         </button>
                       </div>
-                      <div style={{ display: "flex", gap: "12px", marginBottom: "12px" }}>
+                      <div style={{ display: "flex", gap: "12px",flexDirection: "column", marginBottom: "12px" }}>
                         <input
                           type="text"
                           placeholder="Badge label"
