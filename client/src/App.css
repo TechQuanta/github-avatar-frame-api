@@ -1,95 +1,165 @@
 /* ==========================
-   App-wide design tokens
+   Formal Design Tokens
    ========================== */
 :root {
+  --radius-xl: 24px;
   --radius-md: 12px;
-  --shadow-sm: 0 4px 12px rgba(2,6,23,0.06);
-  --accent-primary: #7c3aed;
-  --accent-secondary: #a855f7;
-  --muted: #9ca3af;
-  --glass: rgba(255,255,255,0.6);
-  --glass-dark: rgba(0,0,0,0.25);
+  --shadow-sm: 0 4px 20px rgba(0, 0, 0, 0.04);
+  --accent-primary: #10b981; /* Emerald for professionalism */
+  --muted: #6b7280;
+  --bg-main: #ffffff; /* Pure white for light mode */
+  --glass: rgba(255, 255, 255, 0.7);
+  --border-light: rgba(0, 0, 0, 0.06);
 }
 
-*,
-*::before,
-*::after { box-sizing: border-box; }
-html,body,#root { height: 100%; margin: 0; }
-body {
-   font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+/* Dark Mode Tokens */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-main: #0a0a0a;
+    --border-light: rgba(255, 255, 255, 0.06);
+    --glass: rgba(10, 10, 10, 0.7);
+  }
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body { 
+  margin: 0; 
+  padding: 0;
+  height: 100%;
+  overflow-x: hidden;
+  background-color: var(--bg-main);
   color: #111827;
-  background: linear-gradient(135deg, #f3f0ff 0%, #fff6fb 100%);
+}
+
+body {
+  font-family: 'Inter', -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
 
 /* ==========================
-   Animations
+   Modern Layout Helpers
    ========================== */
-@keyframes spin { to { transform: rotate(360deg); } }
-@keyframes pulse-anim { 50% { opacity: .6; } }
-@keyframes slideInRight { from { transform: translateX(8px); opacity: 0 } to { transform: translateX(0); opacity: 1 } }
-.spinner { animation: spin 1s linear infinite; }
-.pulse-text { animation: pulse-anim 2s infinite; }
-.error-shake { animation: shake 0.4s ease-out; }
+.layout-wrapper { 
+  width: 100%;
+  max-width: 1300px; 
+  margin: 0 auto; 
+  padding: 40px 24px; /* Balanced side padding */
+}
+
+/* Fix for the "content inside" issue */
+@media(max-width: 640px) {
+  .layout-wrapper { padding: 20px 16px; }
+}
+
+.header-container { 
+  display: flex; 
+  justify-content: space-between; 
+  align-items: flex-end; 
+  gap: 20px; 
+  margin-bottom: 48px;
+}
+
+.main-title { 
+  font-size: clamp(32px, 8vw, 64px); /* Fluid typography */
+  font-weight: 900;
+  letter-spacing: -0.05em;
+  line-height: 0.9;
+  margin: 0;
+  text-transform: uppercase;
+}
 
 /* ==========================
-   Layout helpers
-   ========================== */
-.layout-wrapper { padding: 24px 16px; max-width: 1200px; margin: 0 auto; }
-.header-container { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
-.main-title { font-size: 48px; line-height: 1; margin: 0; }
-.main-grid-container { display: grid; gap: 24px; grid-template-columns: 1fr; }
-.section-card { background: white; border-radius: var(--radius-md); padding: 28px; box-shadow: var(--shadow-sm); border: 1px solid rgba(15,23,42,0.03); }
+   Section & Glass Cards
+   ========================= */
+.section-card { 
+  background: var(--glass); 
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: var(--radius-xl); 
+  padding: 32px; 
+  border: 1px solid var(--border-light);
+  box-shadow: var(--shadow-sm);
+}
 
-/* Prevent long content from causing horizontal overflow */
-html, body { overflow-x: hidden; }
-.mono-box, .main-title, .section-card, input, select, textarea { word-break: break-word; }
-.truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.wrap { white-space: normal; }
-
-/* header title responsiveness */
-.title-block { flex: 1 1 auto; min-width: 0; }
-.main-title { max-width: 100%; word-wrap: break-word; }
-.api-url-box { width: 100%; }
-
-/* Two column layout on desktop */
-@media(min-width: 769px) { .main-grid-container { grid-template-columns: 1fr 1fr; } }
-
-/* ==========================
-   Form & Controls
-   ========================== */
-label { display: block; font-weight: 600; margin-bottom: 8px; }
-input[type="text"], input[type="color"], select, .range-slider { width: 100%; font-size: 14px; padding: 10px 12px; border-radius: 10px; border: 1px solid #e6e9ee; }
-input[type="color"] { padding: 3px; height: 40px; }
-.control-group { display: flex; gap: 24px; align-items: flex-start; }
-.control-button-set { display:flex; gap: 12px; }
-.control-button-set button { min-width: 100px; }
-
-.button-primary { background: linear-gradient(90deg,var(--accent-primary),var(--accent-secondary)); color: white; border: none; padding: 12px 16px; border-radius: 10px; cursor: pointer; font-weight: 700; }
-.button-ghost { background: transparent; border: 1px solid rgba(0,0,0,0.06); padding: 10px 12px; border-radius: 8px; }
+/* Remove fixed white borders on preview images */
+.preview-canvas, .preview-img { 
+  width: 100%; 
+  height: auto; 
+  border-radius: var(--radius-md);
+  border: none; /* Removed the 3px white border */
+  display: block; 
+  margin: 0 auto;
+}
 
 /* ==========================
-   Preview & Image
+   Grid & Responsiveness
    ========================== */
-.preview-canvas, .preview-img { width: 100%; height: auto; max-width: 384px; max-height: 384px; display: block; margin: 0 auto 24px; box-shadow: 0 10px 25px rgba(2,6,23,0.12); border: 3px solid white; }
+.main-grid-container { 
+  display: grid; 
+  gap: 32px; 
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); 
+}
 
-/* API/Badge boxes - monospace and subtle background */
-.mono-box { font-family: monospace; font-size: 12px; padding: 10px; border-radius: 8px; background: #f8fafc; border: 1px solid #e6e9ee; color: #374151; word-break: break-all; }
-
-/* small responsive tweaks */
 @media(max-width: 768px) {
-  .main-title { font-size: 36px; }
-  .control-group { flex-direction: column; }
-  .section-card { padding: 20px; }
+  .main-grid-container { grid-template-columns: 1fr; }
+  .header-container { flex-direction: column; align-items: flex-start; }
 }
 
-/* range thumb styling */
-.range-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; border-radius: 50%; background: var(--accent-primary); box-shadow: 0 2px 6px rgba(0,0,0,0.12); }
-.range-slider::-moz-range-thumb { width: 18px; height: 18px; border-radius: 50%; background: var(--accent-primary); }
+/* ==========================
+   Formal Forms & Controls
+   ========================== */
+input, select, textarea { 
+  width: 100%; 
+  font-size: 13px; 
+  font-weight: 600;
+  padding: 12px 16px; 
+  border-radius: var(--radius-md); 
+  border: 1px solid var(--border-light);
+  background: transparent;
+  transition: all 0.2s ease;
+}
 
-/* scrollbar styling for horizontal theme list */
-.themes-scroll-container { overflow-x: auto; -ms-overflow-style: none; scrollbar-width: thin; }
-.themes-scroll-container::-webkit-scrollbar { height: 8px; }
-.themes-scroll-container::-webkit-scrollbar-thumb { background: linear-gradient(90deg,var(--accent-primary),var(--accent-secondary)); border-radius: 999px; }
+input:focus {
+  outline: none;
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
+}
 
+.button-primary { 
+  background: #000; 
+  color: #fff; 
+  border: none; 
+  padding: 14px 24px; 
+  border-radius: var(--radius-md); 
+  cursor: pointer; 
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  transition: transform 0.2s;
+}
+
+@media (prefers-color-scheme: dark) {
+  .button-primary { background: #fff; color: #000; }
+  body { color: #f9fafb; }
+}
+
+.button-primary:active { transform: scale(0.96); }
+
+/* ==========================
+   Miscellaneous Utilities
+   ========================== */
+.mono-box { 
+  font-family: 'SFMono-Regular', Consolas, monospace; 
+  font-size: 11px; 
+  padding: 12px; 
+  border-radius: var(--radius-md); 
+  background: rgba(0,0,0,0.03); 
+  border: 1px solid var(--border-light);
+  word-break: break-all; 
+}
+
+/* Scrollbar refinement */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 10px; }
