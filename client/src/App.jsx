@@ -1822,23 +1822,35 @@ function App() {
                   <label style={{ fontSize: "12px", color: colors.textSecondary, marginBottom: "4px", display: "block" }}>
                     Position
                   </label>
-                  <div style={{ display: "flex", gap: "8px" }}>
+                  <div 
+                    className="flex flex-col sm:flex-row" // Stacks on mobile, builds on 640px+ screens
+                    style={{ 
+                      display: "flex", 
+                      flexWrap: "wrap", // Safety for smaller screens
+                      gap: "8px" 
+                    }}
+                  >
                     <ControlButton
                       onClick={() => setEmojiPosition("top")}
                       isSelected={emojiPosition === "top"}
-                      isDark={isDark}>
+                      isDark={isDark}
+                    >
                       Top
                     </ControlButton>
+                  
                     <ControlButton
                       onClick={() => setEmojiPosition("bottom")}
                       isSelected={emojiPosition === "bottom"}
-                      isDark={isDark}>
+                      isDark={isDark}
+                    >
                       Bottom
                     </ControlButton>
+                  
                     <ControlButton
                       onClick={() => setEmojiPosition("corners")}
                       isSelected={emojiPosition === "corners"}
-                      isDark={isDark}>
+                      isDark={isDark}
+                    >
                       Corners
                     </ControlButton>
                   </div>
