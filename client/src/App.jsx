@@ -1152,19 +1152,20 @@ function App() {
         </div>
 
         {/* --- 3. Main Left/Right Container (50/50 Split Desktop, Column Mobile) --- */}
-        <div
-          className="main-grid-container"
-          style={{
-            display: "grid",
-            gap: "24px",
-            alignItems: "start",
-            justifyContent: "center",
-            gridTemplateColumns: "1fr 1fr",
-            maxWidth: "1200px",
-            margin: "0 auto",
-            padding: "32px 16px",
-          }}
-        >
+          <div
+            className="main-grid-container"
+            style={{
+              display: "grid",
+              gap: "24px",
+              /* This is the magic line that fixes mobile wrapping */
+              gridTemplateColumns: "repeat(auto-fit, minmax(350px, 1fr))", 
+              alignItems: "start",
+              justifyContent: "center",
+              maxWidth: "1200px",
+              margin: "0 auto",
+              padding: "32px 16px",
+            }}
+          >
           {/* Left: Configuration Panel (50%) */}
           <div id="username-section" data-aos="flip-right"
             style={{
@@ -1919,7 +1920,12 @@ function App() {
               border: `1px solid ${colors.border}`,
               padding: "32px",
               maxWidth: "100%",
-              minWidth: "0" /* Critical for layout flexibility */,
+              minWidth: "0",
+              
+              /* ADD THESE 3 LINES BELOW */
+              position: "sticky", 
+              top: "24px",       // Distance from the top of the screen when scrolling
+              zIndex: 10,        // Keeps it above other background elements
             }}
           >
             <div
