@@ -42,16 +42,16 @@ body {
    ========================== */
 .layout-wrapper { 
   width: 100%;
-  max-width: 1300px; 
+  max-width: 1400px; /* Increased for a more formal wide look */
   margin: 0 auto; 
-  padding: 40px 24px; /* Balanced side padding */
+  padding: 40px 5%; /* Use percentage for sides so it scales with screen */
 }
 
-/* Fix for the "content inside" issue */
-@media(max-width: 640px) {
-  .layout-wrapper { padding: 20px 16px; }
+@media(max-width: 768px) {
+  .layout-wrapper { 
+    padding: 20px 16px; /* Tighter padding on mobile */
+  }
 }
-
 .header-container { 
   display: flex; 
   justify-content: space-between; 
@@ -74,22 +74,24 @@ body {
    ========================= */
 .section-card { 
   background: var(--glass); 
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-radius: var(--radius-xl); 
-  padding: 32px; 
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: var(--radius-md); 
+  padding: 24px; 
   border: 1px solid var(--border-light);
   box-shadow: var(--shadow-sm);
+  height: 100%; /* Ensures cards in the same row are equal height */
 }
-
 /* Remove fixed white borders on preview images */
 .preview-canvas, .preview-img { 
   width: 100%; 
   height: auto; 
-  border-radius: var(--radius-md);
-  border: none; /* Removed the 3px white border */
+  max-width: 100%; /* Changed from 384px to fill the container */
   display: block; 
-  margin: 0 auto;
+  margin: 0; 
+  border: none; /* Removed the 3px solid white */
+  box-shadow: none; 
+  border-radius: 8px;
 }
 
 /* ==========================
@@ -97,13 +99,17 @@ body {
    ========================== */
 .main-grid-container { 
   display: grid; 
-  gap: 32px; 
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); 
+  /* This says: "Make columns at least 400px wide, otherwise stack them" */
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 400px), 1fr)); 
+  gap: 40px; 
+  align-items: start;
 }
 
-@media(max-width: 768px) {
-  .main-grid-container { grid-template-columns: 1fr; }
-  .header-container { flex-direction: column; align-items: flex-start; }
+/* For very large screens, you can force a 2-column split for formal balance */
+@media(min-width: 1200px) {
+  .main-grid-container {
+    grid-template-columns: 1.2fr 0.8fr; /* Makes the left side slightly wider for main content */
+  }
 }
 
 /* ==========================
