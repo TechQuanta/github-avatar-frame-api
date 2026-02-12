@@ -1,21 +1,68 @@
- <img src="https://user-images.githubusercontent.com/74038190/212284100-561aa473-3905-4a80-b561-0d28506553ee.gif" width="100%">
-<!-- GSSoC Banner -->
-<h1 align="center" style="font-size: 3em; color: #ff4081;">
-  🖼️ GitHub Avatar Frame API
-</h1>
-
 <div align="center">
-
-  
+<h1 align="Left" style="font-size: 3em; color: #ff4081;">
+  🖼️ Frame Your Profile
+ <img src="https://user-images.githubusercontent.com/74038190/212284100-561aa473-3905-4a80-b561-0d28506553ee.gif" width="100%">
+</h1>
+ 
 [Report Bug](https://github.com/TechQuanta/github-avatar-frame-api/issues) • [Request Feature](https://github.com/TechQuanta/github-avatar-frame-api/issues)
 
 </div>
 
- <img src="https://user-images.githubusercontent.com/74038190/212284100-561aa473-3905-4a80-b561-0d28506553ee.gif" width="100%">
+
+<br>
+<h3 style="color:#ff4081;">🧪 Live Examples by Theme</h3>
+
+<table style="width:100%; border-collapse:collapse; font-size:1.05em; text-align:center;" align=center>
+<thead style="background-color:#f5f5f5;">
+<tr>
+<th>Theme</th>
+<th>Canvas / Shape / Radius</th>
+<th>Preview</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>eternity</td>
+<td>light / circle / 0</td>
+<td><img src="https://github-avatar-frame-api.onrender.com/api/framed-avatar/as?theme=ocean&size=100&canvas=light&shape=circle&radius=0" width="80"></td>
+<td>Classic eternity theme, light background, circular avatar</td>
+</tr>
+<tr>
+<td>eternity</td>
+<td>dark / circle / 0</td>
+<td><img src="https://github-avatar-frame-api.onrender.com/api/framed-avatar/octocat?theme=eternity&size=100&canvas=dark&shape=circle&radius=0" width="80"></td>
+<td>Dark canvas version of eternity theme</td>
+</tr>
+<tr>
+<td>base</td>
+<td>light / rounded / 20</td>
+<td><img src="https://github-avatar-frame-api.onrender.com/api/framed-avatar/octocat?theme=darkmode&size=100&canvas=light&shape=rounded&radius=20" width="80"></td>
+<td>Base theme, light background, rounded corners 20px</td>
+</tr>
+<tr>
+<td>base</td>
+<td>light / rounded / 50</td>
+<td><img src="https://github-avatar-frame-api.onrender.com/api/framed-avatar/octocat?theme=neon&size=100&canvas=light&shape=rounded&radius=50" width="80"></td>
+<td>Base theme, light background, rounded corners 50px</td>
+</tr>
+<tr>
+<td>flamingo</td>
+<td>dark / circle / 0</td>
+<td><img src="https://github-avatar-frame-api.onrender.com/api/framed-avatar/octocat?theme=flamingo&size=100&canvas=dark&shape=circle&radius=0" width="80"></td>
+<td>Flamingo theme, dark canvas</td>
+</tr>
+<tr>
+<td>flamingo</td>
+<td>light / rounded / 30</td>
+<td><img src="https://github-avatar-frame-api.onrender.com/api/framed-avatar/octocat?theme=macros&size=100&canvas=light&shape=rounded&radius=30" width="80"></td>
+<td>Flamingo theme, light canvas, rounded corners 30px</td>
+</tr>
+</tbody>
+</table>
 
 <br>
 
-# 🖼️ GitHub Avatar Frame API
 
 <!-- ✅ (2) Added modern badges for repo stats instead of the old table -->
 <table align="center" style="width: 90%; border-collapse: collapse; font-size: 0.95em;">
@@ -43,43 +90,11 @@
 </tbody>
 </table>
 
-<br><hr><br>
 
-## 📚 Table of Contents
-- [✨ Vision](#-vision)
-- [🎯 Mission](#-mission)
-- [⚙️ Setup & Local Development](#️-setup--local-development)
-- [📂 Project Structure](#-project-structure)
-- [📌 API Usage](#-api-usage)
-- [🧮 Query Parameters](#-query-parameters)
-- [� CLI Usage](#-cli-usage)
-- [�💡 Why GitHub Avatar Frame API?](#-why-github-avatar-frame-api)
-- [🤝 Contributing](#-contributing)
-- [🛠️ Troubleshooting](#️-troubleshooting)
-- [📜 License](#-license)
-
----
-
-## ✨ Vision
-<p style="font-size: 1.1em;">
-Democratize creative avatar customization by providing a free, open-source API that transforms GitHub profiles into engaging visual experiences for developers worldwide.
-</p>
 
  <img src="https://user-images.githubusercontent.com/74038190/212284100-561aa473-3905-4a80-b561-0d28506553ee.gif" width="100%">
 
-<h2 style="color:#ff5722;">🎯 Mission</h2>
-<p style="font-size: 1.1em;">
-<ul>
- <li>🏗️ Build the most comprehensive and user-friendly avatar framing API</li>
-<li>💪 Empower developers to personalize their GitHub presence with minimal effort</li>
-<li>🎨 Foster creative expression through customizable themes, text, and emoji overlays</li>
-<li>🆓 Maintain a free, accessible service that supports the open-source community</li>
-</ul>
-</p>
 
- <img src="https://user-images.githubusercontent.com/74038190/212284100-561aa473-3905-4a80-b561-0d28506553ee.gif" width="100%">
-
-<h2 style="color:#673ab7;">🎨 About GitHub Avatar Frame API</h2>
 
 <p style="font-size: 1.1em;">
 A free and open-source API to frame your GitHub avatar using creative themes. Perfect for README files, portfolios, or social media.
@@ -91,61 +106,6 @@ A free and open-source API to frame your GitHub avatar using creative themes. Pe
 
 <br>
  <img src="https://user-images.githubusercontent.com/74038190/212284100-561aa473-3905-4a80-b561-0d28506553ee.gif" width="100%">
-
- ## ⚙️ Setup & Local Development
-
-Follow these steps to run the GitHub Avatar Frame API locally for development or testing:
-
-### 🧩 Prerequisites
-- 🟢 Node.js 16+ and npm installed
-- 🐙 Git for version control
-- 🖥️ Code editor (VS Code recommended)
-- 📦 Optional: TypeScript knowledge for contributing
-
-### 💻 Steps
-### 1. Clone the Repository
-```bash
-git clone https://github.com/TechQuanta/github-avatar-frame-api.git
-cd github-avatar-frame-api
-```
-
-### 2. Install Backend Dependencies
-```bash
-npm install
-```
-
-### 3. Setup Frontend
-```bash
-cd client
-npm install
-cd ..
-```
-
-## Running the Application
-
-### Start Backend (Terminal 1)
-```bash
-npm run dev
-```
-
-The backend will start on `http://localhost:3000`
-
-### Start Frontend (Terminal 2)
-```bash
-cd client
-npm run dev
-```
-
-The frontend will start on `http://localhost:5173` (or another port if 5173 is in use)
-
-## Verify Everything Works
-
-1. Open your browser and go to `http://localhost:5173`
-2. You should see the GitHub Avatar Frames interface
-3. Enter a GitHub username (e.g., "torvalds")
-4. Select a theme and click "Generate"
-5. If successful, your framed avatar will appear
----
 
 ## 📂 Project Structure
 
@@ -197,22 +157,28 @@ The GitHub Avatar Frame API comes with a command-line interface (CLI) for easy a
 <h3 style="color:#ff4081;">🚀 Installation</h3>
 
 <p style="font-size: 1.05em;"><b>Option 1: Install globally from npm</b></p>
+
 ```bash
 npm install -g github-avatar-frame-cli
 ```
 
 <p style="font-size: 1.05em;"><b>Option 2: Use locally (from project root)</b></p>
+
 ```bash
 # Build the CLI
 npm run build:cli
+```
 
 # Use the CLI
+
+```
 npm run cli -- <command>
 ```
 
 <h3 style="color:#ff4081;">📖 Usage</h3>
 
 <p style="font-size: 1.05em;"><b>Generate an avatar:</b></p>
+
 ```bash
 github-avatar-frame generate <username> [options]
 ```
@@ -308,21 +274,7 @@ github-avatar-frame suggest octocat
 <li><b>Beginners</b> → Classic themes</li>
 </ul>
 
- <img src="https://user-images.githubusercontent.com/74038190/212284100-561aa473-3905-4a80-b561-0d28506553ee.gif" width="100%">
 
-<h2 style="color:#ff5722;">💡 Why GitHub Avatar Frame API?</h2>
-<p style="font-size: 1.1em;">
-  <ul>
-<li>🆓 Zero Setup: No registration, API keys, or complex configurations needed</li>
-<li>⚡ Instant Results: Real-time avatar processing with customizable themes</li>
-<li>👨‍💻 Developer-Friendly: Simple REST API with comprehensive documentation</li>
-<li>🎭 Creative Freedom: Text overlays, emojis, multiple themes, and shape options</li>
-<li>🔓 Open Source: Community-driven development with transparent contributions</li>
-<li>💖 Always Free: No usage limits or premium tiers—built for the community</li>
-  </ul>
-</p>
-
- <img src="https://user-images.githubusercontent.com/74038190/212284100-561aa473-3905-4a80-b561-0d28506553ee.gif" width="100%">
 
 <h2 style="color:#3f51b5;">📌 API Usage</h2>
 
@@ -333,10 +285,7 @@ https://github-avatar-frame-api.onrender.com/api/framed-avatar/{username}?theme=
 
  <img src="https://user-images.githubusercontent.com/74038190/212284100-561aa473-3905-4a80-b561-0d28506553ee.gif" width="100%">
 
-<h2 style="color:#3f51b5;">🧭 Flowchart</h2>
-<div align=center>
- <img width="360" height="600" alt="Untitled diagram-2025-10-14-005556" src="https://github.com/user-attachments/assets/fd49b6b8-07b3-4fa6-ab66-48cc40eb0c38"  />
-</div>
+
 
 <h3 style="color:#009688;" align=center>🧮 Query Parameters:</h3>
 <div align=center>
@@ -445,58 +394,7 @@ https://github-avatar-frame-api.onrender.com/api/framed-avatar/octocat?theme=bas
 
  <img src="https://user-images.githubusercontent.com/74038190/212284100-561aa473-3905-4a80-b561-0d28506553ee.gif" width="100%">
  
-<h3 style="color:#ff4081;">🧪 Live Examples by Theme</h3>
 
-<table style="width:100%; border-collapse:collapse; font-size:1.05em; text-align:center;" align=center>
-<thead style="background-color:#f5f5f5;">
-<tr>
-<th>Theme</th>
-<th>Canvas / Shape / Radius</th>
-<th>Preview</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>eternity</td>
-<td>light / circle / 0</td>
-<td><img src="https://github-avatar-frame-api.onrender.com/api/framed-avatar/as?theme=ocean&size=100&canvas=light&shape=circle&radius=0" width="80"></td>
-<td>Classic eternity theme, light background, circular avatar</td>
-</tr>
-<tr>
-<td>eternity</td>
-<td>dark / circle / 0</td>
-<td><img src="https://github-avatar-frame-api.onrender.com/api/framed-avatar/octocat?theme=eternity&size=100&canvas=dark&shape=circle&radius=0" width="80"></td>
-<td>Dark canvas version of eternity theme</td>
-</tr>
-<tr>
-<td>base</td>
-<td>light / rounded / 20</td>
-<td><img src="https://github-avatar-frame-api.onrender.com/api/framed-avatar/octocat?theme=darkmode&size=100&canvas=light&shape=rounded&radius=20" width="80"></td>
-<td>Base theme, light background, rounded corners 20px</td>
-</tr>
-<tr>
-<td>base</td>
-<td>light / rounded / 50</td>
-<td><img src="https://github-avatar-frame-api.onrender.com/api/framed-avatar/octocat?theme=neon&size=100&canvas=light&shape=rounded&radius=50" width="80"></td>
-<td>Base theme, light background, rounded corners 50px</td>
-</tr>
-<tr>
-<td>flamingo</td>
-<td>dark / circle / 0</td>
-<td><img src="https://github-avatar-frame-api.onrender.com/api/framed-avatar/octocat?theme=flamingo&size=100&canvas=dark&shape=circle&radius=0" width="80"></td>
-<td>Flamingo theme, dark canvas</td>
-</tr>
-<tr>
-<td>flamingo</td>
-<td>light / rounded / 30</td>
-<td><img src="https://github-avatar-frame-api.onrender.com/api/framed-avatar/octocat?theme=macros&size=100&canvas=light&shape=rounded&radius=30" width="80"></td>
-<td>Flamingo theme, light canvas, rounded corners 30px</td>
-</tr>
-</tbody>
-</table>
-
-<br>
 
 <h3 style="color:#3f51b5;" align=left>📥 Embed in README</h3>
 
@@ -506,73 +404,7 @@ https://github-avatar-frame-api.onrender.com/api/framed-avatar/octocat?theme=bas
 
  <img src="https://user-images.githubusercontent.com/74038190/212284100-561aa473-3905-4a80-b561-0d28506553ee.gif" width="100%">
 
-<h2 style="color:#ff5722;">🧩 Prerequisites</h2>
-<p style="font-size: 1.1em;">
-<p>
-  <ul>
-For API Usage:
-<li>Any modern web browser or HTTP client</li>
-<li>Valid GitHub username</li>
-<li>Basic understanding of URL parameters</li>
-  
-For Development/Contributing:
-<li>Node.js 16+ and npm</li>
-<li>TypeScript knowledge</li>
-<li>Git for version control</li>
-<li>Code editor (VS Code recommended)</li>
-</ul>
-</p>
 
- <img src="https://user-images.githubusercontent.com/74038190/212284100-561aa473-3905-4a80-b561-0d28506553ee.gif" width="100%">
-
-<h2 style="color:#ff5722;">🤝 Contributing</h2>
-
-<ul style="font-size:1.05em;">
-<li>🎨 Add new themes in <code>public/frames/</code></li>
-<li>🐛 Bug fixes</li>
-<li>✨ New features</li>
-<li>📚 Improve documentation</li>
-</ul>
-
- <img src="https://user-images.githubusercontent.com/74038190/212284100-561aa473-3905-4a80-b561-0d28506553ee.gif" width="100%">
-
-<h2 style="color:#673ab7;">⚙ Tech Stack</h2>
-
-<ul style="font-size:1.05em;">
-<li>🟢 Node.js & Express.js (TypeScript)</li>
-<li>🖼️ Sharp (image processing)</li>
-<li>☁️ Render (hosting)</li>
-<li>📘 TypeScript</li>
-</ul>
-
- <img src="https://user-images.githubusercontent.com/74038190/212284100-561aa473-3905-4a80-b561-0d28506553ee.gif" width="100%">
-
-<h2 style="color:#673ab7;">🖼️ Screenshot</h2>
-<img width="785" height="756" alt="Screenshot 2025-10-14 113128" src="https://github.com/user-attachments/assets/df7698d1-710b-4eed-a714-2e624a6b31e0" />
-
-
-<h2 style="color:#3f51b5;">🔗 Links</h2>
-
-<ul style="font-size:1.05em;">
-<li>Live API: <a href="https://github-avatar-frame-api.onrender.com">https://github-avatar-frame-api.onrender.com</a></li>
-<li>Issues: <a href="https://github.com/TechQuanta/github-avatar-frame-api/issues">GitHub Issues</a></li>
-<li>Contributing Guidelines: <a href="CONTRIBUTING.md">CONTRIBUTING.md</a></li>
-<li>Code of Conduct: <a href="CODE_OF_CONDUCT.md">CODE_OF_CONDUCT.md</a></li>
-</ul>
-
- <img src="https://user-images.githubusercontent.com/74038190/212284100-561aa473-3905-4a80-b561-0d28506553ee.gif" width="100%">
-
-<h2 style="color:#ff4081;">🌟 Show Your Support</h2>
-
-<ul style="font-size:1.05em;">
-<li>⭐ Star the repository</li>
-<li>🐛 Report bugs or suggest features</li>
-<li>🤝 Contribute new themes</li>
-<li>📢 Share with the community</li>
-</ul>
-
- <img src="https://user-images.githubusercontent.com/74038190/212284100-561aa473-3905-4a80-b561-0d28506553ee.gif" width="100%">
- 
 <h2 style="color:#3f51b5;">🛠️ Troubleshooting</h2>
 <p>
 <h3>🧩 API Issues:</h3>
@@ -604,12 +436,3 @@ Kill process or change port in server config
 
  <img src="https://user-images.githubusercontent.com/74038190/212284100-561aa473-3905-4a80-b561-0d28506553ee.gif" width="100%">
 
-<h2 style="color:#009688;">📜 License</h2>
-<a href="https://github.com/TechQuanta/github-avatar-frame-api?tab=MIT-1-ov-file">MIT License </a>
-
-<div align="center">
-  <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&pause=1000&color=FF0000&width=435&lines=Thanks+for+visiting++;GitHub+Avatar+Frame+API+%F0%9F%99%8C;Star+the+repo+%E2%AD%90;Contribute+and+Grow+%F0%9F%8C%8D;Happy+Coding+%E2%9C%A8" alt="Typing SVG" />
-</div>
-<div align="center">
-<img src="https://user-images.githubusercontent.com/74038190/212284158-e840e285-664b-44d7-b79b-e264b5e54825.gif" width="400">
-<br><br>
