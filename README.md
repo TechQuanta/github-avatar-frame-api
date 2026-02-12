@@ -4,18 +4,8 @@
   🖼️ GitHub Avatar Frame API
 </h1>
 
-<p align="center" style="font-size: 1.3em;">
-  <b>Officially accepted for <span style="color: #2196f3;">GSSoC!</span></b>
-</p>
-
 <div align="center">
-  <img src="public/assets/gssoc.png" alt="GSSOC" width="80%" style="border-radius: 15px; box-shadow: 0px 5px 15px rgba(0,0,0,0.2);">
-</div>
 
-<div align="center">
- <a href="https://frame-avatars.vercel.app/"><strong>Explore the Live Demo »</strong></a>
-    <br />
-    <br />
   
 [Report Bug](https://github.com/TechQuanta/github-avatar-frame-api/issues) • [Request Feature](https://github.com/TechQuanta/github-avatar-frame-api/issues)
 
@@ -181,8 +171,6 @@ The frontend will start on `http://localhost:5173` (or another port if 5173 is i
 │   ├── ⚡ vite.config.js
 │   └── 🌍 vercel.json
 ├── 🖼️ public
-│   └── assets
-│       └── 🖼️ gssoc.png
 ├── � cli
 │   ├── 📄 package.json
 │   ├── ⚙️ tsconfig.json
