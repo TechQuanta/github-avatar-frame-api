@@ -1,100 +1,13 @@
-<div align="center">
-<h1 align="Left" style="font-size: 3em; color: #ff4081;">
-  🖼️ Frame Your Profile
- <img src="https://user-images.githubusercontent.com/74038190/212284100-561aa473-3905-4a80-b561-0d28506553ee.gif" width="100%">
-</h1>
- 
-[Report Bug](https://github.com/TechQuanta/github-avatar-frame-api/issues) • [Request Feature](https://github.com/TechQuanta/github-avatar-frame-api/issues)
+<div align="left">
+  
+# Frame Your Profile
 
+
+ 
 </div>
 
 
 <br>
-<h3 style="color:#ff4081;">🧪 Live Examples by Theme</h3>
-
-<table style="width:100%; border-collapse:collapse; font-size:1.05em; text-align:center;" align=center>
-<thead style="background-color:#f5f5f5;">
-<tr>
-<th>Theme</th>
-<th>Canvas / Shape / Radius</th>
-<th>Preview</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>eternity</td>
-<td>light / circle / 0</td>
-<td><img src="https://github-avatar-frame-api.onrender.com/api/framed-avatar/as?theme=ocean&size=100&canvas=light&shape=circle&radius=0" width="80"></td>
-<td>Classic eternity theme, light background, circular avatar</td>
-</tr>
-<tr>
-<td>eternity</td>
-<td>dark / circle / 0</td>
-<td><img src="https://github-avatar-frame-api.onrender.com/api/framed-avatar/octocat?theme=eternity&size=100&canvas=dark&shape=circle&radius=0" width="80"></td>
-<td>Dark canvas version of eternity theme</td>
-</tr>
-<tr>
-<td>base</td>
-<td>light / rounded / 20</td>
-<td><img src="https://github-avatar-frame-api.onrender.com/api/framed-avatar/octocat?theme=darkmode&size=100&canvas=light&shape=rounded&radius=20" width="80"></td>
-<td>Base theme, light background, rounded corners 20px</td>
-</tr>
-<tr>
-<td>base</td>
-<td>light / rounded / 50</td>
-<td><img src="https://github-avatar-frame-api.onrender.com/api/framed-avatar/octocat?theme=neon&size=100&canvas=light&shape=rounded&radius=50" width="80"></td>
-<td>Base theme, light background, rounded corners 50px</td>
-</tr>
-<tr>
-<td>flamingo</td>
-<td>dark / circle / 0</td>
-<td><img src="https://github-avatar-frame-api.onrender.com/api/framed-avatar/octocat?theme=flamingo&size=100&canvas=dark&shape=circle&radius=0" width="80"></td>
-<td>Flamingo theme, dark canvas</td>
-</tr>
-<tr>
-<td>flamingo</td>
-<td>light / rounded / 30</td>
-<td><img src="https://github-avatar-frame-api.onrender.com/api/framed-avatar/octocat?theme=macros&size=100&canvas=light&shape=rounded&radius=30" width="80"></td>
-<td>Flamingo theme, light canvas, rounded corners 30px</td>
-</tr>
-</tbody>
-</table>
-
-<br>
-
-
-<!-- ✅ (2) Added modern badges for repo stats instead of the old table -->
-<table align="center" style="width: 90%; border-collapse: collapse; font-size: 0.95em;">
-<thead>
-<tr style="background-color:#f5f5f5; text-align:center;">
-<th>🌟 Stars</th>
-<th>🍴 Forks</th>
-<th>🐛 Issues</th>
-<th>🔔 Open PRs</th>
-<th>🔕 Closed PRs</th>
-<th>🛠️ Languages</th>
-<th>👥 Contributors</th>
-</tr>
-</thead>
-<tbody align="center">
-<tr style="background-color:#fafafa;">
-<td><img alt="Stars" src="https://img.shields.io/github/stars/TechQuanta/github-avatar-frame-api?style=flat&logo=github"/></td>
-<td><img alt="Forks" src="https://img.shields.io/github/forks/TechQuanta/github-avatar-frame-api?style=flat&logo=github"/></td>
-<td><img alt="Issues" src="https://img.shields.io/github/issues/TechQuanta/github-avatar-frame-api?style=flat&logo=github"/></td>
-<td><img alt="Open PRs" src="https://img.shields.io/github/issues-pr/TechQuanta/github-avatar-frame-api?style=flat&logo=github"/></td>
-<td><img alt="Closed PRs" src="https://img.shields.io/github/issues-pr-closed/TechQuanta/github-avatar-frame-api?style=flat&color=critical&logo=github"/></td>
-<td><img alt="Languages Count" src="https://img.shields.io/github/languages/count/TechQuanta/github-avatar-frame-api?style=flat&color=green&logo=github"/></td>
-<td><img alt="Contributors Count" src="https://img.shields.io/github/contributors/TechQuanta/github-avatar-frame-api?style=flat&color=blue&logo=github"/></td>
-</tr>
-</tbody>
-</table>
-
-
-
- <img src="https://user-images.githubusercontent.com/74038190/212284100-561aa473-3905-4a80-b561-0d28506553ee.gif" width="100%">
-
-
 
 <p style="font-size: 1.1em;">
 A free and open-source API to frame your GitHub avatar using creative themes. Perfect for README files, portfolios, or social media.
@@ -105,48 +18,104 @@ A free and open-source API to frame your GitHub avatar using creative themes. Pe
 </p>
 
 <br>
- <img src="https://user-images.githubusercontent.com/74038190/212284100-561aa473-3905-4a80-b561-0d28506553ee.gif" width="100%">
 
-## 📂 Project Structure
+<h3 style="color:#ff4081;">🧪 Live Examples by Theme</h3>
+<table align="center">
+<tr>
+<td>
+<img src="https://github-avatar-frame-api.onrender.com/api/framed-avatar/ashmeet07?theme=classic&size=110&canvas=light&shape=circle&radius=0" />
+</td>
+<td>
+<img src="https://github-avatar-frame-api.onrender.com/api/framed-avatar/darshan02parmar?theme=darkmode&size=110&canvas=dark&shape=circle&radius=0" />
+</td>
+<td>
+<img src="https://github-avatar-frame-api.onrender.com/api/framed-avatar/shivram9?theme=eternity&size=110&canvas=light&shape=rounded&radius=20" />
+</td>
+<td>
+<img src="https://github-avatar-frame-api.onrender.com/api/framed-avatar/Suke2004?theme=flamingo&size=110&canvas=dark&shape=rounded&radius=35" />
+</td>
+<td>
+<img src="https://github-avatar-frame-api.onrender.com/api/framed-avatar/Anshita-Rajput?theme=gitblaze&size=110&canvas=light&shape=circle&radius=0" />
+</td>
+</tr>
 
-```
-📦 github-avatar-frame-api
-├── 🖥️ api
-│   ├── 📄 FRAMETHEMES.md
-│   ├── 🖼️ collage.js
-│   ├── 🖼️ frames.js
-│   ├── 🚀 server.ts
-│   └── 🎨 themes.js
-├── 🌐 client
-│   ├── src
-│   │   ├── components
-│   │   │   └── 🧩 ThemeSlider.jsx
-│   │   ├── pages
-│   │   │   └── 📄 NotFound.jsx
-│   │   ├── 🎨 App.css
-│   │   ├── 📄 App.jsx
-│   │   ├── 🎨 index.css
-│   │   └── 🚀 main.jsx
-│   ├── 📄 index.html
-│   ├── ⚡ vite.config.js
-│   └── 🌍 vercel.json
-├── 🖼️ public
-├── � cli
-│   ├── 📄 package.json
-│   ├── ⚙️ tsconfig.json
-│   └── 🚀 src/index.ts
-├── �📄 README.md
-├── 📄 LICENSE
-├── 📄 CODE_OF_CONDUCT.md
-├── 📄 CONTRIBUTING.md
-├── 📄 CUSTOMIZATION_FEATURE.md
-├── 📝 TODO.md
-├── 📦 package.json
-├── ⚙️ render.yml
-└── 📄 tsconfig.server.json
-```
+<tr>
+<td>
+<img src="https://github-avatar-frame-api.onrender.com/api/framed-avatar/aliviahossain?theme=macros&size=110&canvas=light&shape=rounded&radius=45" />
+</td>
+<td>
+<img src="https://github-avatar-frame-api.onrender.com/api/framed-avatar/ishanraj953?theme=neon&size=110&canvas=dark&shape=circle&radius=0" />
+</td>
+<td>
+<img src="https://github-avatar-frame-api.onrender.com/api/framed-avatar/Akshayaqueen?theme=ocean&size=110&canvas=light&shape=rounded&radius=25" />
+</td>
+<td>
+<img src="https://github-avatar-frame-api.onrender.com/api/framed-avatar/dharapandya85?theme=starry&size=110&canvas=dark&shape=rounded&radius=50" />
+</td>
+<td>
+<img src="https://github-avatar-frame-api.onrender.com/api/framed-avatar/shreya-mishra325?theme=hotfire&size=110&canvas=dark&shape=circle&radius=0" />
+</td>
+</tr>
 
- <img src="https://user-images.githubusercontent.com/74038190/212284100-561aa473-3905-4a80-b561-0d28506553ee.gif" width="100%">
+<tr>
+<td>
+<img src="https://github-avatar-frame-api.onrender.com/api/framed-avatar/Gupta-02?theme=gravityspace&size=110&canvas=dark&shape=rounded&radius=60" />
+</td>
+<td>
+<img src="https://github-avatar-frame-api.onrender.com/api/framed-avatar/itspavant?theme=classic&size=110&canvas=light&shape=rounded&radius=30" />
+</td>
+<td>
+<img src="https://github-avatar-frame-api.onrender.com/api/framed-avatar/Adez017?theme=flamingo&size=110&canvas=light&shape=circle&radius=0" />
+</td>
+<td>
+<img src="https://github-avatar-frame-api.onrender.com/api/framed-avatar/kishanrathor?theme=darkmode&size=110&canvas=dark&shape=rounded&radius=40" />
+</td>
+<td>
+<img src="https://github-avatar-frame-api.onrender.com/api/framed-avatar/Alpana176?theme=ocean&size=110&canvas=light&shape=circle&radius=0" />
+</td>
+</tr>
+
+<tr>
+<td>
+<img src="https://github-avatar-frame-api.onrender.com/api/framed-avatar/surajsingh9389?theme=neon&size=110&canvas=dark&shape=circle&radius=0" />
+</td>
+<td>
+<img src="https://github-avatar-frame-api.onrender.com/api/framed-avatar/arundhativaishnav?theme=eternity&size=110&canvas=light&shape=rounded&radius=22" />
+</td>
+<td>
+<img src="https://github-avatar-frame-api.onrender.com/api/framed-avatar/ananyasinha-1?theme=macros&size=110&canvas=light&shape=rounded&radius=55" />
+</td>
+<td>
+<img src="https://github-avatar-frame-api.onrender.com/api/framed-avatar/prernaparwani13?theme=starry&size=110&canvas=dark&shape=rounded&radius=48" />
+</td>
+<td>
+<img src="https://github-avatar-frame-api.onrender.com/api/framed-avatar/Akshayaqueen?theme=hotfire&size=110&canvas=dark&shape=circle&radius=0" />
+</td>
+</tr>
+
+<tr>
+<td>
+<img src="https://github-avatar-frame-api.onrender.com/api/framed-avatar/ashmeet07?theme=gravityspace&size=110&canvas=dark&shape=rounded&radius=65" />
+</td>
+<td>
+<img src="https://github-avatar-frame-api.onrender.com/api/framed-avatar/darshan02parmar?theme=classic&size=110&canvas=light&shape=circle&radius=0" />
+</td>
+<td>
+<img src="https://github-avatar-frame-api.onrender.com/api/framed-avatar/shivram9?theme=flamingo&size=110&canvas=light&shape=rounded&radius=28" />
+</td>
+<td>
+<img src="https://github-avatar-frame-api.onrender.com/api/framed-avatar/Suke2004?theme=darkmode&size=110&canvas=dark&shape=rounded&radius=38" />
+</td>
+<td>
+<img src="https://github-avatar-frame-api.onrender.com/api/framed-avatar/Anshita-Rajput?theme=neon&size=110&canvas=dark&shape=circle&radius=0" />
+</td>
+</tr>
+</table>
+
+
+<br>
+
+
 
 <h2 style="color:#2196f3;">💻 CLI Usage</h2>
 
@@ -258,36 +227,16 @@ github-avatar-frame suggest <username>
 github-avatar-frame suggest octocat
 ```
 
-<p style="font-size: 1.05em;">The AI analyzes:</p>
-<ul style="font-size: 1.05em;">
-<li>🎨 Avatar colors and brightness</li>
-<li>📊 Contribution activity and patterns</li>
-<li>👥 Follower-to-repository ratios</li>
-<li>🔄 Consistency of activity</li>
-</ul>
 
-<p style="font-size: 1.05em;">And suggests themes like:</p>
-<ul style="font-size: 1.05em;">
-<li><b>Dark avatars</b> → Starry/Galaxy themes</li>
-<li><b>Professional photos</b> → Minimal themes</li>
-<li><b>High contributions</b> → Pro/Advanced themes</li>
-<li><b>Beginners</b> → Classic themes</li>
-</ul>
-
-
-
-<h2 style="color:#3f51b5;">📌 API Usage</h2>
-
-<p style="font-size:1.05em;"><b>🔗 Base Endpoint:</b></p>
 <pre style="background-color:#f9f9f9; padding:10px; border-radius:10px;">
 https://github-avatar-frame-api.onrender.com/api/framed-avatar/{username}?theme={theme}&size={size}&canvas={canvas}&shape={shape}&radius={radius}
 </pre>
 
- <img src="https://user-images.githubusercontent.com/74038190/212284100-561aa473-3905-4a80-b561-0d28506553ee.gif" width="100%">
 
 
 
-<h3 style="color:#009688;" align=center>🧮 Query Parameters:</h3>
+
+<h3 >🧮 Query Parameters:</h3>
 <div align=center>
 <table style="width:100%; border-collapse:collapse; font-size:1.05em;">
 <thead style="background-color:#f5f5f5; text-align:center;">
@@ -319,29 +268,6 @@ https://github-avatar-frame-api.onrender.com/api/framed-avatar/{username}?theme=
 </div>
 <br>
 
-<h3 style="color:#ff4081;">🧱 Canvas, Shape & Radius Explained</h3>
-
-<ul style="font-size:1.05em;">
-<li>🎨 <b>canvas</b>: Sets the avatar background color. Options: <code>light</code> or <code>dark</code>.</li>
-<li>🔷 <b>shape</b>: Sets the avatar outline. Options: <code>circle</code> or <code>rounded</code>.</li>
-<li>📐 <b>radius</b>: Controls corner rounding in px when <code>shape=rounded</code>. 0 = square, higher = more rounded.</li>
-</ul>
-
-<p>Combine all three to customize your avatar:</p>
-
-<h3 style="color:#ff4081;">✍️ Text & Emoji Overlays</h3>
-
-<p style="font-size:1.05em;">Add personalized text and emojis to make your avatar more expressive:</p>
-
-<ul style="font-size:1.05em;">
-<li>📝 <b>text</b>: Add custom text like your name, role, or tagline.</li>
-<li>🎨 <b>textColor</b>: Set text color using HEX format (e.g., #ff0000 for red).</li>
-<li>🔠 <b>textSize</b>: Control text size from 8-100 pixels.</li>
-<li>📍 <b>textPosition</b>: Place text at top, bottom, or center of the avatar.</li>
-<li>😀 <b>emojis</b>: Add multiple emojis separated by commas (e.g., 🚀,💻,🔥).</li>
-<li>📏 <b>emojiSize</b>: Control emoji size from 16-120 pixels.</li>
-<li>📍 <b>emojiPosition</b>: Place emojis at top, bottom, or in corners.</li>
-</ul>
 
 <p><b>📌 Example with text and emojis:</b></p>
 <pre style="background-color:#f9f9f9; padding:10px; border-radius:10px;">
@@ -392,9 +318,6 @@ https://github-avatar-frame-api.onrender.com/api/framed-avatar/octocat?theme=bas
 </div>
 <br>
 
- <img src="https://user-images.githubusercontent.com/74038190/212284100-561aa473-3905-4a80-b561-0d28506553ee.gif" width="100%">
- 
-
 
 <h3 style="color:#3f51b5;" align=left>📥 Embed in README</h3>
 
@@ -402,24 +325,6 @@ https://github-avatar-frame-api.onrender.com/api/framed-avatar/octocat?theme=bas
 ![My Avatar](https://github-avatar-frame-api.onrender.com/api/framed-avatar/your-username?theme=flamingo&size=256&canvas=dark&shape=rounded&radius=20)
 </pre>
 
- <img src="https://user-images.githubusercontent.com/74038190/212284100-561aa473-3905-4a80-b561-0d28506553ee.gif" width="100%">
-
-
-<h2 style="color:#3f51b5;">🛠️ Troubleshooting</h2>
-<p>
-<h3>🧩 API Issues:</h3>
-<h3>🖼️ Avatar not loading</h3>
-  <ul>
-<li>Check if GitHub username is valid</li>
-<li>Verify theme name spelling (eternity, base, flamingo)</li>
-<li>Ensure size is between 64-1024 pixels</li>
-  </ul>
-<h3>🐢 Slow response times</h3>
-<ul>
-<li>API may be cold-starting (hosted on Render free tier)</li>
-<li>Wait 10-15 seconds for first request</li>
-<li>Subsequent requests will be faster</li>
-</ul>
 
 🔧 Development Issues:
 🧰 Installation problems
@@ -434,5 +339,4 @@ https://github-avatar-frame-api.onrender.com/api/framed-avatar/octocat?theme=bas
 Kill process or change port in server config
 </p>
 
- <img src="https://user-images.githubusercontent.com/74038190/212284100-561aa473-3905-4a80-b561-0d28506553ee.gif" width="100%">
 
