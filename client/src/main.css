@@ -945,3 +945,105 @@ input:focus {
     font-size: 11px;
   }
 }
+
+/* ==========================
+    Preview panel polish
+   ========================== */
+:root {
+  --studio-preview-size: clamp(248px, 29vw, 388px);
+}
+
+.studio-preview-panel {
+  position: relative;
+}
+
+.studio-preview-panel::before {
+  position: absolute;
+  inset: 12px;
+  z-index: 0;
+  border-radius: 20px;
+  background:
+    radial-gradient(circle at 50% 30%, rgba(6, 182, 212, 0.1), transparent 34%),
+    radial-gradient(circle at 52% 68%, rgba(139, 92, 246, 0.11), transparent 38%);
+  content: "";
+  pointer-events: none;
+}
+
+.studio-preview-panel > * {
+  position: relative;
+  z-index: 1;
+}
+
+.studio-preview-panel > div:last-child {
+  justify-content: flex-start !important;
+  gap: 16px;
+  width: 100%;
+  border: 1px solid rgba(139, 92, 246, 0.12);
+  border-radius: 20px;
+  padding: clamp(14px, 2vw, 22px);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.58), rgba(248, 250, 252, 0.36));
+  overflow: auto;
+  scrollbar-gutter: stable both-edges;
+}
+
+.studio-preview-panel .preview-canvas,
+.studio-preview-panel .preview-img {
+  width: var(--studio-preview-size) !important;
+  height: var(--studio-preview-size) !important;
+  max-width: 100%;
+  max-height: var(--studio-preview-size);
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  overflow: hidden;
+  box-shadow:
+    0 24px 60px -34px rgba(15, 23, 42, 0.8),
+    0 14px 32px -26px rgba(139, 92, 246, 0.8);
+}
+
+.studio-preview-panel canvas.preview-canvas {
+  contain: layout paint;
+}
+
+.studio-preview-panel > div:last-child::-webkit-scrollbar {
+  width: 8px;
+}
+
+.studio-preview-panel > div:last-child::-webkit-scrollbar-track {
+  background: rgba(139, 92, 246, 0.08);
+  border-radius: 999px;
+}
+
+.studio-preview-panel > div:last-child::-webkit-scrollbar-thumb {
+  border: 2px solid transparent;
+  border-radius: 999px;
+  background: linear-gradient(180deg, var(--studio-cyan), var(--studio-purple)) border-box;
+}
+
+@media (prefers-color-scheme: dark) {
+  .studio-preview-panel > div:last-child {
+    border-color: rgba(34, 211, 238, 0.14);
+    background: linear-gradient(180deg, rgba(15, 23, 42, 0.58), rgba(30, 41, 59, 0.34));
+  }
+}
+
+@media (min-width: 900px) and (max-height: 780px) {
+  :root {
+    --studio-preview-size: clamp(220px, 25vw, 330px);
+  }
+
+  .studio-preview-panel > div:last-child {
+    padding: 14px;
+    gap: 12px;
+  }
+}
+
+@media (max-width: 899px) {
+  :root {
+    --studio-preview-size: min(calc(100vw - 72px), 380px);
+  }
+
+  .studio-preview-panel > div:last-child {
+    min-height: auto !important;
+    overflow: visible;
+  }
+}
