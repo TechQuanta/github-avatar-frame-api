@@ -44,7 +44,7 @@ program
 program
   .command('generate <username>')
   .description('Generate a framed avatar for a GitHub user')
-  .option('-t, --theme <theme>', `Frame theme (${THEMES.join(', ')})`, 'base')
+  .option('-t, --theme <theme>', 'Frame theme (base, classic, darkmode, eternity, flamingo, gitblaze, gravityspace, hotfire, macros, minimal, neon, ocean, starry)', 'base')
   .option('-s, --size <size>', 'Avatar size in pixels (64-1024)', '256')
   .option('-c, --canvas <canvas>', 'Background color (light, dark, transparent)', 'light')
   .option('-sh, --shape <shape>', 'Avatar shape (circle, rounded, rect)', 'circle')
@@ -123,25 +123,12 @@ program
   .command('themes')
   .description('List available themes grouped by vibe')
   .action(() => {
-    printHero('Available themes', 'Pick a vibe, then pass it with --theme');
-    Object.entries(THEME_GROUPS).forEach(([group, themes]) => {
-      console.log(chalk.yellow(`\n${group}`));
-      themes.forEach(theme => console.log(`  ${chalk.green('◆')} ${chalk.bold(theme)}`));
-    });
-  });
-
-program
-  .command('docs')
-  .description('Show API docs and useful links')
-  .option('-u, --url <url>', 'API base URL', DEFAULT_API_URL)
-  .action((options) => {
-    const baseUrl = normalizeBaseUrl(options.url);
-    printHero('Docs & links');
-    console.log(`${chalk.cyan('Swagger UI:')} ${baseUrl}/api-docs`);
-    console.log(`${chalk.cyan('Health:')}     ${baseUrl}/api/health`);
-    console.log(`${chalk.cyan('Themes:')}     ${baseUrl}/api/themes`);
-    console.log(chalk.gray('\nExample:'));
-    console.log(`  github-avatar-frame generate octocat --theme neon --canvas dark --emojis "🚀,💻"`);
+    console.log(chalk.blue('Available themes:'));
+    const themes = [
+      'base', 'classic', 'darkmode', 'eternity', 'flamingo',
+      'gitblaze', 'gravityspace', 'hotfire', 'macros', 'minimal', 'neon', 'ocean', 'starry'
+    ];
+    themes.forEach(theme => console.log(chalk.green(`  • ${theme}`)));
   });
 
 program

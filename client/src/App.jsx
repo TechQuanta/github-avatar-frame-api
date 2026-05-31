@@ -35,13 +35,6 @@ const API_BASE_URL =
     ? "https://github-avatar-frame-api.onrender.com"
     : "http://localhost:3001");
 
-const STUDIO_NAV_ITEMS = [
-  { label: "Start", target: "#username-section" },
-  { label: "Customize", target: "#settings-section" },
-  { label: "Preview", target: "#preview-section" },
-  { label: "Docs", target: "/api-docs", external: true },
-];
-
 // Utility component for consistent button styling (Canvas and Shape)
 const ControlButton = ({ onClick, isSelected, children, isDark }) => (
   <button
@@ -490,13 +483,6 @@ function App() {
     { id: "text", label: "Text", helper: text.trim() || "Optional label" },
     { id: "emoji", label: "Emoji", helper: emojis.trim() || "Optional flair" },
   ];
-
-  const scrollToSection = (target) => {
-    const element = document.querySelector(target);
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
-  };
 
   // Detect system preference and set up listener
   useEffect(() => {
@@ -1078,9 +1064,9 @@ function App() {
             </div>
           </div>
           <div className="studio-navbar__links">
-            {STUDIO_NAV_ITEMS.map((item) =>
+            {studioNavItems.map((item) =>
               item.external ? (
-                <a key={item.label} href={`${API_BASE_URL}${item.target}`} target="_blank" rel="noopener noreferrer">
+                <a key={item.label} href={item.target} target="_blank" rel="noopener noreferrer">
                   {item.label}
                 </a>
               ) : (
@@ -2050,10 +2036,8 @@ function App() {
             </div>
           </div>
 
-          {/* Preview Panel */}
-          <div
-            id="preview-section"
-            data-aos="flip-left"
+          {/* Right: Preview Panel (50%) */}
+          <div data-aos="flip-left"
             className="preview-panel-card"
             style={{
               background: colors.bgCard,
