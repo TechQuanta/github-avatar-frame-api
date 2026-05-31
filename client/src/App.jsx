@@ -17,7 +17,6 @@ import {
   Square,
   Sun,
   Moon,
-  Users,
   X,
   Share2,
   Twitter,
@@ -34,13 +33,6 @@ const API_BASE_URL =
   (import.meta.env.PROD
     ? "https://github-avatar-frame-api.onrender.com"
     : "http://localhost:3001");
-
-const STUDIO_NAV_ITEMS = [
-  { label: "Start", target: "username-section" },
-  { label: "Customize", target: "settings-section" },
-  { label: "Generate", target: "generate-section" },
-  { label: "API Docs", target: `${API_BASE_URL}/api-docs`, external: true },
-];
 
 // Utility component for consistent button styling (Canvas and Shape)
 const ControlButton = ({ onClick, isSelected, children, isDark }) => (
@@ -88,120 +80,6 @@ const ControlButton = ({ onClick, isSelected, children, isDark }) => (
     {children}
   </button>
 );
-
-// --- Community Modal Component ---
-const CommunityModal = ({ isOpen, onClose, colors }) => {
-  if (!isOpen) return null;
-
-  // Fixed positioning and padding ensure the modal works on mobile without overflow
-  return (
-    <div
-      style={{
-        position: "fixed",
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        backgroundColor: "rgba(0, 0, 0, 0.7)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        zIndex: 1000,
-        padding: "16px",
-        backdropFilter: "blur(5px)",
-      }}
-    >
-      <div
-        style={{
-          background: colors.bgCard,
-          borderRadius: "16px",
-          padding: "32px",
-          maxWidth: "450px",
-          width: "100%",
-          boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.5)",
-          position: "relative",
-          border: `1px solid ${colors.border}`,
-        }}
-      >
-        <button
-          onClick={onClose}
-          style={{
-            position: "absolute",
-            top: "12px",
-            right: "12px",
-            background: "transparent",
-            border: "none",
-            cursor: "pointer",
-            color: colors.textSecondary,
-            transition: "color 0.2s",
-          }}
-          onMouseEnter={(e) =>
-            (e.currentTarget.style.color = colors.textPrimary)
-          }
-          onMouseLeave={(e) =>
-            (e.currentTarget.style.color = colors.textSecondary)
-          }
-        >
-          <X size={24} />
-        </button>
-
-        <div style={{ textAlign: "center", marginBottom: "24px" }}>
-          <Users
-            size={48}
-            color={colors.accentPrimary}
-            style={{ marginBottom: "12px" }}
-          />
-          <h3
-            style={{
-              fontSize: "24px",
-              fontWeight: "bold",
-              color: colors.textPrimary,
-              margin: 0,
-            }}
-          >
-            Join the Open Community
-          </h3>
-        </div>
-
-        <p
-          style={{
-            color: colors.textSecondary,
-            textAlign: "center",
-            marginBottom: "32px",
-          }}
-        >
-          This is where you'd find hundreds of custom themes, share your
-          creations, and collaborate on new frame designs!
-        </p>
-
-        <a
-          href="https://github.com/TechQuanta/github-avatar-frame-api" // Mock link
-          target="_blank"
-          rel="noopener noreferrer"
-          onClick={onClose}
-          style={{
-            display: "block",
-            width: "100%",
-            background: "linear-gradient(to right, #7c3aed, #a855f7)",
-            color: "white",
-            padding: "14px",
-            borderRadius: "8px",
-            textAlign: "center",
-            textDecoration: "none",
-            fontWeight: "600",
-            fontSize: "16px",
-            transition: "all 0.2s",
-            boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
-          }}
-          onMouseEnter={(e) => (e.currentTarget.style.opacity = 0.9)}
-          onMouseLeave={(e) => (e.currentTarget.style.opacity = 1)}
-        >
-          Visit Community Repository
-        </a>
-      </div>
-    </div>
-  );
-};
 
 // --- Share Modal Component ---
 const ShareModal = ({ isOpen, onClose, colors, shareUrl, username }) => {
@@ -430,9 +308,7 @@ function App() {
   const [framedAvatarUrl, setFramedAvatarUrl] = useState(null);
   const [previewKey, setPreviewKey] = useState(0);
   const [copied, setCopied] = useState(false);
-  const [currentStep, setCurrentStep] = useState(1);
   const [activeConfigTab, setActiveConfigTab] = useState("style");
-  const [isCommunityModalOpen, setIsCommunityModalOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const [showToast, setShowToast] = useState(false);
 
@@ -462,7 +338,7 @@ function App() {
       textSecondary: isDark ? "#9ca3af" : "#6b7280",
       bgBody: isDark
         ? "#0F172A"
-        : "linear-gradient(135deg, #e0e7ff 0%, #f3e8ff 50%, #fce7f3 100%)",
+        : "linear-gradient(135deg, #f8fafc 0%, #eef2ff 55%, #faf5ff 100%)",
       bgCard: isDark ? "#1E293B" : "white",
       bgInput: isDark ? "#334155" : "white",
       border: isDark ? "#374151" : "#e5e7eb",
@@ -477,29 +353,11 @@ function App() {
     [isDark]
   );
 
-  // Progress Steps definition (using requested labels)
-  const steps = [
-    { num: 1, label: "Enter Username", icon: Github },
-    { num: 2, label: "Choose Theme", icon: Sparkles },
-    { num: 3, label: "Adjust Settings", icon: Zap },
-    { num: 4, label: "Generate", icon: Frame },
-  ];
-
   const configTabs = [
     { id: "style", label: "Style", helper: "Theme, color, size" },
     { id: "text", label: "Text", helper: text.trim() || "Optional label" },
     { id: "emoji", label: "Emoji", helper: emojis.trim() || "Optional flair" },
   ];
-
-  const scrollToSection = useCallback((sectionId) => {
-    const section = document.getElementById(sectionId);
-
-    if (!section) {
-      return;
-    }
-
-    section.scrollIntoView({ behavior: "smooth", block: "start" });
-  }, []);
 
   // Detect system preference and set up listener
   useEffect(() => {
@@ -521,9 +379,6 @@ function App() {
       setRadius(maxRadius);
     }
 
-    if (username.trim() && selectedTheme) {
-      setCurrentStep(3);
-    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [size, shape, maxRadius]);
 
@@ -626,8 +481,6 @@ function App() {
     setLoading(true);
     setError(null);
     setFramedAvatarUrl(null);
-    setCurrentStep(4);
-
     try {
       const finalRadius = shape === "circle" ? maxRadius : radius;
 
@@ -691,16 +544,10 @@ function App() {
   const handleUsernameChange = (e) => {
     setUsername(e.target.value);
     setPreviewError(null); // Clear preview error when username changes
-    if (e.target.value.trim()) {
-      setCurrentStep(2);
-    } else {
-      setCurrentStep(1);
-    }
   };
 
   const handleThemeSelect = (theme) => {
     setSelectedTheme(theme);
-    setCurrentStep(3);
     // Reset custom color when selecting a new theme
     setCustomAccentColor(null);
   };
@@ -725,7 +572,6 @@ function App() {
       showToastNotification("Surprise style loaded");
     }
     
-    setCurrentStep(3);
   };
 
   const showToastNotification = (message) => {
@@ -929,286 +775,31 @@ function App() {
                       maxWidth: "1200px",
                       margin:"0 auto",
                     }}>
-        {/* --- 1. Top Bar: Title + Community Button --- */}
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            marginBottom: "32px",
-            flexWrap: "wrap",
-            gap: "16px",
-          }}
-          className='header-container'
+        <section
+          className="dashboard-hero"
           data-aos="fade-down"
-          >
-          {/* Center Title Block */}
-          <div
-            style={{
-              flexGrow: 1,
-              textAlign: "center",
-              minWidth: "200px",
-              order: 1,
-              width: "100%",
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: "12px",
-                marginBottom: "8px",
-              }}
-            >
-              <div style={{ position: "relative", display: "inline-block" }}>
-                <Frame
-                  size={48}
-                  color={colors.accentPrimary}
-                  strokeWidth={2.5}
-                />
-                <Sparkles
-                  size={20}
-                  color={colors.accentSecondary}
-                  className="pulse-icon"
-                  style={{
-                    position: "absolute",
-                    top: "-4px",
-                    right: "-4px",
-                  }}
-                />
-              </div>
-              <h1
-                className="main-title"
-                style={{
-                  fontSize: "48px",
-                  fontWeight: "900",
-                  fontFamily: "Georgia, Times New Roman, Times, serif",
-                  fontStyle: "italic",
-                  background:
-                    "linear-gradient(to right, #7c3aed, #a855f7, #ec4899)",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                  backgroundClip: "text",
-                  margin: 0,
-                }} data-aos="zoom-in">
-                GitHub Avatar Frames
-              </h1>
-            </div>
-            <p
-              style={{
-                color: colors.textSecondary,
-                fontSize: "16px",
-                margin: "0",
-              }}
-              data-aos="fade-right">
-                Create stunning framed avatars for your GitHub profile in seconds
+          style={{
+            background: colors.bgCard,
+            border: `1px solid ${colors.border}`,
+            color: colors.textPrimary,
+          }}
+        >
+          <div className="dashboard-hero__mark" aria-hidden="true">
+            <Frame size={30} strokeWidth={2.4} />
+          </div>
+          <div className="dashboard-hero__content">
+            <p className="dashboard-eyebrow">Avatar Dashboard</p>
+            <h1 className="dashboard-title">GitHub Avatar Frames</h1>
+            <p style={{ color: colors.textSecondary }}>
+              Create, preview, and export a polished GitHub avatar from one clean workspace.
             </p>
           </div>
-
-          {/* API Docs and Community Buttons */}
-          <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
-            <button data-aos="fade-right"
-              onClick={() => setIsCommunityModalOpen(true)}
-              className="community-button"
-              style={{
-                padding: "10px 20px",
-                borderRadius: "8px",
-                background: isDark ? "#374151" : "#f0f4f8",
-                border: `2px solid ${
-                  isDark ? colors.accentDark : colors.accentPrimary
-                }`,
-                color: isDark ? colors.accentDark : colors.accentPrimary,
-                fontWeight: "800",
-                fontSize: "14px",
-                cursor: "pointer",
-                transition: "all 0.3s",
-                display: "flex",
-                alignItems: "center",
-                gap: "8px",
-                boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = isDark
-                  ? "#475569"
-                  : colors.accentPrimary;
-                e.currentTarget.style.color = isDark ? "white" : "white";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = isDark ? "#374151" : "#f0f4f8";
-                e.currentTarget.style.color = isDark
-                  ? colors.accentDark
-                  : colors.accentPrimary;
-              }}
-            >
-              <Users size={20} />
-              <span style={{ fontFamily: "Times New Roman, serif" }}>
-                Open Community
-              </span>
-            </button>
-            <a
-              href={`${API_BASE_URL}/api-docs`}
-              target="_blank"
-              rel="noopener noreferrer"
-              data-aos="fade-right"
-              style={{
-                padding: "10px 20px",
-                borderRadius: "8px",
-                background: isDark ? "#374151" : "#f0f4f8",
-                border: `2px solid ${isDark ? colors.accentDark : colors.accentPrimary}`,
-                color: isDark ? colors.accentDark : colors.accentPrimary,
-                fontWeight: "700",
-                fontSize: "14px",
-                textDecoration: "none",
-                transition: "all 0.3s",
-                display: "flex",
-                alignItems: "center",
-                gap: "8px",
-                boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
-              }}
-            >
-              API Docs
-            </a>
+          <div className="dashboard-hero__meta" aria-label="Dashboard summary">
+            <span>{themes.length || "—"} themes</span>
+            <span>{size}px canvas</span>
+            <span>{selectedTheme}</span>
           </div>
-        </div>
-
-        <nav className="studio-navbar" data-aos="fade-up" aria-label="Avatar studio navigation">
-          <div className="studio-navbar__brand">
-            <span className="studio-navbar__spark">✦</span>
-            <div>
-              <strong>Avatar Studio</strong>
-              <small>Build • Preview • Share</small>
-            </div>
-          </div>
-          <div className="studio-navbar__links">
-            {STUDIO_NAV_ITEMS.map((item) =>
-              item.external ? (
-                <a key={item.label} href={item.target} target="_blank" rel="noopener noreferrer">
-                  {item.label}
-                </a>
-              ) : (
-                <button key={item.label} className={className} type="button" onClick={() => scrollToSection(item.target)}>
-                  {content}
-                </button>
-              );
-            })}
-          </div>
-        </nav>
-
-        {/* --- 2. Progress Steps --- */}
-        <div data-aos="fade-right" style={{ marginBottom: "32px" }}>
-          <div
-            style={{
-              background: colors.bgCard,
-              borderRadius: "12px",
-              padding: "20px",
-              border: `1px solid ${colors.border}`,
-              maxWidth: "100%",
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                flexWrap: "wrap",
-              }}
-            >
-              {steps.map((step, idx) => {
-                const isActive = currentStep >= step.num;
-                const Icon = step.icon;
-
-                  const activeBg = "white"; 
-                  const inactiveBg = isDark ? "#374151" : "#f3f4f6";
-                  const activeColor = "#111827"; 
-                  const inactiveColor = "white";  
-                   const activeBorder = "#a855f7"; 
-                   const inactiveBorder = isDark ? "#4b5563" : "#e5e7eb";
-
-                return (
-                  <React.Fragment key={step.num}>
-                    <div
-                      style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                        flex: 1,
-                        minWidth: "20%",
-                      }}
-                    >
-                      <div
-
-                       onClick={() => {
-    const sectionIds = [
-      "#username-section",
-      "#theme-section",
-      "#settings-section",
-      "#generate-section",
-    ];
-    const targetId = sectionIds[idx];
-    if (step.num === 3) setActiveConfigTab("style");
-    const target = document.querySelector(targetId);
-    if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
-  }}
-  style={{
-    width: "48px",
-    height: "48px",
-    borderRadius: "50%",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    marginBottom: "8px",
-    transition: "all 0.3s ease",
-    background: isActive ? activeBg : inactiveBg,
-    color: isActive ? activeColor : inactiveColor,
-    border: `2px solid ${
-      isActive ? activeBorder : inactiveBorder
-    }`,
-    cursor: "pointer",
-  }}
-  onMouseEnter={(e) => {
-    e.currentTarget.style.transform = "scale(1.1)";
-    e.currentTarget.style.boxShadow =
-      "0 0 10px rgba(168, 85, 247, 0.5)";
-       if (!isActive) {
-              e.currentTarget.style.background = "white"; 
-              e.currentTarget.style.color = "#111827"; 
-            }
-  }}
-  onMouseLeave={(e) => {
-    e.currentTarget.style.transform = "scale(1)";
-    e.currentTarget.style.boxShadow = "none";
-    if (!isActive) {
-              e.currentTarget.style.background = inactiveBg;
-              e.currentTarget.style.color = inactiveColor; 
-            }
-  }}
->
-
-                        <Icon size={20} />
-                      </div>
-                      <div
-                        style={{
-                          fontSize: "12px",
-                          fontWeight: "600",
-                          textAlign: "center",
-
-                          // color: isActive ? activeColor : inactiveColor,
-                           color: isActive ? "white" : "#9ca3af"
-                        }}>
-
-                        
-
-                        {step.label}
-                      </div>
-                    </div>
-
-                  </React.Fragment>
-                );
-              })}
-            </div>
-          </div>
-        </div>
+        </section>
 
       <div
   className="main-grid-container studio-workspace-grid"
@@ -1263,7 +854,7 @@ function App() {
           margin: 0,
         }}
       >
-        Configuration & Params
+        Dashboard Controls
       </h2>
     </div>
 
@@ -2519,13 +2110,6 @@ function App() {
         </div>
       </div>
 
-      {/* Community Modal Injection */}
-      <CommunityModal
-        isOpen={isCommunityModalOpen}
-        onClose={() => setIsCommunityModalOpen(false)}
-        colors={colors}
-      />
-
       {/* Share Modal Injection */}
       <ShareModal
         isOpen={isShareModalOpen}
@@ -2578,8 +2162,6 @@ function App() {
         </div>
       )}
 
-      {/* Styles are provided by ./App.css */}
-      {/* Community Modal */}
     </div>
   } />
   <Route path="*" element={<NotFound />} />
