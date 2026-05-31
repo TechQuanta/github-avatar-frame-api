@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import AOS from 'aos';
-import 'aos/dist/aos.css';
 import NotFound from "./pages/NotFound.jsx";
 import {
   Frame,
@@ -34,6 +33,13 @@ const API_BASE_URL =
   (import.meta.env.PROD
     ? "https://github-avatar-frame-api.onrender.com"
     : "http://localhost:3001");
+
+const STUDIO_NAV_ITEMS = [
+  { label: "Start", target: "username-section" },
+  { label: "Customize", target: "settings-section" },
+  { label: "Generate", target: "generate-section" },
+  { label: "API Docs", target: `${API_BASE_URL}/api-docs`, external: true },
+];
 
 // Utility component for consistent button styling (Canvas and Shape)
 const ControlButton = ({ onClick, isSelected, children, isDark }) => (
@@ -483,6 +489,16 @@ function App() {
     { id: "text", label: "Text", helper: text.trim() || "Optional label" },
     { id: "emoji", label: "Emoji", helper: emojis.trim() || "Optional flair" },
   ];
+
+  const scrollToSection = useCallback((sectionId) => {
+    const section = document.getElementById(sectionId);
+
+    if (!section) {
+      return;
+    }
+
+    section.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, []);
 
   // Detect system preference and set up listener
   useEffect(() => {
@@ -1064,7 +1080,7 @@ function App() {
             </div>
           </div>
           <div className="studio-navbar__links">
-            {studioNavItems.map((item) =>
+            {STUDIO_NAV_ITEMS.map((item) =>
               item.external ? (
                 <a key={item.label} href={item.target} target="_blank" rel="noopener noreferrer">
                   {item.label}
