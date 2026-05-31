@@ -1683,3 +1683,184 @@ input:focus {
     flex-basis: 78%;
   }
 }
+
+/* ==========================
+    Compact themed controls polish
+   ========================== */
+.studio-page {
+  --studio-surface: rgba(255, 255, 255, 0.74);
+  --studio-surface-soft: rgba(248, 250, 252, 0.58);
+  --studio-control-text: #334155;
+  --studio-control-border: rgba(139, 92, 246, 0.18);
+}
+
+.studio-page[data-app-theme="dark"] {
+  --studio-surface: rgba(15, 23, 42, 0.68);
+  --studio-surface-soft: rgba(30, 41, 59, 0.44);
+  --studio-control-text: #dbeafe;
+  --studio-control-border: rgba(34, 211, 238, 0.18);
+}
+
+.studio-page .control-button {
+  flex: 0 1 auto !important;
+  min-width: 0 !important;
+  width: auto !important;
+  padding: 8px 11px !important;
+  border-width: 1px !important;
+  border-color: var(--studio-control-border) !important;
+  border-radius: 999px !important;
+  color: var(--studio-control-text) !important;
+  background: var(--studio-surface) !important;
+  font-size: 12px !important;
+  font-weight: 800 !important;
+  line-height: 1 !important;
+  box-shadow: 0 10px 22px -20px rgba(15, 23, 42, 0.6) !important;
+}
+
+.studio-page .control-button:hover {
+  transform: translateY(-1px);
+  border-color: rgba(6, 182, 212, 0.42) !important;
+}
+
+.studio-page .control-button svg {
+  width: 14px !important;
+  height: 14px !important;
+  stroke-width: 2.2;
+}
+
+.studio-page .control-button-set,
+.studio-page .tab-panel [style*="display: flex"] {
+  gap: 7px !important;
+}
+
+.studio-page .control-group {
+  display: grid;
+  gap: 12px;
+}
+
+.studio-page .control-group > div,
+.studio-page .tab-panel > div {
+  min-width: 0;
+}
+
+.studio-page .theme-picker__card {
+  flex-basis: 132px;
+  min-height: 54px;
+  padding: 8px 10px;
+  border-radius: 14px;
+}
+
+.studio-page .theme-picker__card-icon {
+  width: 24px;
+  height: 24px;
+  flex-basis: 24px;
+  border-radius: 9px;
+}
+
+.studio-page .theme-picker__card-icon svg,
+.studio-page .theme-picker__arrow svg,
+.studio-page .theme-suggestions__title svg,
+.studio-page .theme-suggestion-chip svg,
+.studio-page .app-theme-toggle svg,
+.studio-page .studio-workflow svg {
+  width: 13px !important;
+  height: 13px !important;
+}
+
+.studio-page .theme-picker__card-copy strong {
+  font-size: 12px;
+}
+
+.studio-page .theme-picker__card-copy small {
+  font-size: 10px;
+}
+
+.studio-page .theme-suggestions {
+  padding: 10px;
+}
+
+.studio-page .theme-suggestions__grid {
+  display: flex;
+  gap: 7px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 4px;
+  scroll-snap-type: x proximity;
+}
+
+.studio-page .theme-suggestion-chip {
+  flex: 0 0 auto;
+  padding: 7px 9px;
+  font-size: 11px;
+  scroll-snap-align: start;
+}
+
+.studio-page .theme-suggestion-chip__dot {
+  width: 7px;
+  height: 7px;
+  flex-basis: 7px;
+}
+
+.studio-page .dashboard-hero__mark {
+  width: 46px;
+  height: 46px;
+  border-radius: 15px;
+}
+
+.studio-page .dashboard-hero__mark svg {
+  width: 23px !important;
+  height: 23px !important;
+}
+
+.studio-page .studio-workflow__icon {
+  width: 24px;
+  height: 24px;
+}
+
+.studio-page .app-theme-toggle {
+  min-height: 34px;
+  padding: 6px 10px;
+  font-size: 11px;
+}
+
+.studio-page .app-theme-toggle__icon {
+  width: 21px;
+  height: 21px;
+}
+
+.studio-page .studio-panel {
+  background-color: var(--studio-surface) !important;
+}
+
+.studio-page[data-app-theme="light"] input,
+.studio-page[data-app-theme="light"] select,
+.studio-page[data-app-theme="light"] textarea {
+  background: rgba(255, 255, 255, 0.86) !important;
+}
+
+.studio-page[data-app-theme="dark"] input,
+.studio-page[data-app-theme="dark"] select,
+.studio-page[data-app-theme="dark"] textarea {
+  background: rgba(15, 23, 42, 0.7) !important;
+  color: #e2e8f0 !important;
+}
+
+.studio-page[data-app-theme="dark"] .control-button {
+  background: rgba(15, 23, 42, 0.76) !important;
+  color: #dbeafe !important;
+}
+
+@media (max-width: 640px) {
+  .studio-page .control-button {
+    padding: 7px 10px !important;
+    font-size: 11px !important;
+  }
+
+  .studio-page .theme-picker__card {
+    flex-basis: 70%;
+  }
+
+  .studio-page .theme-suggestions {
+    margin-top: 8px;
+  }
+}

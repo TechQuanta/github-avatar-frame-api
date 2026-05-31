@@ -71,6 +71,7 @@ const getCachedAppTheme = () => {
 // Utility component for consistent button styling (Canvas and Shape)
 const ControlButton = ({ onClick, isSelected, children, isDark }) => (
   <button
+    className="control-button"
     onClick={onClick}
     //isSelected={isSelected} // Pass isSelected as prop for internal styling
     style={{
@@ -307,7 +308,8 @@ function App() {
   // helper to show alert if username missing; returns true if blocked
   const blockIfNoUsername = () => {
     if (!username || !username.trim()) {
-      alert("Hey! Please enter your GitHub username first 😊");
+      setError("Please enter your GitHub username first.");
+      showToastNotification("Please enter a username first");
       return true; // blocked
     }
     return false; // ok
@@ -1152,11 +1154,10 @@ function App() {
                   <ControlButton
                     onClick={() => {
                       if(blockIfNoUsername()){
-                        alert("please enter a username first!");
                         return;
                       }
                       setFrameStyle("default");
-                      alert("Default frame selected!");
+                      showToastNotification("Default frame selected");
                     }}
                     isSelected={frameStyle === "default"}
                     isDark={isDark}
@@ -1166,11 +1167,10 @@ function App() {
                   <ControlButton
                     onClick={() => {
                       if(blockIfNoUsername()){
-                        alert("please enter the user name first!");
                         return;
                       }
                       setFrameStyle("border-focus");
-                      alert("border-focus frame selected!");
+                      showToastNotification("Border focus frame selected");
 
                     }}
                     isSelected={frameStyle === "border-focus"}
