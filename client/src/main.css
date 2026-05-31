@@ -1864,3 +1864,80 @@ input:focus {
     margin-top: 8px;
   }
 }
+
+/* ==========================
+    Single-row canvas and shape choices
+   ========================== */
+.studio-page .control-group {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: stretch;
+  margin-bottom: 14px !important;
+}
+
+.studio-page .control-group > div {
+  margin-bottom: 0 !important;
+  padding: 10px;
+  border: 1px solid var(--studio-control-border);
+  border-radius: 16px;
+  background: var(--studio-surface-soft);
+}
+
+.studio-page .control-group label {
+  align-items: center;
+  margin-bottom: 7px !important;
+  color: var(--studio-control-text) !important;
+  font-size: 12px !important;
+  font-weight: 900 !important;
+  letter-spacing: 0.01em;
+}
+
+.studio-page .control-button-set {
+  display: grid !important;
+  grid-auto-columns: max-content;
+  grid-auto-flow: column;
+  grid-template-columns: none !important;
+  justify-content: start;
+  align-items: center;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 2px 2px 5px;
+  scroll-snap-type: x proximity;
+  scrollbar-width: thin;
+}
+
+.studio-page .control-button-set .control-button {
+  min-height: 32px;
+  scroll-snap-align: start;
+  white-space: nowrap;
+}
+
+.studio-page .control-button-set .control-button:has(svg) {
+  padding-inline: 10px !important;
+}
+
+.studio-page[data-app-theme="dark"] .control-group > div {
+  background: rgba(15, 23, 42, 0.42);
+}
+
+@media (max-width: 760px) {
+  .studio-page .control-group {
+    grid-template-columns: 1fr;
+    gap: 9px;
+  }
+
+  .studio-page .control-group > div {
+    padding: 9px;
+  }
+
+  .studio-page .control-button-set {
+    grid-auto-columns: max-content;
+  }
+}
+
+@media (max-width: 420px) {
+  .studio-page .control-button-set .control-button {
+    min-height: 30px;
+    padding: 7px 9px !important;
+  }
+}
