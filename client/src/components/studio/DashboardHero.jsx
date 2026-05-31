@@ -2,9 +2,9 @@ import React from "react";
 import { Frame, Github, Palette, Download } from "lucide-react";
 
 const WORKFLOW_STEPS = [
-  { label: "User", icon: Github },
-  { label: "Style", icon: Palette },
-  { label: "Export", icon: Download },
+  { label: "1. Username", icon: Github },
+  { label: "2. Style", icon: Palette },
+  { label: "3. Export", icon: Download },
 ];
 
 function DashboardHero({ colors, themesCount, selectedTheme, size }) {
@@ -24,7 +24,8 @@ function DashboardHero({ colors, themesCount, selectedTheme, size }) {
 
       <div className="dashboard-hero__content">
         <p className="dashboard-eyebrow">Avatar Frame Studio</p>
-        <h1 className="dashboard-title">Design, preview, and export in one flow.</h1>
+        <h1 className="dashboard-title">GitAvatar Frame Creator</h1>
+        <p className="dashboard-subtitle">Design, preview, and export in one flow.</p>
       </div>
 
       <div className="studio-workflow" aria-label="Avatar creation workflow">
