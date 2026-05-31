@@ -23,6 +23,7 @@ import {
   Twitter,
   Linkedin,
   Award,
+  Palette,
 } from "lucide-react";
 import ThemeSlider from "./components/ThemeSlider.jsx";
 
@@ -1345,7 +1346,7 @@ function App() {
       </div>
 
       {/* Theme Selection Slider */}
-      <div style={{ flex: 1, minWidth: "250px" }}>
+      <div id="theme-section" style={{ flex: 1, minWidth: "250px" }}>
         <ThemeSlider
           themes={themes}
           themesLoading={themesLoading}

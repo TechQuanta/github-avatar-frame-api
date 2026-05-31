@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Zap, Loader2 } from "lucide-react";
+import { Zap, Loader2, Palette } from "lucide-react";
 
 const ThemeSlider = ({
   themes = [],
@@ -50,17 +50,33 @@ const ThemeSlider = ({
 
   return (
     <div style={{ marginBottom: "24px", position: "relative" }}>
-      <label
-        style={{
-          display: "block",
-          fontSize: "14px",
-          fontWeight: "600",
-          color: colors.textPrimary,
-          marginBottom: "8px",
-        }}
-      >
-        Frame Theme ({themes.length} available)
-      </label>
+      <div className="theme-slider-heading">
+        <label
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "8px",
+            fontSize: "14px",
+            fontWeight: "700",
+            color: colors.textPrimary,
+          }}
+        >
+          <span className="theme-slider-heading__icon">
+            <Palette size={16} color="white" aria-hidden="true" />
+          </span>
+          Frame Theme
+        </label>
+        <span
+          className="theme-slider-active-pill"
+          style={{
+            color: isDark ? "#ddd6fe" : "#6d28d9",
+            background: isDark ? "rgba(167, 139, 250, 0.14)" : "rgba(124, 58, 237, 0.1)",
+            borderColor: isDark ? "rgba(167, 139, 250, 0.22)" : "rgba(124, 58, 237, 0.18)",
+          }}
+        >
+          {themes.length} available
+        </span>
+      </div>
 
       {themesLoading ? (
         <div style={{ display: "flex", justifyContent: "center", padding: "32px 0" }}>
