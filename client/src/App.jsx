@@ -424,6 +424,7 @@ function App() {
   const [previewKey, setPreviewKey] = useState(0);
   const [copied, setCopied] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
+  const [activeConfigTab, setActiveConfigTab] = useState("style");
   const [isCommunityModalOpen, setIsCommunityModalOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const [showToast, setShowToast] = useState(false);
@@ -475,6 +476,12 @@ function App() {
     { num: 2, label: "Choose Theme", icon: Sparkles },
     { num: 3, label: "Adjust Settings", icon: Zap },
     { num: 4, label: "Generate", icon: Frame },
+  ];
+
+  const configTabs = [
+    { id: "style", label: "Style", helper: "Theme, color, size" },
+    { id: "text", label: "Text", helper: text.trim() || "Optional label" },
+    { id: "emoji", label: "Emoji", helper: emojis.trim() || "Optional flair" },
   ];
 
   // Detect system preference and set up listener
@@ -1099,8 +1106,9 @@ function App() {
       "#generate-section",
     ];
     const targetId = sectionIds[idx];
+    if (step.num === 3) setActiveConfigTab("style");
     const target = document.querySelector(targetId);
-    if (target) target.scrollIntoView({ behavior: "smooth" });
+    if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
   }}
   style={{
     width: "48px",
@@ -1313,6 +1321,52 @@ function App() {
         />
       </div>
     </div>
+
+    <div
+      className="interactive-tab-shell"
+      id="settings-section"
+      style={{
+        background: isDark ? "rgba(51, 65, 85, 0.55)" : "#f8fafc",
+        border: `1px solid ${colors.border}`,
+        borderRadius: "14px",
+        padding: "10px",
+        marginBottom: "18px",
+      }}
+    >
+      <div className="config-tab-list">
+        {configTabs.map((tab) => {
+          const isActiveTab = activeConfigTab === tab.id;
+          return (
+            <button
+              key={tab.id}
+              type="button"
+              onClick={() => setActiveConfigTab(tab.id)}
+              className="config-tab-button"
+              style={{
+                background: isActiveTab
+                  ? `linear-gradient(135deg, ${colors.accentPrimary}, ${colors.accentSecondary})`
+                  : colors.bgCard,
+                color: isActiveTab ? "white" : colors.textPrimary,
+                border: `1px solid ${isActiveTab ? "transparent" : colors.borderInput}`,
+                boxShadow: isActiveTab ? "0 12px 24px -14px rgba(124, 58, 237, 0.8)" : "none",
+              }}
+            >
+              <span>{tab.label}</span>
+              <small>{tab.helper}</small>
+            </button>
+          );
+        })}
+      </div>
+      <div className="config-summary-strip">
+        <span>{selectedTheme}</span>
+        <span>{canvas}</span>
+        <span>{shape === "circle" ? "circle" : `${finalRadiusForDisplay}px radius`}</span>
+        <span>{size}px</span>
+      </div>
+    </div>
+
+            {activeConfigTab === "style" && (
+              <>
             {/* Custom Color Picker and Random Theme Generator */}
             <div style={{ marginBottom: "16px" }}>
               <label
@@ -1669,8 +1723,12 @@ function App() {
               </div>
             )}
 
-            {/* Text Overlay Controls */}
-            <div style={{ marginBottom: "24px" }}>
+              </>
+            )}
+
+            {activeConfigTab === "text" && (
+            <div className="tab-panel" style={{ marginBottom: "24px" }}>
+              {/* Text Overlay Controls */}
               <label
                 style={{
                   display: "flex",
@@ -1775,8 +1833,11 @@ function App() {
               </div>
             </div>
 
-            {/* Emoji Overlay Controls */}
-            <div style={{ marginBottom: "24px" }}>
+            )}
+
+            {activeConfigTab === "emoji" && (
+            <div className="tab-panel" style={{ marginBottom: "24px" }}>
+              {/* Emoji Overlay Controls */}
               <label
                 style={{
                   display: "block",
@@ -1869,8 +1930,10 @@ function App() {
               </div>
             </div>
 
+            )}
+
             {/* Generate Button */}
-          <div id="generate-section"> 
+          <div id="generate-section" className="generate-action-bar"> 
              <button
               onClick={generateFramedAvatar}
               disabled={loading || !username.trim()}
@@ -1951,6 +2014,7 @@ function App() {
 
           {/* Right: Preview Panel (50%) */}
           <div data-aos="flip-left"
+            className="preview-panel-card"
             style={{
               background: colors.bgCard,
               borderRadius: "12px",
