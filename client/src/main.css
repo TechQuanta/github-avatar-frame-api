@@ -506,3 +506,250 @@ input:focus {
     transition-duration: 0.01s;
   }
 }
+
+/* ==========================
+    Single-page Studio Layout
+   ========================== */
+#root {
+  min-height: 100dvh;
+}
+
+.studio-page {
+  min-height: 100dvh;
+  padding: 12px;
+  background-attachment: fixed;
+}
+
+.studio-page__layout {
+  width: min(100%, 1440px);
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0;
+}
+
+.studio-dashboard-hero {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: clamp(14px, 1.5vw, 20px);
+  grid-template-columns: auto minmax(220px, 1fr) auto auto;
+  gap: clamp(12px, 1.4vw, 20px);
+  overflow: hidden;
+}
+
+.studio-dashboard-hero .dashboard-hero__mark {
+  width: clamp(48px, 4.4vw, 60px);
+  height: clamp(48px, 4.4vw, 60px);
+  border-radius: 18px;
+}
+
+.studio-dashboard-hero .dashboard-title {
+  max-width: 760px;
+  font-size: clamp(22px, 2.3vw, 34px);
+  line-height: 1.05;
+}
+
+.studio-workflow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px;
+  border: 1px solid rgba(124, 58, 237, 0.14);
+  border-radius: 999px;
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.08), rgba(236, 72, 153, 0.08));
+  white-space: nowrap;
+}
+
+.studio-workflow__step {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: #6d28d9;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.studio-workflow__icon {
+  display: grid;
+  width: 28px;
+  height: 28px;
+  place-items: center;
+  border-radius: 50%;
+  color: white;
+  background: linear-gradient(135deg, #7c3aed, #ec4899);
+}
+
+.studio-workflow__line {
+  width: 18px;
+  height: 2px;
+  border-radius: 999px;
+  background: rgba(124, 58, 237, 0.3);
+}
+
+.studio-workspace-grid {
+  width: 100%;
+  padding: 0;
+  gap: clamp(12px, 1.5vw, 20px);
+  align-items: stretch;
+}
+
+.studio-config-panel,
+.studio-preview-panel {
+  min-height: 0;
+  box-shadow: 0 24px 80px -48px rgba(15, 23, 42, 0.55), 0 8px 26px -22px rgba(124, 58, 237, 0.45) !important;
+}
+
+.studio-config-panel {
+  overflow: auto;
+}
+
+.studio-config-panel > div:first-child,
+.studio-preview-panel > div:first-child {
+  margin-bottom: 4px !important;
+}
+
+.search-theme-container {
+  gap: 14px !important;
+  margin-bottom: 0 !important;
+}
+
+.interactive-tab-shell {
+  top: 0;
+  margin-bottom: 6px !important;
+}
+
+.config-tab-button {
+  min-height: 52px;
+}
+
+.control-group,
+.tab-panel {
+  margin-bottom: 12px !important;
+}
+
+.generate-action-bar {
+  bottom: 0;
+  margin-top: auto;
+}
+
+.studio-preview-panel {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.studio-preview-panel > div:last-child {
+  flex: 1;
+  min-height: 0 !important;
+}
+
+.studio-preview-panel .preview-canvas,
+.studio-preview-panel .preview-img {
+  max-width: min(100%, 420px);
+  max-height: min(46vh, 420px);
+  margin: 0 auto;
+  object-fit: contain;
+}
+
+@media (prefers-color-scheme: dark) {
+  .studio-workflow {
+    border-color: rgba(167, 139, 250, 0.2);
+    background: linear-gradient(135deg, rgba(167, 139, 250, 0.14), rgba(244, 114, 182, 0.12));
+  }
+
+  .studio-workflow__step {
+    color: #ddd6fe;
+  }
+
+  .studio-workflow__line {
+    background: rgba(221, 214, 254, 0.32);
+  }
+}
+
+@media (min-width: 900px) {
+  html,
+  body,
+  #root {
+    height: 100%;
+    overflow: hidden;
+  }
+
+  .studio-page {
+    height: 100dvh;
+    overflow: hidden;
+  }
+
+  .studio-page__layout {
+    height: 100%;
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+    gap: 12px;
+  }
+
+  .studio-workspace-grid {
+    min-height: 0;
+    grid-template-columns: minmax(540px, 1.18fr) minmax(360px, 0.82fr);
+  }
+
+  .studio-config-panel,
+  .studio-preview-panel {
+    height: 100%;
+  }
+
+  .preview-panel-card {
+    max-height: none;
+  }
+}
+
+@media (max-width: 1180px) {
+  .studio-dashboard-hero {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+  }
+
+  .studio-workflow {
+    display: none;
+  }
+}
+
+@media (max-width: 899px) {
+  html,
+  body,
+  #root {
+    min-height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  .studio-page {
+    min-height: 100dvh;
+    overflow: visible;
+    padding: 12px;
+  }
+
+  .studio-page__layout {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .studio-dashboard-hero {
+    grid-template-columns: 1fr;
+  }
+
+  .studio-workspace-grid {
+    grid-template-columns: 1fr;
+    overflow: visible;
+    scroll-snap-type: none;
+  }
+
+  .studio-config-panel,
+  .studio-preview-panel {
+    order: initial;
+    overflow: visible;
+  }
+
+  .studio-preview-panel .preview-canvas,
+  .studio-preview-panel .preview-img {
+    max-height: none;
+  }
+}
