@@ -787,12 +787,18 @@ function App() {
           <div className="dashboard-hero__mark" aria-hidden="true">
             <Frame size={30} strokeWidth={2.4} />
           </div>
-          <div className="dashboard-hero__content">
-            <p className="dashboard-eyebrow">Avatar Dashboard</p>
-            <h1 className="dashboard-title">GitHub Avatar Frames</h1>
-            <p style={{ color: colors.textSecondary }}>
-              Create, preview, and export a polished GitHub avatar from one clean workspace.
-            </p>
+          <div className="studio-navbar__links">
+            {STUDIO_NAV_ITEMS.map((item) =>
+              item.external ? (
+                <a key={item.label} href={item.target} target="_blank" rel="noopener noreferrer">
+                  {item.label}
+                </a>
+              ) : (
+                <button key={item.label} type="button" onClick={() => scrollToSection(item.target)}>
+                  {item.label}
+                </button>
+              )
+            )}
           </div>
           <div className="dashboard-hero__meta" aria-label="Dashboard summary">
             <span>{themes.length || "—"} themes</span>
