@@ -1,5 +1,5 @@
 import React from "react";
-import { Frame, Github, Palette, Download } from "lucide-react";
+import { Frame, Github, Palette, Download, Moon, Sun } from "lucide-react";
 
 const WORKFLOW_STEPS = [
   { label: "1. Username", icon: Github },
@@ -7,7 +7,7 @@ const WORKFLOW_STEPS = [
   { label: "3. Export", icon: Download },
 ];
 
-function DashboardHero({ colors, themesCount, selectedTheme, size }) {
+function DashboardHero({ colors, themesCount, selectedTheme, size, isDark, onToggleAppTheme }) {
   return (
     <section
       className="dashboard-hero studio-dashboard-hero"
@@ -40,10 +40,24 @@ function DashboardHero({ colors, themesCount, selectedTheme, size }) {
         ))}
       </div>
 
-      <div className="dashboard-hero__meta" aria-label="Dashboard summary">
-        <span>{themesCount || "—"} themes</span>
-        <span>{size}px canvas</span>
-        <span>{selectedTheme}</span>
+      <div className="studio-hero-actions">
+        <div className="dashboard-hero__meta" aria-label="Dashboard summary">
+          <span>{themesCount || "—"} themes</span>
+          <span>{size}px canvas</span>
+          <span>{selectedTheme}</span>
+        </div>
+        <button
+          type="button"
+          className="app-theme-toggle"
+          onClick={onToggleAppTheme}
+          aria-label={isDark ? "Switch app to light theme" : "Switch app to dark theme"}
+          title={isDark ? "Switch to light mode" : "Switch to dark mode"}
+        >
+          <span className="app-theme-toggle__icon">
+            {isDark ? <Sun size={16} /> : <Moon size={16} />}
+          </span>
+          <span>{isDark ? "Light" : "Dark"}</span>
+        </button>
       </div>
     </section>
   );

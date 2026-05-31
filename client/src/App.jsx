@@ -37,6 +37,7 @@ const API_BASE_URL =
     : "http://localhost:3001");
 
 const SELECTED_THEME_CACHE_KEY = "gitavatar:selected-frame-theme";
+const APP_THEME_CACHE_KEY = "gitavatar:app-theme";
 const FALLBACK_THEMES = [
   { theme: "base", name: "Base Frame" },
   { theme: "minimal", name: "Minimal Theme" },
@@ -56,6 +57,15 @@ const FALLBACK_THEMES = [
 const getCachedTheme = () => {
   if (typeof window === "undefined") return "base";
   return window.localStorage.getItem(SELECTED_THEME_CACHE_KEY) || "base";
+};
+
+const getCachedAppTheme = () => {
+  if (typeof window === "undefined") return false;
+
+  const cachedTheme = window.localStorage.getItem(APP_THEME_CACHE_KEY);
+  if (cachedTheme) return cachedTheme === "dark";
+
+  return window.matchMedia("(prefers-color-scheme: dark)").matches;
 };
 
 // Utility component for consistent button styling (Canvas and Shape)
@@ -339,8 +349,8 @@ function App() {
   // Sharing state
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
 
-  // System Theme State
-  const [isDark, setIsDark] = useState(false);
+  // App Theme State
+  const [isDark, setIsDark] = useState(getCachedAppTheme);
 
   // Badge Generator State
   const [badgeLabel, setBadgeLabel] = useState("GitHub Avatar");
@@ -383,16 +393,13 @@ function App() {
     { id: "emoji", label: "Emoji", helper: emojis.trim() || "Optional flair" },
   ];
 
-  // Detect system preference and set up listener
   useEffect(() => {
-    const checkDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    setIsDark(checkDark);
+    document.documentElement.dataset.appTheme = isDark ? "dark" : "light";
+    window.localStorage.setItem(APP_THEME_CACHE_KEY, isDark ? "dark" : "light");
+  }, [isDark]);
 
-    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-    const handler = (e) => setIsDark(e.matches);
-
-    mediaQuery.addEventListener("change", handler);
-    return () => mediaQuery.removeEventListener("change", handler);
+  const toggleAppTheme = useCallback(() => {
+    setIsDark((current) => !current);
   }, []);
 
   useEffect(() => {
@@ -791,12 +798,14 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={
-          <StudioPageShell colors={colors}>
+          <StudioPageShell colors={colors} isDark={isDark}>
             <DashboardHero
               colors={colors}
               themesCount={themes.length}
               selectedTheme={selectedTheme}
               size={size}
+              isDark={isDark}
+              onToggleAppTheme={toggleAppTheme}
             />
 
       <div
