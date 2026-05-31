@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import AOS from 'aos';
-import 'aos/dist/aos.css';
 import NotFound from "./pages/NotFound.jsx";
 import {
   Frame,
@@ -24,6 +23,7 @@ import {
   Twitter,
   Linkedin,
   Award,
+  Palette,
 } from "lucide-react";
 import ThemeSlider from "./components/ThemeSlider.jsx";
 
@@ -34,6 +34,15 @@ const API_BASE_URL =
   (import.meta.env.PROD
     ? "https://github-avatar-frame-api.onrender.com"
     : "http://localhost:3001");
+
+const STUDIO_NAV_ITEMS = [
+  { label: "Start", target: "username-section", icon: Github },
+  { label: "Theme", target: "theme-section", icon: Palette },
+  { label: "Preview", target: "preview-section", icon: Frame },
+  { label: "Customize", target: "settings-section", icon: Sparkles },
+  { label: "API Docs", target: `${API_BASE_URL}/api-docs`, icon: ChevronRight, external: true },
+  { label: "Generate", target: "generate-section", icon: Zap, cta: true },
+];
 
 // Utility component for consistent button styling (Canvas and Shape)
 const ControlButton = ({ onClick, isSelected, children, isDark }) => (
@@ -483,6 +492,16 @@ function App() {
     { id: "text", label: "Text", helper: text.trim() || "Optional label" },
     { id: "emoji", label: "Emoji", helper: emojis.trim() || "Optional flair" },
   ];
+
+  const scrollToSection = useCallback((sectionId) => {
+    const section = document.getElementById(sectionId);
+
+    if (!section) {
+      return;
+    }
+
+    section.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, []);
 
   // Detect system preference and set up listener
   useEffect(() => {
@@ -1064,17 +1083,26 @@ function App() {
             </div>
           </div>
           <div className="studio-navbar__links">
-            {studioNavItems.map((item) =>
-              item.external ? (
-                <a key={item.label} href={item.target} target="_blank" rel="noopener noreferrer">
-                  {item.label}
+            {STUDIO_NAV_ITEMS.map((item) => {
+              const Icon = item.icon;
+              const className = item.cta ? "studio-navbar__link studio-navbar__link--cta" : "studio-navbar__link";
+              const content = (
+                <>
+                  <Icon size={16} aria-hidden="true" />
+                  <span>{item.label}</span>
+                </>
+              );
+
+              return item.external ? (
+                <a key={item.label} className={className} href={item.target} target="_blank" rel="noopener noreferrer">
+                  {content}
                 </a>
               ) : (
-                <button key={item.label} type="button" onClick={() => scrollToSection(item.target)}>
-                  {item.label}
+                <button key={item.label} className={className} type="button" onClick={() => scrollToSection(item.target)}>
+                  {content}
                 </button>
-              )
-            )}
+              );
+            })}
           </div>
         </nav>
 
@@ -1194,21 +1222,16 @@ function App() {
         </div>
 
       <div
-  className="main-grid-container"
+  className="main-grid-container studio-workspace-grid"
   style={{
-    display: "grid",
-    gap: "24px",
-    gridTemplateColumns: "1fr",
-    alignItems: "stretch",
-    justifyContent: "center",
-    maxWidth: "1040px",
+    maxWidth: "1120px",
     margin: "0 auto",
-    padding: "32px 16px",
   }}
 >
   {/* Configuration Panel */}
   <div 
     id="username-section" 
+    className="studio-panel studio-config-panel"
     data-aos="flip-right"
     style={{
       background: colors.bgCard,
@@ -1334,7 +1357,7 @@ function App() {
       </div>
 
       {/* Theme Selection Slider */}
-      <div style={{ flex: 1, minWidth: "250px" }}>
+      <div id="theme-section" style={{ flex: 1, minWidth: "250px" }}>
         <ThemeSlider
           themes={themes}
           themesLoading={themesLoading}
@@ -2037,8 +2060,10 @@ function App() {
           </div>
 
           {/* Right: Preview Panel (50%) */}
-          <div data-aos="flip-left"
-            className="preview-panel-card"
+          <div
+            id="preview-section"
+            data-aos="flip-left"
+            className="studio-panel preview-panel-card studio-preview-panel"
             style={{
               background: colors.bgCard,
               borderRadius: "24px",
