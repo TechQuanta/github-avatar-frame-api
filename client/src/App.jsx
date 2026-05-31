@@ -25,6 +25,8 @@ import {
   Palette,
 } from "lucide-react";
 import ThemeSlider from "./components/ThemeSlider.jsx";
+import DashboardHero from "./components/studio/DashboardHero.jsx";
+import StudioPageShell from "./components/studio/StudioPageShell.jsx";
 
 // Use an explicit Vite env override when provided; otherwise default to the
 // deployed API in production and the local API server during development.
@@ -33,6 +35,38 @@ const API_BASE_URL =
   (import.meta.env.PROD
     ? "https://github-avatar-frame-api.onrender.com"
     : "http://localhost:3001");
+
+const SELECTED_THEME_CACHE_KEY = "gitavatar:selected-frame-theme";
+const APP_THEME_CACHE_KEY = "gitavatar:app-theme";
+const FALLBACK_THEMES = [
+  { theme: "base", name: "Base Frame" },
+  { theme: "minimal", name: "Minimal Theme" },
+  { theme: "classic", name: "Classic Theme" },
+  { theme: "darkmode", name: "Darkmode Theme" },
+  { theme: "neon", name: "Neon Theme" },
+  { theme: "ocean", name: "Ocean Theme" },
+  { theme: "eternity", name: "Galaxy Theme" },
+  { theme: "starry", name: "Starry Theme" },
+  { theme: "gravityspace", name: "Gravity Space" },
+  { theme: "hotfire", name: "Hot Fire" },
+  { theme: "flamingo", name: "Beginner Theme" },
+  { theme: "gitblaze", name: "Git Blaze" },
+  { theme: "macros", name: "Macros Theme" },
+];
+
+const getCachedTheme = () => {
+  if (typeof window === "undefined") return "base";
+  return window.localStorage.getItem(SELECTED_THEME_CACHE_KEY) || "base";
+};
+
+const getCachedAppTheme = () => {
+  if (typeof window === "undefined") return false;
+
+  const cachedTheme = window.localStorage.getItem(APP_THEME_CACHE_KEY);
+  if (cachedTheme) return cachedTheme === "dark";
+
+  return window.matchMedia("(prefers-color-scheme: dark)").matches;
+};
 
 // Utility component for consistent button styling (Canvas and Shape)
 const ControlButton = ({ onClick, isSelected, children, isDark }) => (
@@ -280,7 +314,7 @@ function App() {
   };
 
   const [themes, setThemes] = useState([]);
-  const [selectedTheme, setSelectedTheme] = useState("base");
+  const [selectedTheme, setSelectedTheme] = useState(getCachedTheme);
   const [customAccentColor, setCustomAccentColor] = useState(null);
   const [size, setSize] = useState(384);
   const [canvas, setCanvas] = useState("light");
@@ -315,8 +349,8 @@ function App() {
   // Sharing state
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
 
-  // System Theme State
-  const [isDark, setIsDark] = useState(false);
+  // App Theme State
+  const [isDark, setIsDark] = useState(getCachedAppTheme);
 
   // Badge Generator State
   const [badgeLabel, setBadgeLabel] = useState("GitHub Avatar");
@@ -343,9 +377,9 @@ function App() {
       bgInput: isDark ? "#334155" : "white",
       border: isDark ? "#374151" : "#e5e7eb",
       borderInput: isDark ? "#475569" : "#d1d5db",
-      accentPrimary: "#7c3aed",
-      accentSecondary: "#a855f7",
-      accentDark: "#a78bfa",
+      accentPrimary: "#8b5cf6",
+      accentSecondary: "#06b6d4",
+      accentDark: "#22d3ee",
       errorBg: isDark ? "#450a0a" : "#fef2f2",
       errorBorder: isDark ? "#b91c1c" : "#fecaca",
       errorText: isDark ? "#fca5a5" : "#991b1b",
@@ -359,16 +393,13 @@ function App() {
     { id: "emoji", label: "Emoji", helper: emojis.trim() || "Optional flair" },
   ];
 
-  // Detect system preference and set up listener
   useEffect(() => {
-    const checkDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    setIsDark(checkDark);
+    document.documentElement.dataset.appTheme = isDark ? "dark" : "light";
+    window.localStorage.setItem(APP_THEME_CACHE_KEY, isDark ? "dark" : "light");
+  }, [isDark]);
 
-    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-    const handler = (e) => setIsDark(e.matches);
-
-    mediaQuery.addEventListener("change", handler);
-    return () => mediaQuery.removeEventListener("change", handler);
+  const toggleAppTheme = useCallback(() => {
+    setIsDark((current) => !current);
   }, []);
 
   useEffect(() => {
@@ -394,17 +425,19 @@ function App() {
       const data = await response.json();
       setThemes(data);
 
-      if (data.length > 0 && !selectedTheme) {
-        setSelectedTheme(data[0].theme);
+      if (data.length > 0 && !data.some((theme) => theme.theme === selectedTheme)) {
+        const nextTheme = data[0].theme;
+        setSelectedTheme(nextTheme);
+        window.localStorage.setItem(SELECTED_THEME_CACHE_KEY, nextTheme);
       }
     } catch (err) {
       console.error("Error fetching themes:", err);
       setError("Failed to load themes. Check API server.");
-      setThemes([
-        { theme: "base", name: "Base Theme" },
-        { theme: "minimal", name: "Minimal" },
-        { theme: "neon", name: "Neon Glow" },
-      ]);
+      setThemes(FALLBACK_THEMES);
+      if (!FALLBACK_THEMES.some((theme) => theme.theme === selectedTheme)) {
+        setSelectedTheme("base");
+        window.localStorage.setItem(SELECTED_THEME_CACHE_KEY, "base");
+      }
     } finally {
       setThemesLoading(false);
     }
@@ -548,6 +581,7 @@ function App() {
 
   const handleThemeSelect = (theme) => {
     setSelectedTheme(theme);
+    window.localStorage.setItem(SELECTED_THEME_CACHE_KEY, theme);
     // Reset custom color when selecting a new theme
     setCustomAccentColor(null);
   };
@@ -559,6 +593,7 @@ function App() {
     const randomTheme = themes[randomIndex];
     
     setSelectedTheme(randomTheme.theme);
+    window.localStorage.setItem(SELECTED_THEME_CACHE_KEY, randomTheme.theme);
     
     // Randomly decide whether to also randomize accent color (30% chance)
     const shouldRandomizeColor = Math.random() < 0.3;
@@ -763,55 +798,21 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={
-          <div
-            style={{
-              minHeight: "100vh",
-              background: colors.bgBody,
-              padding: "24px 16px",
-              color: colors.textPrimary,
-            }}>
-            <div className="layout-wrapper"
-                    style={{
-                      maxWidth: "1200px",
-                      margin:"0 auto",
-                    }}>
-        <section
-          className="dashboard-hero"
-          data-aos="fade-down"
-          style={{
-            background: colors.bgCard,
-            border: `1px solid ${colors.border}`,
-            color: colors.textPrimary,
-          }}
-        >
-          <div className="dashboard-hero__mark" aria-hidden="true">
-            <Frame size={30} strokeWidth={2.4} />
-          </div>
-          <div className="studio-navbar__links">
-            {STUDIO_NAV_ITEMS.map((item) =>
-              item.external ? (
-                <a key={item.label} href={item.target} target="_blank" rel="noopener noreferrer">
-                  {item.label}
-                </a>
-              ) : (
-                <button key={item.label} type="button" onClick={() => scrollToSection(item.target)}>
-                  {item.label}
-                </button>
-              )
-            )}
-          </div>
-          <div className="dashboard-hero__meta" aria-label="Dashboard summary">
-            <span>{themes.length || "—"} themes</span>
-            <span>{size}px canvas</span>
-            <span>{selectedTheme}</span>
-          </div>
-        </section>
+          <StudioPageShell colors={colors} isDark={isDark}>
+            <DashboardHero
+              colors={colors}
+              themesCount={themes.length}
+              selectedTheme={selectedTheme}
+              size={size}
+              isDark={isDark}
+              onToggleAppTheme={toggleAppTheme}
+            />
 
       <div
   className="main-grid-container studio-workspace-grid"
   style={{
-    maxWidth: "1120px",
-    margin: "0 auto",
+    maxWidth: "100%",
+    margin: "0",
   }}
 >
   {/* Configuration Panel */}
@@ -823,7 +824,7 @@ function App() {
       background: colors.bgCard,
       borderRadius: "24px",
       border: `1px solid ${colors.border}`,
-      padding: "32px",
+      padding: "clamp(16px, 2vw, 24px)",
       backgroundImage: isDark
         ? "radial-gradient(circle at top right, rgba(168, 85, 247, 0.18), transparent 34%)"
         : "radial-gradient(circle at top right, rgba(168, 85, 247, 0.16), transparent 34%)",
@@ -1654,7 +1655,7 @@ function App() {
               background: colors.bgCard,
               borderRadius: "24px",
               border: `1px solid ${colors.border}`,
-              padding: "32px",
+              padding: "clamp(16px, 2vw, 24px)",
               maxWidth: "100%",
               minWidth: "0",
               backgroundImage: isDark
@@ -2114,7 +2115,6 @@ function App() {
             </div>
           </div>
         </div>
-      </div>
 
       {/* Share Modal Injection */}
       <ShareModal
@@ -2168,7 +2168,7 @@ function App() {
         </div>
       )}
 
-    </div>
+    </StudioPageShell>
   } />
   <Route path="*" element={<NotFound />} />
   </Routes>
