@@ -112,23 +112,56 @@ body {
    ========================== */
 .main-grid-container { 
   display: grid; 
-  grid-template-columns: 1fr; /* Force 1 column on mobile */
+  grid-template-columns: 1fr;
   gap: 32px; 
   align-items: start;
 }
 
-/* Tablet & Small Desktop (2 Equal Columns) */
-@media(min-width: 769px) {
-  .main-grid-container {
-    grid-template-columns: 1fr 1fr;
-  }
+.studio-workspace-grid {
+  grid-template-columns: minmax(320px, 1fr) minmax(320px, 0.9fr);
+  align-items: start;
+  gap: 24px;
+  justify-content: center;
+  padding: 32px 16px;
+}
+
+.studio-panel {
+  scroll-snap-align: start;
+}
+
+.studio-config-panel {
+  order: 1;
+}
+
+.studio-preview-panel {
+  order: 2;
 }
 
 /* Formal Wide Balance for Large Screens */
 @media(min-width: 1200px) {
-  .main-grid-container {
-    grid-template-columns: 1.1fr 0.9fr; 
+  .studio-workspace-grid {
+    grid-template-columns: minmax(0, 1.1fr) minmax(360px, 0.9fr); 
     gap: 48px;
+  }
+}
+
+@media(max-width: 768px) {
+  .studio-workspace-grid {
+    grid-template-columns: minmax(300px, 88vw) minmax(300px, 88vw);
+    justify-content: start;
+    overflow-x: auto;
+    overflow-y: visible;
+    scroll-padding-left: 16px;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .studio-config-panel {
+    order: 2;
+  }
+
+  .studio-preview-panel {
+    order: 1;
   }
 }
 
@@ -196,8 +229,10 @@ input:focus {
   .mono-box { background: rgba(255,255,255,0.02); }
 }
 
-::-webkit-scrollbar { width: 5px; }
-::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 10px; }
+@supports selector(::-webkit-scrollbar) {
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 10px; }
+}
 
 
 .responsive-stack {
@@ -344,5 +379,183 @@ input:focus {
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+/* Minimal AOS-compatible animation rules. Kept local so the bundle does not
+   include AOS declarations with unitless transition-delay values that Firefox
+   reports as parse errors. */
+[data-aos] {
+  pointer-events: none;
+  transition-duration: 0.6s;
+  transition-property: opacity, transform;
+  transition-timing-function: ease-in-out;
+}
+
+[data-aos].aos-animate {
+  pointer-events: auto;
+}
+
+[data-aos="fade-down"] {
+  opacity: 0;
+  transform: translate3d(0, -24px, 0);
+}
+
+[data-aos="fade-up"] {
+  opacity: 0;
+  transform: translate3d(0, 24px, 0);
+}
+
+[data-aos="fade-right"] {
+  opacity: 0;
+  transform: translate3d(-24px, 0, 0);
+}
+
+[data-aos="zoom-in"] {
+  opacity: 0;
+  transform: scale(0.94);
+}
+
+[data-aos="flip-right"] {
+  opacity: 0;
+  transform: perspective(1200px) rotateY(-10deg);
+  backface-visibility: hidden;
+}
+
+[data-aos="flip-left"] {
+  opacity: 0;
+  transform: perspective(1200px) rotateY(10deg);
+  backface-visibility: hidden;
+}
+
+[data-aos].aos-animate {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-aos] {
+    opacity: 1;
+    transform: none;
+    transition-duration: 0.01s;
+  }
+}
+
+.studio-navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 0 0 28px;
+  padding: 14px 16px;
+  border: 1px solid var(--border-light);
+  border-radius: 18px;
+  background: var(--glass);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: var(--shadow-sm);
+}
+
+.studio-navbar__brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 180px;
+}
+
+.studio-navbar__spark {
+  display: grid;
+  width: 36px;
+  height: 36px;
+  place-items: center;
+  border-radius: 999px;
+  color: #fff;
+  background: linear-gradient(135deg, #7c3aed, #ec4899);
+}
+
+.studio-navbar__brand strong,
+.studio-navbar__brand small {
+  display: block;
+}
+
+.studio-navbar__brand strong {
+  font-size: 14px;
+  font-weight: 900;
+}
+
+.studio-navbar__brand small {
+  margin-top: 2px;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.studio-navbar__links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.studio-navbar__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  border: 1px solid rgba(124, 58, 237, 0.16);
+  border-radius: 999px;
+  padding: 8px 12px;
+  color: #6d28d9;
+  background: rgba(124, 58, 237, 0.08);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 800;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.18s ease, background 0.18s ease, color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.studio-navbar__link svg {
+  flex-shrink: 0;
+}
+
+.studio-navbar__link--cta {
+  color: #fff;
+  background: linear-gradient(135deg, #7c3aed, #ec4899);
+  border-color: transparent;
+  box-shadow: 0 10px 22px -14px rgba(124, 58, 237, 0.9);
+}
+
+.studio-navbar__link:hover {
+  color: #fff;
+  background: #7c3aed;
+  transform: translateY(-1px);
+}
+
+.studio-navbar__link--cta:hover {
+  background: linear-gradient(135deg, #6d28d9, #db2777);
+}
+
+@media (prefers-color-scheme: dark) {
+  .studio-navbar__link {
+    color: #ddd6fe;
+    background: rgba(167, 139, 250, 0.14);
+    border-color: rgba(167, 139, 250, 0.2);
+  }
+
+  .studio-navbar__link--cta {
+    color: #fff;
+    background: linear-gradient(135deg, #7c3aed, #ec4899);
+    border-color: transparent;
+  }
+}
+
+@media (max-width: 640px) {
+  .studio-navbar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .studio-navbar__links {
+    justify-content: flex-start;
   }
 }
