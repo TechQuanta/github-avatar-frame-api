@@ -484,20 +484,6 @@ function App() {
     { id: "emoji", label: "Emoji", helper: emojis.trim() || "Optional flair" },
   ];
 
-  const studioNavItems = [
-    { label: "Start", target: "#username-section" },
-    { label: "Customize", target: "#settings-section" },
-    { label: "Preview", target: "#preview-section" },
-    { label: "Docs", target: `${API_BASE_URL}/api-docs`, external: true },
-  ];
-
-  const scrollToSection = (target) => {
-    const element = document.querySelector(target);
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
-  };
-
   // Detect system preference and set up listener
   useEffect(() => {
     const checkDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
@@ -2050,10 +2036,8 @@ function App() {
             </div>
           </div>
 
-          {/* Preview Panel */}
-          <div
-            id="preview-section"
-            data-aos="flip-left"
+          {/* Right: Preview Panel (50%) */}
+          <div data-aos="flip-left"
             className="preview-panel-card"
             style={{
               background: colors.bgCard,
