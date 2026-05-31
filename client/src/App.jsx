@@ -1087,11 +1087,11 @@ function App() {
                   {item.label}
                 </a>
               ) : (
-                <button key={item.label} className={className} type="button" onClick={() => scrollToSection(item.target)}>
-                  {content}
+                <button key={item.label} type="button" onClick={() => scrollToSection(item.target)}>
+                  {item.label}
                 </button>
-              );
-            })}
+              )
+            )}
           </div>
         </nav>
 
