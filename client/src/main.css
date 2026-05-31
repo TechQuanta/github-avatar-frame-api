@@ -196,8 +196,10 @@ input:focus {
   .mono-box { background: rgba(255,255,255,0.02); }
 }
 
-::-webkit-scrollbar { width: 5px; }
-::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 10px; }
+@supports selector(::-webkit-scrollbar) {
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 10px; }
+}
 
 
 .responsive-stack {
@@ -344,5 +346,162 @@ input:focus {
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+/* Minimal AOS-compatible animation rules. Kept local so the bundle does not
+   include AOS declarations with unitless transition-delay values that Firefox
+   reports as parse errors. */
+[data-aos] {
+  pointer-events: none;
+  transition-duration: 0.6s;
+  transition-property: opacity, transform;
+  transition-timing-function: ease-in-out;
+}
+
+[data-aos].aos-animate {
+  pointer-events: auto;
+}
+
+[data-aos="fade-down"] {
+  opacity: 0;
+  transform: translate3d(0, -24px, 0);
+}
+
+[data-aos="fade-up"] {
+  opacity: 0;
+  transform: translate3d(0, 24px, 0);
+}
+
+[data-aos="fade-right"] {
+  opacity: 0;
+  transform: translate3d(-24px, 0, 0);
+}
+
+[data-aos="zoom-in"] {
+  opacity: 0;
+  transform: scale(0.94);
+}
+
+[data-aos="flip-right"] {
+  opacity: 0;
+  transform: perspective(1200px) rotateY(-10deg);
+  backface-visibility: hidden;
+}
+
+[data-aos="flip-left"] {
+  opacity: 0;
+  transform: perspective(1200px) rotateY(10deg);
+  backface-visibility: hidden;
+}
+
+[data-aos].aos-animate {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-aos] {
+    opacity: 1;
+    transform: none;
+    transition-duration: 0.01s;
+  }
+}
+
+.studio-navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 0 0 28px;
+  padding: 14px 16px;
+  border: 1px solid var(--border-light);
+  border-radius: 18px;
+  background: var(--glass);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: var(--shadow-sm);
+}
+
+.studio-navbar__brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 180px;
+}
+
+.studio-navbar__spark {
+  display: grid;
+  width: 36px;
+  height: 36px;
+  place-items: center;
+  border-radius: 999px;
+  color: #fff;
+  background: linear-gradient(135deg, #7c3aed, #ec4899);
+}
+
+.studio-navbar__brand strong,
+.studio-navbar__brand small {
+  display: block;
+}
+
+.studio-navbar__brand strong {
+  font-size: 14px;
+  font-weight: 900;
+}
+
+.studio-navbar__brand small {
+  margin-top: 2px;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.studio-navbar__links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.studio-navbar__links a,
+.studio-navbar__links button {
+  border: 1px solid rgba(124, 58, 237, 0.16);
+  border-radius: 999px;
+  padding: 8px 12px;
+  color: #6d28d9;
+  background: rgba(124, 58, 237, 0.08);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 800;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.18s ease, background 0.18s ease, color 0.18s ease;
+}
+
+.studio-navbar__links a:hover,
+.studio-navbar__links button:hover {
+  color: #fff;
+  background: #7c3aed;
+  transform: translateY(-1px);
+}
+
+@media (prefers-color-scheme: dark) {
+  .studio-navbar__links a,
+  .studio-navbar__links button {
+    color: #ddd6fe;
+    background: rgba(167, 139, 250, 0.14);
+    border-color: rgba(167, 139, 250, 0.2);
+  }
+}
+
+@media (max-width: 640px) {
+  .studio-navbar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .studio-navbar__links {
+    justify-content: flex-start;
   }
 }
