@@ -16,7 +16,7 @@ program
 program
   .command('generate <username>')
   .description('Generate a framed avatar for a GitHub user')
-  .option('-t, --theme <theme>', 'Frame theme (base, classic, darkmode, eternity, flamingo, gitblaze, macros, minimal, neon, ocean, starry)', 'base')
+  .option('-t, --theme <theme>', 'Frame theme (base, classic, darkmode, eternity, flamingo, gitblaze, gravityspace, hotfire, macros, minimal, neon, ocean, starry)', 'base')
   .option('-s, --size <size>', 'Avatar size in pixels (64-1024)', '256')
   .option('-c, --canvas <canvas>', 'Background color (light, dark)', 'light')
   .option('-sh, --shape <shape>', 'Avatar shape (circle, rounded)', 'circle')
@@ -98,7 +98,7 @@ program
     console.log(chalk.blue('Available themes:'));
     const themes = [
       'base', 'classic', 'darkmode', 'eternity', 'flamingo',
-      'gitblaze', 'macros', 'minimal', 'neon', 'ocean', 'starry'
+      'gitblaze', 'gravityspace', 'hotfire', 'macros', 'minimal', 'neon', 'ocean', 'starry'
     ];
     themes.forEach(theme => console.log(chalk.green(`  • ${theme}`)));
   });
