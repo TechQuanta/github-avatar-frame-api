@@ -497,10 +497,8 @@ input:focus {
   gap: 8px;
 }
 
-.studio-navbar__link {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
+.studio-navbar__links a,
+.studio-navbar__links button {
   border: 1px solid rgba(124, 58, 237, 0.16);
   border-radius: 999px;
   padding: 8px 12px;
@@ -511,41 +509,22 @@ input:focus {
   font-weight: 800;
   text-decoration: none;
   cursor: pointer;
-  transition: transform 0.18s ease, background 0.18s ease, color 0.18s ease, box-shadow 0.18s ease;
+  transition: transform 0.18s ease, background 0.18s ease, color 0.18s ease;
 }
 
-.studio-navbar__link svg {
-  flex-shrink: 0;
-}
-
-.studio-navbar__link--cta {
-  color: #fff;
-  background: linear-gradient(135deg, #7c3aed, #ec4899);
-  border-color: transparent;
-  box-shadow: 0 10px 22px -14px rgba(124, 58, 237, 0.9);
-}
-
-.studio-navbar__link:hover {
+.studio-navbar__links a:hover,
+.studio-navbar__links button:hover {
   color: #fff;
   background: #7c3aed;
   transform: translateY(-1px);
 }
 
-.studio-navbar__link--cta:hover {
-  background: linear-gradient(135deg, #6d28d9, #db2777);
-}
-
 @media (prefers-color-scheme: dark) {
-  .studio-navbar__link {
+  .studio-navbar__links a,
+  .studio-navbar__links button {
     color: #ddd6fe;
     background: rgba(167, 139, 250, 0.14);
     border-color: rgba(167, 139, 250, 0.2);
-  }
-
-  .studio-navbar__link--cta {
-    color: #fff;
-    background: linear-gradient(135deg, #7c3aed, #ec4899);
-    border-color: transparent;
   }
 }
 
@@ -557,39 +536,5 @@ input:focus {
 
   .studio-navbar__links {
     justify-content: flex-start;
-  }
-}
-
-.theme-slider-heading {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 8px;
-}
-
-.theme-slider-heading__icon {
-  display: inline-grid;
-  width: 28px;
-  height: 28px;
-  place-items: center;
-  border-radius: 10px;
-  background: linear-gradient(135deg, #7c3aed, #ec4899);
-  box-shadow: 0 10px 18px -14px rgba(124, 58, 237, 0.95);
-}
-
-.theme-slider-active-pill {
-  flex-shrink: 0;
-  border: 1px solid;
-  border-radius: 999px;
-  padding: 5px 9px;
-  font-size: 11px;
-  font-weight: 800;
-}
-
-@media (max-width: 420px) {
-  .theme-slider-heading {
-    align-items: flex-start;
-    flex-direction: column;
   }
 }
