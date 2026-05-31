@@ -1086,11 +1086,11 @@ function App() {
                   {item.label}
                 </a>
               ) : (
-                <button key={item.label} type="button" onClick={() => scrollToSection(item.target)}>
-                  {item.label}
+                <button key={item.label} className={className} type="button" onClick={() => scrollToSection(item.target)}>
+                  {content}
                 </button>
-              )
-            )}
+              );
+            })}
           </div>
         </nav>
 
@@ -1210,21 +1210,16 @@ function App() {
         </div>
 
       <div
-  className="main-grid-container"
+  className="main-grid-container studio-workspace-grid"
   style={{
-    display: "grid",
-    gap: "24px",
-    gridTemplateColumns: "1fr",
-    alignItems: "stretch",
-    justifyContent: "center",
-    maxWidth: "1040px",
+    maxWidth: "1120px",
     margin: "0 auto",
-    padding: "32px 16px",
   }}
 >
   {/* Configuration Panel */}
   <div 
     id="username-section" 
+    className="studio-panel studio-config-panel"
     data-aos="flip-right"
     style={{
       background: colors.bgCard,
@@ -2053,8 +2048,10 @@ function App() {
           </div>
 
           {/* Right: Preview Panel (50%) */}
-          <div data-aos="flip-left"
-            className="preview-panel-card"
+          <div
+            id="preview-section"
+            data-aos="flip-left"
+            className="studio-panel preview-panel-card studio-preview-panel"
             style={{
               background: colors.bgCard,
               borderRadius: "24px",
