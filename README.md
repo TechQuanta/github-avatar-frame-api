@@ -170,8 +170,11 @@ github-avatar-frame generate octocat --emojis "🚀,💻,🔥" --emoji-position 
 # Save to custom file
 github-avatar-frame generate octocat --output my-avatar.png
 
+# Export a transparent SVG
+github-avatar-frame generate octocat --format svg --canvas transparent --output octocat-frame
+
 # Use local API server
-github-avatar-frame generate octocat --url http://localhost:3000
+github-avatar-frame generate octocat --url http://localhost:3001
 ```
 
 <h3 style="color:#ff4081;">⚙️ CLI Options</h3>
@@ -185,11 +188,12 @@ github-avatar-frame generate octocat --url http://localhost:3000
 </tr>
 </thead>
 <tbody style="text-align:center;">
-<tr><td>--theme, -t</td><td>base</td><td>Frame theme (base, classic, darkmode, eternity, flamingo, gitblaze, macros, minimal, neon, ocean, starry)</td></tr>
+<tr><td>--theme, -t</td><td>base</td><td>Frame theme (base, classic, darkmode, eternity, flamingo, gitblaze, gravityspace, hotfire, macros, minimal, neon, ocean, starry)</td></tr>
 <tr><td>--size, -s</td><td>256</td><td>Avatar size in pixels (64-1024)</td></tr>
-<tr><td>--canvas, -c</td><td>light</td><td>Background color (light, dark)</td></tr>
-<tr><td>--shape, -sh</td><td>circle</td><td>Avatar shape (circle, rounded)</td></tr>
-<tr><td>--radius, -r</td><td>25</td><td>Corner radius for rounded shape</td></tr>
+<tr><td>--canvas, -c</td><td>light</td><td>Background color (light, dark, transparent)</td></tr>
+<tr><td>--shape, -sh</td><td>circle</td><td>Avatar shape (circle, rounded, rect)</td></tr>
+<tr><td>--radius, -r</td><td>25</td><td>Corner radius for rounded/rect shape</td></tr>
+<tr><td>--format, -f</td><td>png</td><td>Output format (png, jpg, svg)</td></tr>
 <tr><td>--text, -tx</td><td>none</td><td>Custom text to display</td></tr>
 <tr><td>--text-color, -tc</td><td>#ffffff</td><td>Text color in HEX format</td></tr>
 <tr><td>--text-size, -ts</td><td>20</td><td>Text size in pixels (8-100)</td></tr>
@@ -207,6 +211,9 @@ github-avatar-frame generate octocat --url http://localhost:3000
 ```bash
 # List available themes
 github-avatar-frame themes
+
+# Show API documentation links
+github-avatar-frame docs
 
 # Show API information
 github-avatar-frame info
@@ -235,6 +242,35 @@ https://github-avatar-frame-api.onrender.com/api/framed-avatar/{username}?theme=
 
 
 
+
+
+<h2 style="color:#2196f3;">📚 API Docs & Local Development</h2>
+
+| Resource | URL / Command | Notes |
+|---|---|---|
+| Swagger API docs | `/api-docs` | Interactive endpoint docs served by the API app. |
+| Health check | `/api/health` | Quick uptime check for deployments and local dev. |
+| Theme list | `/api/themes` | Returns every frame theme with metadata. |
+| Local API | `npm run build && npm start` | Starts the compiled Express server on port `3001` by default. |
+| Local client | `cd client && npm run dev` | Starts the Vite UI for interactive editing. |
+
+<h2 style="color:#2196f3;">✅ Testing</h2>
+
+Run these checks before opening a pull request:
+
+```bash
+# Server helper/API unit tests
+npm test
+
+# TypeScript server build
+npm run build
+
+# CLI TypeScript build
+npm run build:cli
+
+# Client lint and production build
+cd client && npm run lint && npm run build
+```
 
 <h3 >🧮 Query Parameters:</h3>
 <div align=center>

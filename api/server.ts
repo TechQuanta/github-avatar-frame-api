@@ -366,6 +366,28 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const ASSET_BASE_PATH = path.join(__dirname, "..");
 
+function escapeXml(value: string): string {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&apos;");
+}
+
+function parseHexColor(value: string | undefined): { r: number; g: number; b: number } | null {
+  if (!value || !/^#[0-9A-Fa-f]{6}$/.test(value)) {
+    return null;
+  }
+
+  return {
+    r: parseInt(value.slice(1, 3), 16),
+    g: parseInt(value.slice(3, 5), 16),
+    b: parseInt(value.slice(5, 7), 16),
+  };
+}
+
+
 //serve static files 
 app.use(express.static(path.join(ASSET_BASE_PATH,"public")));
 
@@ -392,7 +414,7 @@ async function createTextOverlay(text: string, textColor: string, textSize: numb
         fill="${textColor}"
         filter="url(#textShadow)"
       >
-        ${text}
+        ${escapeXml(text)}
       </text>
     </svg>
   `;
@@ -428,7 +450,7 @@ async function createEmojiOverlay(emojis: string, emojiSize: number, emojiPositi
           dominant-baseline="middle"
           font-size="${emojiSize}"
         >
-          ${emoji}
+          ${escapeXml(emoji)}
         </text>
       `;
     });
@@ -448,7 +470,7 @@ async function createEmojiOverlay(emojis: string, emojiSize: number, emojiPositi
           dominant-baseline="middle"
           font-size="${emojiSize}"
         >
-          ${emoji}
+          ${escapeXml(emoji)}
         </text>
       `;
     });
@@ -605,7 +627,30 @@ app.get("/api/framed-avatar/:username", async (req: Request, res: Response) => {
       });
     }
 
+    // Validate canvas parameter
+    if (!["light", "dark", "transparent"].includes(canvasParam)) {
+      return res.status(400).json({
+        error: "Bad Request",
+        message: "canvas must be 'light', 'dark', or 'transparent'.",
+      });
+    }
+
+    // Validate accent color parameter
+    const accentRgb = parseHexColor(accentColor);
+    if (accentColor && !accentRgb) {
+      return res.status(400).json({
+        error: "Bad Request",
+        message: "accentColor must be a valid hex color in the format #RRGGBB.",
+      });
+    }
+
     // Validate text parameters
+    if (!/^\d+$/.test(textSizeStr)) {
+      return res.status(400).json({
+        error: "Bad Request",
+        message: "textSize must be a valid integer.",
+      });
+    }
     const textSize = Math.max(8, Math.min(parseInt(textSizeStr, 10), 100));
     if (!["top", "bottom", "center"].includes(textPosition)) {
       return res.status(400).json({
@@ -615,6 +660,12 @@ app.get("/api/framed-avatar/:username", async (req: Request, res: Response) => {
     }
 
     // Validate emoji parameters
+    if (!/^\d+$/.test(emojiSizeStr)) {
+      return res.status(400).json({
+        error: "Bad Request",
+        message: "emojiSize must be a valid integer.",
+      });
+    }
     const emojiSize = Math.max(16, Math.min(parseInt(emojiSizeStr, 10), 120));
     if (!["top", "bottom", "corners"].includes(emojiPosition)) {
       return res.status(400).json({
@@ -645,6 +696,8 @@ app.get("/api/framed-avatar/:username", async (req: Request, res: Response) => {
     let canvasColor: { r: number; g: number; b: number; alpha: number };
     if (canvasParam === "dark")
       canvasColor = { r: 34, g: 34, b: 34, alpha: 1 }; // dark gray
+    else if (canvasParam === "transparent")
+      canvasColor = { r: 0, g: 0, b: 0, alpha: 0 };
     else canvasColor = { r: 240, g: 240, b: 240, alpha: 1 }; // light gray default
 
     // Load frame first to validate theme exists
@@ -680,10 +733,12 @@ app.get("/api/framed-avatar/:username", async (req: Request, res: Response) => {
           error: "User not found",
           message: "The GitHub user does not exist. Please check the spelling and try again."
         });
-      } else {
-        // For other network errors, let the outer catch block handle it
-        throw axiosError;
       }
+
+      // If the upstream avatar service is temporarily unavailable or rate-limited,
+      // keep the image endpoint usable by rendering the local fallback avatar.
+      console.warn("Failed to fetch GitHub avatar, using fallback image:", axiosError);
+      avatarBuffer = fs.readFileSync(path.join(ASSET_BASE_PATH, "public", "images", "fallback.png"));
     }
 
     // Load frame
@@ -712,18 +767,12 @@ app.get("/api/framed-avatar/:username", async (req: Request, res: Response) => {
       })
       .resize(size, size);
     
-    if (accentColor) {
-      // Convert hex color to RGB for processing
-      const hex = accentColor.replace('#', '');
-      const r = parseInt(hex.substr(0, 2), 16);
-      const g = parseInt(hex.substr(2, 2), 16);
-      const b = parseInt(hex.substr(4, 2), 16);
-      
+    if (accentRgb) {
       // Apply color tint to the frame
       frameProcessor = frameProcessor.modulate({
         brightness: 1.1, // Slightly brighten
         saturation: 1.3, // Increase saturation
-      }).tint({ r, g, b });
+      }).tint(accentRgb);
     }
     
     const paddedFrame = await frameProcessor.png().toBuffer();
@@ -1028,15 +1077,15 @@ function generateRecommendations(analysis: any) {
 
   // Frame type based on profile type
   if (analysis.isFrontend) {
-    recommendedFrame = "tech-minimal";
+    recommendedFrame = "minimal";
     accentColor = "#61DAFB"; // React blue
     emojis = ["💻", "🚀"];
   } else if (analysis.isDataScientist) {
-    recommendedFrame = "neural";
+    recommendedFrame = "ocean";
     accentColor = "#FFD43B"; // Yellow for data
     emojis = ["🧠", "📊"];
   } else if (analysis.isStudent || analysis.isOpenSource) {
-    recommendedFrame = "soft-modern";
+    recommendedFrame = "gitblaze";
     accentColor = "#34D399"; // Green for growth
     emojis = ["🚀", "📚"];
   } else if (analysis.dominantLanguage === "Python") {
@@ -1494,15 +1543,22 @@ app.get("*", (req: Request, res: Response) => {
   }
 });
 
-// Start server
-app.listen(PORT, () => {
-  console.log(`🚀 Server running at http://localhost:${PORT}`);
-  console.log(`📁 Asset base path: ${ASSET_BASE_PATH}`);
-  console.log(`🎨 Available endpoints:`);
-  console.log(`   GET /api/themes - List available themes`);
-  console.log(`   GET /api/framed-avatar/:username - Generate framed avatar`);
-  console.log(`   GET /api/ai-suggest/:username - AI-powered frame suggestions based on avatar & activity`);
-  console.log(`   GET /api/smart-frame/:username - AI-powered smart frame suggestions`);
-  console.log(`   GET /api/badge/:username - Generate GitHub stats badges`);
-  console.log(`   GET /api/health - Health check`);
-});
+const isDirectRun = process.argv[1]
+  ? path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)
+  : false;
+
+if (isDirectRun) {
+  app.listen(PORT, () => {
+    console.log(`🚀 Server running at http://localhost:${PORT}`);
+    console.log(`📁 Asset base path: ${ASSET_BASE_PATH}`);
+    console.log(`🎨 Available endpoints:`);
+    console.log(`   GET /api/themes - List available themes`);
+    console.log(`   GET /api/framed-avatar/:username - Generate framed avatar`);
+    console.log(`   GET /api/ai-suggest/:username - AI-powered frame suggestions based on avatar & activity`);
+    console.log(`   GET /api/smart-frame/:username - AI-powered smart frame suggestions`);
+    console.log(`   GET /api/badge/:username - Generate GitHub stats badges`);
+    console.log(`   GET /api/health - Health check`);
+  });
+}
+
+export { app, escapeXml, parseHexColor, generateRecommendations };
