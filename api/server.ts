@@ -1543,15 +1543,22 @@ app.get("*", (req: Request, res: Response) => {
   }
 });
 
-// Start server
-app.listen(PORT, () => {
-  console.log(`🚀 Server running at http://localhost:${PORT}`);
-  console.log(`📁 Asset base path: ${ASSET_BASE_PATH}`);
-  console.log(`🎨 Available endpoints:`);
-  console.log(`   GET /api/themes - List available themes`);
-  console.log(`   GET /api/framed-avatar/:username - Generate framed avatar`);
-  console.log(`   GET /api/ai-suggest/:username - AI-powered frame suggestions based on avatar & activity`);
-  console.log(`   GET /api/smart-frame/:username - AI-powered smart frame suggestions`);
-  console.log(`   GET /api/badge/:username - Generate GitHub stats badges`);
-  console.log(`   GET /api/health - Health check`);
-});
+const isDirectRun = process.argv[1]
+  ? path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)
+  : false;
+
+if (isDirectRun) {
+  app.listen(PORT, () => {
+    console.log(`🚀 Server running at http://localhost:${PORT}`);
+    console.log(`📁 Asset base path: ${ASSET_BASE_PATH}`);
+    console.log(`🎨 Available endpoints:`);
+    console.log(`   GET /api/themes - List available themes`);
+    console.log(`   GET /api/framed-avatar/:username - Generate framed avatar`);
+    console.log(`   GET /api/ai-suggest/:username - AI-powered frame suggestions based on avatar & activity`);
+    console.log(`   GET /api/smart-frame/:username - AI-powered smart frame suggestions`);
+    console.log(`   GET /api/badge/:username - Generate GitHub stats badges`);
+    console.log(`   GET /api/health - Health check`);
+  });
+}
+
+export { app, escapeXml, parseHexColor, generateRecommendations };

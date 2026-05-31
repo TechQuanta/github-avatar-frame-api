@@ -9,7 +9,8 @@
     "build": "tsc -p tsconfig.server.json",
     "build:cli": "cd cli && npm run build",
     "start": "node dist/server.js",
-    "cli": "cd cli && npm start"
+    "cli": "cd cli && npm start",
+    "test": "npm run build && node --test tests/*.test.mjs"
   },
   "dependencies": {
     "aos": "^2.3.4",

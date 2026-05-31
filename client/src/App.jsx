@@ -1055,6 +1055,29 @@ function App() {
           </div>
         </div>
 
+        <nav className="studio-navbar" data-aos="fade-up" aria-label="Avatar studio navigation">
+          <div className="studio-navbar__brand">
+            <span className="studio-navbar__spark">✦</span>
+            <div>
+              <strong>Avatar Studio</strong>
+              <small>Build • Preview • Share</small>
+            </div>
+          </div>
+          <div className="studio-navbar__links">
+            {studioNavItems.map((item) =>
+              item.external ? (
+                <a key={item.label} href={item.target} target="_blank" rel="noopener noreferrer">
+                  {item.label}
+                </a>
+              ) : (
+                <button key={item.label} type="button" onClick={() => scrollToSection(item.target)}>
+                  {item.label}
+                </button>
+              )
+            )}
+          </div>
+        </nav>
+
         {/* --- 2. Progress Steps --- */}
         <div data-aos="fade-right" style={{ marginBottom: "32px" }}>
           <div
@@ -1175,25 +1198,26 @@ function App() {
   style={{
     display: "grid",
     gap: "24px",
-    /* Logic: Automatically fits as many 350px columns as possible. 
-       On mobile (~400px), only one fits, so they stack! */
-    gridTemplateColumns: "repeat(auto-fit, minmax(350px, 1fr))", 
-    alignItems: "start",
+    gridTemplateColumns: "1fr",
+    alignItems: "stretch",
     justifyContent: "center",
-    maxWidth: "1200px",
+    maxWidth: "1040px",
     margin: "0 auto",
     padding: "32px 16px",
   }}
 >
-  {/* Left: Configuration Panel (50%) */}
+  {/* Configuration Panel */}
   <div 
     id="username-section" 
     data-aos="flip-right"
     style={{
       background: colors.bgCard,
-      borderRadius: "12px",
+      borderRadius: "24px",
       border: `1px solid ${colors.border}`,
       padding: "32px",
+      backgroundImage: isDark
+        ? "radial-gradient(circle at top right, rgba(168, 85, 247, 0.18), transparent 34%)"
+        : "radial-gradient(circle at top right, rgba(168, 85, 247, 0.16), transparent 34%)",
       display: "flex",
       maxWidth: "100%",
       flexDirection: "column",
@@ -2017,16 +2041,14 @@ function App() {
             className="preview-panel-card"
             style={{
               background: colors.bgCard,
-              borderRadius: "12px",
+              borderRadius: "24px",
               border: `1px solid ${colors.border}`,
               padding: "32px",
               maxWidth: "100%",
               minWidth: "0",
-              
-              /* ADD THESE 3 LINES BELOW */
-              position: "sticky", 
-              top: "24px",       // Distance from the top of the screen when scrolling
-              zIndex: 10,        // Keeps it above other background elements
+              backgroundImage: isDark
+                ? "radial-gradient(circle at top left, rgba(236, 72, 153, 0.18), transparent 36%)"
+                : "radial-gradient(circle at top left, rgba(236, 72, 153, 0.14), transparent 36%)",
             }}
           >
             <div
