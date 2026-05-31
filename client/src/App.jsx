@@ -36,6 +36,28 @@ const API_BASE_URL =
     ? "https://github-avatar-frame-api.onrender.com"
     : "http://localhost:3001");
 
+const SELECTED_THEME_CACHE_KEY = "gitavatar:selected-frame-theme";
+const FALLBACK_THEMES = [
+  { theme: "base", name: "Base Frame" },
+  { theme: "minimal", name: "Minimal Theme" },
+  { theme: "classic", name: "Classic Theme" },
+  { theme: "darkmode", name: "Darkmode Theme" },
+  { theme: "neon", name: "Neon Theme" },
+  { theme: "ocean", name: "Ocean Theme" },
+  { theme: "eternity", name: "Galaxy Theme" },
+  { theme: "starry", name: "Starry Theme" },
+  { theme: "gravityspace", name: "Gravity Space" },
+  { theme: "hotfire", name: "Hot Fire" },
+  { theme: "flamingo", name: "Beginner Theme" },
+  { theme: "gitblaze", name: "Git Blaze" },
+  { theme: "macros", name: "Macros Theme" },
+];
+
+const getCachedTheme = () => {
+  if (typeof window === "undefined") return "base";
+  return window.localStorage.getItem(SELECTED_THEME_CACHE_KEY) || "base";
+};
+
 // Utility component for consistent button styling (Canvas and Shape)
 const ControlButton = ({ onClick, isSelected, children, isDark }) => (
   <button
@@ -282,7 +304,7 @@ function App() {
   };
 
   const [themes, setThemes] = useState([]);
-  const [selectedTheme, setSelectedTheme] = useState("base");
+  const [selectedTheme, setSelectedTheme] = useState(getCachedTheme);
   const [customAccentColor, setCustomAccentColor] = useState(null);
   const [size, setSize] = useState(384);
   const [canvas, setCanvas] = useState("light");
@@ -396,17 +418,19 @@ function App() {
       const data = await response.json();
       setThemes(data);
 
-      if (data.length > 0 && !selectedTheme) {
-        setSelectedTheme(data[0].theme);
+      if (data.length > 0 && !data.some((theme) => theme.theme === selectedTheme)) {
+        const nextTheme = data[0].theme;
+        setSelectedTheme(nextTheme);
+        window.localStorage.setItem(SELECTED_THEME_CACHE_KEY, nextTheme);
       }
     } catch (err) {
       console.error("Error fetching themes:", err);
       setError("Failed to load themes. Check API server.");
-      setThemes([
-        { theme: "base", name: "Base Theme" },
-        { theme: "minimal", name: "Minimal" },
-        { theme: "neon", name: "Neon Glow" },
-      ]);
+      setThemes(FALLBACK_THEMES);
+      if (!FALLBACK_THEMES.some((theme) => theme.theme === selectedTheme)) {
+        setSelectedTheme("base");
+        window.localStorage.setItem(SELECTED_THEME_CACHE_KEY, "base");
+      }
     } finally {
       setThemesLoading(false);
     }
@@ -550,6 +574,7 @@ function App() {
 
   const handleThemeSelect = (theme) => {
     setSelectedTheme(theme);
+    window.localStorage.setItem(SELECTED_THEME_CACHE_KEY, theme);
     // Reset custom color when selecting a new theme
     setCustomAccentColor(null);
   };
@@ -561,6 +586,7 @@ function App() {
     const randomTheme = themes[randomIndex];
     
     setSelectedTheme(randomTheme.theme);
+    window.localStorage.setItem(SELECTED_THEME_CACHE_KEY, randomTheme.theme);
     
     // Randomly decide whether to also randomize accent color (30% chance)
     const shouldRandomizeColor = Math.random() < 0.3;

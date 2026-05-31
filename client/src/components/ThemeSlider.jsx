@@ -1,5 +1,30 @@
-import React, { useEffect, useRef, useState } from "react";
-import { Zap, Loader2, Palette } from "lucide-react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Check, ChevronLeft, ChevronRight, Loader2, Palette, Sparkles, Zap } from "lucide-react";
+
+const THEME_SUGGESTIONS = [
+  { label: "Clean Starter", theme: "base", tone: "#8b5cf6" },
+  { label: "Minimal Pro", theme: "minimal", tone: "#64748b" },
+  { label: "Classic GitHub", theme: "classic", tone: "#111827" },
+  { label: "Dark Mode", theme: "darkmode", tone: "#0f172a" },
+  { label: "Neon Glow", theme: "neon", tone: "#22d3ee" },
+  { label: "Ocean Calm", theme: "ocean", tone: "#0284c7" },
+  { label: "Galaxy", theme: "eternity", tone: "#7c3aed" },
+  { label: "Starry Night", theme: "starry", tone: "#ef4444" },
+  { label: "Gravity Space", theme: "gravityspace", tone: "#6366f1" },
+  { label: "Hot Fire", theme: "hotfire", tone: "#f97316" },
+  { label: "Flamingo", theme: "flamingo", tone: "#ec4899" },
+  { label: "Git Blaze", theme: "gitblaze", tone: "#f59e0b" },
+  { label: "Macro Purple", theme: "macros", tone: "#a855f7" },
+  { label: "Portfolio", theme: "minimal", tone: "#14b8a6" },
+  { label: "Open Source", theme: "classic", tone: "#22c55e" },
+  { label: "Cyberpunk", theme: "neon", tone: "#d946ef" },
+  { label: "Deep Sea", theme: "ocean", tone: "#0ea5e9" },
+  { label: "Cosmic Dev", theme: "gravityspace", tone: "#8b5cf6" },
+  { label: "Warm Energy", theme: "hotfire", tone: "#fb7185" },
+  { label: "Soft Pop", theme: "flamingo", tone: "#f472b6" },
+];
+
+const getThemeLabel = (theme) => theme?.name || theme?.theme || "Theme";
 
 const ThemeSlider = ({
   themes = [],
@@ -10,46 +35,67 @@ const ThemeSlider = ({
   isDark,
 }) => {
   const scrollRef = useRef(null);
-  const intervalRef = useRef(null);
-  const [isManuallyStopped, setIsManuallyStopped] = useState(false);
+  const [scrollState, setScrollState] = useState({ canLeft: false, canRight: false });
 
-  // Start auto-slide
+  const themeMap = useMemo(
+    () => new Map(themes.map((theme) => [theme.theme, theme])),
+    [themes]
+  );
+
+  const suggestions = useMemo(
+    () => THEME_SUGGESTIONS.filter((suggestion) => themeMap.has(suggestion.theme)).slice(0, 20),
+    [themeMap]
+  );
+
+  const selectedThemeName = getThemeLabel(themeMap.get(selectedTheme)) || selectedTheme;
+
+  const updateScrollState = useCallback(() => {
+    const container = scrollRef.current;
+    if (!container) return;
+
+    setScrollState({
+      canLeft: container.scrollLeft > 4,
+      canRight: container.scrollLeft + container.clientWidth < container.scrollWidth - 4,
+    });
+  }, []);
+
+  useEffect(() => {
+    updateScrollState();
+    const container = scrollRef.current;
+    if (!container) return undefined;
+
+    container.addEventListener("scroll", updateScrollState, { passive: true });
+    const resizeObserver = new ResizeObserver(updateScrollState);
+    resizeObserver.observe(container);
+
+    return () => {
+      container.removeEventListener("scroll", updateScrollState);
+      resizeObserver.disconnect();
+    };
+  }, [themes, updateScrollState]);
+
   useEffect(() => {
     const container = scrollRef.current;
-    if (!container || isManuallyStopped) return;
+    const activeButton = container?.querySelector(`[data-theme-id="${selectedTheme}"]`);
+    activeButton?.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+  }, [selectedTheme, themesLoading]);
 
-    // Clear existing interval
-    if (intervalRef.current) clearInterval(intervalRef.current);
+  const scrollThemes = (direction) => {
+    const container = scrollRef.current;
+    if (!container) return;
 
-    // Slide function
-    const slide = () => {
-      if (container.scrollLeft + container.clientWidth >= container.scrollWidth - 5) {
-        container.scrollTo({ left: 0, behavior: "smooth" });
-      } else {
-        container.scrollBy({ left: 150, behavior: "smooth" });
-      }
-    };
+    container.scrollBy({
+      left: direction * Math.max(220, container.clientWidth * 0.75),
+      behavior: "smooth",
+    });
+  };
 
-    // Run immediately once
-    slide();
-
-    // Then every 1.5s
-    intervalRef.current = setInterval(slide, 1500);
-
-    return () => clearInterval(intervalRef.current);
-  }, [isManuallyStopped, themes]);
-
-  // Stop auto-slide (manual)
-  const stopAutoSlide = () => {
-    if (intervalRef.current) {
-      clearInterval(intervalRef.current);
-      intervalRef.current = null;
-    }
-    setIsManuallyStopped(true);
+  const selectTheme = (theme) => {
+    handleThemeSelect(theme);
   };
 
   return (
-    <div style={{ marginBottom: "24px", position: "relative" }}>
+    <div className="theme-picker" style={{ marginBottom: "24px" }}>
       <div className="theme-slider-heading">
         <label
           style={{
@@ -69,176 +115,103 @@ const ThemeSlider = ({
         <span
           className="theme-slider-active-pill"
           style={{
-            color: isDark ? "#ddd6fe" : "#6d28d9",
-            background: isDark ? "rgba(167, 139, 250, 0.14)" : "rgba(124, 58, 237, 0.1)",
-            borderColor: isDark ? "rgba(167, 139, 250, 0.22)" : "rgba(124, 58, 237, 0.18)",
+            color: isDark ? "#cffafe" : "#6d28d9",
+            background: isDark ? "rgba(6, 182, 212, 0.14)" : "rgba(139, 92, 246, 0.1)",
+            borderColor: isDark ? "rgba(34, 211, 238, 0.22)" : "rgba(139, 92, 246, 0.18)",
           }}
         >
-          {themes.length} available
+          Saved: {selectedThemeName}
         </span>
       </div>
 
       {themesLoading ? (
-        <div style={{ display: "flex", justifyContent: "center", padding: "32px 0" }}>
+        <div className="theme-picker__loading">
           <Loader2 size={32} color={colors.accentPrimary} className="spinner" />
         </div>
       ) : (
-        <div
-          style={{
-            position: "relative",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            maxWidth: "500px",
-            margin: "0 auto",
-          }}
-        >
-          {/* Left Button */}
-          <button
-            onClick={() => {
-              stopAutoSlide();
-              scrollRef.current?.scrollBy({ left: -200, behavior: "smooth" });
-            }}
-            style={{
-              position: "absolute",
-              left: "-40px",
-              top: "50%",
-              transform: "translateY(-50%)",
-              zIndex: 2,
-              background: colors.bgCard,
-              border: `1px solid ${colors.border}`,
-              borderRadius: "50%",
-              width: "32px",
-              height: "32px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              cursor: "pointer",
-              boxShadow: "0 2px 6px rgba(0,0,0,0.15)",
-              opacity: 0.9,
-            }}
-          >
-            ‹
-          </button>
+        <>
+          <div className="theme-picker__rail-shell">
+            <button
+              type="button"
+              className="theme-picker__arrow theme-picker__arrow--left"
+              onClick={() => scrollThemes(-1)}
+              disabled={!scrollState.canLeft}
+              aria-label="Scroll themes left"
+            >
+              <ChevronLeft size={18} />
+            </button>
 
-          {/* Scroll Container */}
-          <div
-            ref={scrollRef}
-            className="themes-scroll-container"
-            style={{
-              display: "flex",
-              gap: "8px",
-              overflowX: "auto",
-              scrollBehavior: "smooth",
-              whiteSpace: "nowrap",
-              scrollbarWidth: "none",
-              msOverflowStyle: "none",
-              padding: "10px",
-              width: "100%",
-            }}
-            onMouseEnter={() => {
-              if (intervalRef.current) clearInterval(intervalRef.current);
-            }}
-            onMouseLeave={() => {
-              if (!isManuallyStopped) {
-                // resume auto-slide if not manually stopped
-                const container = scrollRef.current;
-                if (!container) return;
+            <div className="theme-picker__fade theme-picker__fade--left" aria-hidden="true" />
+            <div
+              ref={scrollRef}
+              className="themes-scroll-container theme-picker__rail"
+              aria-label="Available frame themes"
+            >
+              {themes.map((theme) => {
+                const isSelected = selectedTheme === theme.theme;
+                return (
+                  <button
+                    key={theme.theme}
+                    data-theme-id={theme.theme}
+                    type="button"
+                    onClick={() => selectTheme(theme.theme)}
+                    className={`theme-picker__card${isSelected ? " theme-picker__card--active" : ""}`}
+                    aria-pressed={isSelected}
+                  >
+                    <span className="theme-picker__card-glow" aria-hidden="true" />
+                    <span className="theme-picker__card-icon" aria-hidden="true">
+                      {isSelected ? <Check size={14} /> : <Sparkles size={14} />}
+                    </span>
+                    <span className="theme-picker__card-copy">
+                      <strong>{getThemeLabel(theme)}</strong>
+                      <small>{theme.theme}</small>
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+            <div className="theme-picker__fade theme-picker__fade--right" aria-hidden="true" />
 
-                const slide = () => {
-                  if (container.scrollLeft + container.clientWidth >= container.scrollWidth - 5) {
-                    container.scrollTo({ left: 0, behavior: "smooth" });
-                  } else {
-                    container.scrollBy({ left: 150, behavior: "smooth" });
-                  }
-                };
-
-                slide();
-                intervalRef.current = setInterval(slide, 1500);
-              }
-            }}
-          >
-            {themes.map((theme) => (
-              <button
-                key={theme.theme}
-                onClick={() => {
-                  handleThemeSelect(theme.theme);
-                  stopAutoSlide();
-                }}
-                style={{
-                  padding: "8px 12px",
-                  minWidth: "100px",
-                  flexShrink: 0,
-                  borderRadius: "8px",
-                  border: "2px solid",
-                  borderColor:
-                    selectedTheme === theme.theme ? colors.accentPrimary : colors.border,
-                  background:
-                    selectedTheme === theme.theme
-                      ? isDark
-                        ? "#4c1d95"
-                        : "#f5f3ff"
-                      : colors.bgCard,
-                  cursor: "pointer",
-                  transition: "all 0.2s",
-                  textAlign: "center",
-                  boxShadow: "0 1px 3px rgba(0,0,0,0.05)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  gap: "6px",
-                }}
-              >
-                {selectedTheme === theme.theme && (
-                  <Zap size={14} color={colors.accentPrimary} fill={colors.accentPrimary} />
-                )}
-                <span
-                  style={{
-                    fontWeight: "600",
-                    fontSize: "13px",
-                    color: colors.textPrimary,
-                    textTransform: "capitalize",
-                  }}
-                >
-                  {theme.name || theme.theme}
-                </span>
-              </button>
-            ))}
+            <button
+              type="button"
+              className="theme-picker__arrow theme-picker__arrow--right"
+              onClick={() => scrollThemes(1)}
+              disabled={!scrollState.canRight}
+              aria-label="Scroll themes right"
+            >
+              <ChevronRight size={18} />
+            </button>
           </div>
 
-          {/* Right Button */}
-          <button
-            onClick={() => {
-              stopAutoSlide();
-              scrollRef.current?.scrollBy({ left: 200, behavior: "smooth" });
-            }}
-            style={{
-              position: "absolute",
-              right: "-40px",
-              top: "50%",
-              transform: "translateY(-50%)",
-              zIndex: 2,
-              background: colors.bgCard,
-              border: `1px solid ${colors.border}`,
-              borderRadius: "50%",
-              width: "32px",
-              height: "32px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              cursor: "pointer",
-              boxShadow: "0 2px 6px rgba(0,0,0,0.15)",
-              opacity: 0.9,
-            }}
-          >
-            ›
-          </button>
-        </div>
+          {suggestions.length > 0 && (
+            <div className="theme-suggestions" aria-label="Theme suggestions">
+              <div className="theme-suggestions__title">
+                <Zap size={14} fill="currentColor" />
+                <span>20 quick theme suggestions</span>
+              </div>
+              <div className="theme-suggestions__grid">
+                {suggestions.map((suggestion) => {
+                  const isSelected = selectedTheme === suggestion.theme;
+                  return (
+                    <button
+                      key={`${suggestion.label}-${suggestion.theme}`}
+                      type="button"
+                      className={`theme-suggestion-chip${isSelected ? " theme-suggestion-chip--active" : ""}`}
+                      onClick={() => selectTheme(suggestion.theme)}
+                      style={{ "--theme-tone": suggestion.tone }}
+                    >
+                      <span className="theme-suggestion-chip__dot" aria-hidden="true" />
+                      <span>{suggestion.label}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+        </>
       )}
     </div>
   );
 };
 
 export default ThemeSlider;
-
-
