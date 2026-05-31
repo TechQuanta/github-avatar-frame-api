@@ -25,6 +25,8 @@ import {
   Palette,
 } from "lucide-react";
 import ThemeSlider from "./components/ThemeSlider.jsx";
+import DashboardHero from "./components/studio/DashboardHero.jsx";
+import StudioPageShell from "./components/studio/StudioPageShell.jsx";
 
 // Use an explicit Vite env override when provided; otherwise default to the
 // deployed API in production and the local API server during development.
@@ -343,9 +345,9 @@ function App() {
       bgInput: isDark ? "#334155" : "white",
       border: isDark ? "#374151" : "#e5e7eb",
       borderInput: isDark ? "#475569" : "#d1d5db",
-      accentPrimary: "#7c3aed",
-      accentSecondary: "#a855f7",
-      accentDark: "#a78bfa",
+      accentPrimary: "#8b5cf6",
+      accentSecondary: "#06b6d4",
+      accentDark: "#22d3ee",
       errorBg: isDark ? "#450a0a" : "#fef2f2",
       errorBorder: isDark ? "#b91c1c" : "#fecaca",
       errorText: isDark ? "#fca5a5" : "#991b1b",
@@ -763,55 +765,19 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={
-          <div
-            style={{
-              minHeight: "100vh",
-              background: colors.bgBody,
-              padding: "24px 16px",
-              color: colors.textPrimary,
-            }}>
-            <div className="layout-wrapper"
-                    style={{
-                      maxWidth: "1200px",
-                      margin:"0 auto",
-                    }}>
-        <section
-          className="dashboard-hero"
-          data-aos="fade-down"
-          style={{
-            background: colors.bgCard,
-            border: `1px solid ${colors.border}`,
-            color: colors.textPrimary,
-          }}
-        >
-          <div className="dashboard-hero__mark" aria-hidden="true">
-            <Frame size={30} strokeWidth={2.4} />
-          </div>
-          <div className="studio-navbar__links">
-            {STUDIO_NAV_ITEMS.map((item) =>
-              item.external ? (
-                <a key={item.label} href={item.target} target="_blank" rel="noopener noreferrer">
-                  {item.label}
-                </a>
-              ) : (
-                <button key={item.label} type="button" onClick={() => scrollToSection(item.target)}>
-                  {item.label}
-                </button>
-              )
-            )}
-          </div>
-          <div className="dashboard-hero__meta" aria-label="Dashboard summary">
-            <span>{themes.length || "—"} themes</span>
-            <span>{size}px canvas</span>
-            <span>{selectedTheme}</span>
-          </div>
-        </section>
+          <StudioPageShell colors={colors}>
+            <DashboardHero
+              colors={colors}
+              themesCount={themes.length}
+              selectedTheme={selectedTheme}
+              size={size}
+            />
 
       <div
   className="main-grid-container studio-workspace-grid"
   style={{
-    maxWidth: "1120px",
-    margin: "0 auto",
+    maxWidth: "100%",
+    margin: "0",
   }}
 >
   {/* Configuration Panel */}
@@ -823,7 +789,7 @@ function App() {
       background: colors.bgCard,
       borderRadius: "24px",
       border: `1px solid ${colors.border}`,
-      padding: "32px",
+      padding: "clamp(16px, 2vw, 24px)",
       backgroundImage: isDark
         ? "radial-gradient(circle at top right, rgba(168, 85, 247, 0.18), transparent 34%)"
         : "radial-gradient(circle at top right, rgba(168, 85, 247, 0.16), transparent 34%)",
@@ -1654,7 +1620,7 @@ function App() {
               background: colors.bgCard,
               borderRadius: "24px",
               border: `1px solid ${colors.border}`,
-              padding: "32px",
+              padding: "clamp(16px, 2vw, 24px)",
               maxWidth: "100%",
               minWidth: "0",
               backgroundImage: isDark
@@ -2114,7 +2080,6 @@ function App() {
             </div>
           </div>
         </div>
-      </div>
 
       {/* Share Modal Injection */}
       <ShareModal
@@ -2168,7 +2133,7 @@ function App() {
         </div>
       )}
 
-    </div>
+    </StudioPageShell>
   } />
   <Route path="*" element={<NotFound />} />
   </Routes>
