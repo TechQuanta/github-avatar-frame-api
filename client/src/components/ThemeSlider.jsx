@@ -60,7 +60,7 @@ const ThemeSlider = ({
   }, []);
 
   useEffect(() => {
-    updateScrollState();
+    const frame = requestAnimationFrame(updateScrollState);
     const container = scrollRef.current;
     if (!container) return undefined;
 
@@ -69,6 +69,7 @@ const ThemeSlider = ({
     resizeObserver.observe(container);
 
     return () => {
+      cancelAnimationFrame(frame);
       container.removeEventListener("scroll", updateScrollState);
       resizeObserver.disconnect();
     };
@@ -112,25 +113,18 @@ const ThemeSlider = ({
           </span>
           Frame Theme
         </label>
-        <span
-          className="theme-slider-active-pill"
-          style={{
-            color: isDark ? "#cffafe" : "#6d28d9",
-            background: isDark ? "rgba(6, 182, 212, 0.14)" : "rgba(139, 92, 246, 0.1)",
-            borderColor: isDark ? "rgba(34, 211, 238, 0.22)" : "rgba(139, 92, 246, 0.18)",
-          }}
-        >
-          Saved: {selectedThemeName}
-        </span>
-      </div>
-
-      {themesLoading ? (
-        <div className="theme-picker__loading">
-          <Loader2 size={32} color={colors.accentPrimary} className="spinner" />
-        </div>
-      ) : (
-        <>
-          <div className="theme-picker__rail-shell">
+        <div className="theme-picker__heading-actions">
+          <span
+            className="theme-slider-active-pill"
+            style={{
+              color: isDark ? "#cffafe" : "#6d28d9",
+              background: isDark ? "rgba(6, 182, 212, 0.14)" : "rgba(139, 92, 246, 0.1)",
+              borderColor: isDark ? "rgba(34, 211, 238, 0.22)" : "rgba(139, 92, 246, 0.18)",
+            }}
+          >
+            Saved: {selectedThemeName}
+          </span>
+          <div className="theme-picker__controls" aria-label="Theme rail controls">
             <button
               type="button"
               className="theme-picker__arrow theme-picker__arrow--left"
@@ -140,7 +134,26 @@ const ThemeSlider = ({
             >
               <ChevronLeft size={18} />
             </button>
+            <button
+              type="button"
+              className="theme-picker__arrow theme-picker__arrow--right"
+              onClick={() => scrollThemes(1)}
+              disabled={!scrollState.canRight}
+              aria-label="Scroll themes right"
+            >
+              <ChevronRight size={18} />
+            </button>
+          </div>
+        </div>
+      </div>
 
+      {themesLoading ? (
+        <div className="theme-picker__loading">
+          <Loader2 size={32} color={colors.accentPrimary} className="spinner" />
+        </div>
+      ) : (
+        <>
+          <div className="theme-picker__rail-shell">
             <div className="theme-picker__fade theme-picker__fade--left" aria-hidden="true" />
             <div
               ref={scrollRef}
@@ -171,16 +184,6 @@ const ThemeSlider = ({
               })}
             </div>
             <div className="theme-picker__fade theme-picker__fade--right" aria-hidden="true" />
-
-            <button
-              type="button"
-              className="theme-picker__arrow theme-picker__arrow--right"
-              onClick={() => scrollThemes(1)}
-              disabled={!scrollState.canRight}
-              aria-label="Scroll themes right"
-            >
-              <ChevronRight size={18} />
-            </button>
           </div>
 
           {suggestions.length > 0 && (
