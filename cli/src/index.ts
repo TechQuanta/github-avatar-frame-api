@@ -7,20 +7,49 @@ import path from 'path';
 import chalk from 'chalk';
 
 const program = new Command();
+const DEFAULT_API_URL = 'https://github-avatar-frame-api.onrender.com';
+const THEMES = [
+  'base', 'classic', 'darkmode', 'eternity', 'flamingo',
+  'gitblaze', 'gravityspace', 'hotfire', 'macros', 'minimal', 'neon', 'ocean', 'starry'
+];
+const THEME_GROUPS: Record<string, string[]> = {
+  'Clean & Simple': ['base', 'classic', 'minimal'],
+  'Dark & Glow': ['darkmode', 'neon', 'starry', 'gravityspace'],
+  'Color Pop': ['flamingo', 'gitblaze', 'hotfire', 'ocean', 'eternity', 'macros'],
+};
+
+function printHero(title: string, subtitle?: string) {
+  console.log(chalk.magentaBright('┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓'));
+  console.log(chalk.magentaBright('┃') + chalk.bold('  ✨ GitHub Avatar Frame Studio CLI       ') + chalk.magentaBright('┃'));
+  console.log(chalk.magentaBright('┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛'));
+  console.log(chalk.cyanBright(`\n${title}`));
+  if (subtitle) console.log(chalk.gray(subtitle));
+}
+
+function normalizeBaseUrl(url: string) {
+  return url.replace(/\/$/, '');
+}
+
+function resolveOutputPath(output: string, format: string) {
+  const parsed = path.parse(output);
+  const file = parsed.ext ? output : `${output}.${format === 'jpg' ? 'jpg' : format}`;
+  return path.resolve(file);
+}
 
 program
   .name('github-avatar-frame')
-  .description('CLI tool for generating framed GitHub avatars')
+  .description('Interactive CLI tool for generating framed GitHub avatars')
   .version('1.0.0');
 
 program
   .command('generate <username>')
   .description('Generate a framed avatar for a GitHub user')
-  .option('-t, --theme <theme>', 'Frame theme (base, classic, darkmode, eternity, flamingo, gitblaze, macros, minimal, neon, ocean, starry)', 'base')
+  .option('-t, --theme <theme>', `Frame theme (${THEMES.join(', ')})`, 'base')
   .option('-s, --size <size>', 'Avatar size in pixels (64-1024)', '256')
-  .option('-c, --canvas <canvas>', 'Background color (light, dark)', 'light')
-  .option('-sh, --shape <shape>', 'Avatar shape (circle, rounded)', 'circle')
-  .option('-r, --radius <radius>', 'Corner radius for rounded shape', '25')
+  .option('-c, --canvas <canvas>', 'Background color (light, dark, transparent)', 'light')
+  .option('-sh, --shape <shape>', 'Avatar shape (circle, rounded, rect)', 'circle')
+  .option('-r, --radius <radius>', 'Corner radius for rounded/rect shape', '25')
+  .option('-f, --format <format>', 'Output format (png, jpg, svg)', 'png')
   .option('-tx, --text <text>', 'Custom text to display')
   .option('-tc, --text-color <color>', 'Text color in HEX format', '#ffffff')
   .option('-ts, --text-size <size>', 'Text size in pixels (8-100)', '20')
@@ -28,19 +57,20 @@ program
   .option('-e, --emojis <emojis>', 'Comma-separated list of emojis')
   .option('-es, --emoji-size <size>', 'Emoji size in pixels (16-120)', '40')
   .option('-ep, --emoji-position <position>', 'Emoji position (top, bottom, corners)', 'top')
-  .option('-o, --output <file>', 'Output file path', 'avatar.png')
-  .option('-u, --url <url>', 'API base URL', 'https://github-avatar-frame-api.onrender.com')
+  .option('-o, --output <file>', 'Output file path or basename', 'avatar')
+  .option('-u, --url <url>', 'API base URL', DEFAULT_API_URL)
   .action(async (username, options) => {
     try {
-      console.log(chalk.blue(`Generating avatar for ${username}...`));
+      const format = String(options.format).toLowerCase();
+      printHero(`Creating avatar for ${chalk.bold(username)}`, `Theme ${options.theme} • ${options.size}px • ${format.toUpperCase()}`);
 
-      // Build query parameters
       const params: Record<string, string> = {
         theme: options.theme,
         size: options.size,
         canvas: options.canvas,
         shape: options.shape,
         radius: options.radius,
+        format,
         textColor: options.textColor,
         textSize: options.textSize,
         textPosition: options.textPosition,
@@ -51,26 +81,24 @@ program
       if (options.text) params.text = options.text;
       if (options.emojis) params.emojis = options.emojis;
 
-      // Build URL
-      const baseUrl = options.url;
+      const baseUrl = normalizeBaseUrl(options.url);
       const queryString = new URLSearchParams(params).toString();
-      const url = `${baseUrl}/api/framed-avatar/${username}?${queryString}`;
+      const url = `${baseUrl}/api/framed-avatar/${encodeURIComponent(username)}?${queryString}`;
 
-      console.log(chalk.gray(`API URL: ${url}`));
+      console.log(chalk.gray(`\n↳ ${url}`));
+      console.log(chalk.yellow('⏳ Rendering via API...'));
 
-      // Fetch the image
       const response = await axios.get(url, {
         responseType: 'arraybuffer',
         timeout: 30000,
       });
 
-      // Save to file
-      const outputPath = path.resolve(options.output);
+      const outputPath = resolveOutputPath(options.output, format);
+      fs.mkdirSync(path.dirname(outputPath), { recursive: true });
       fs.writeFileSync(outputPath, response.data);
 
-      console.log(chalk.green(`✅ Avatar saved to ${outputPath}`));
-      console.log(chalk.gray(`Size: ${options.size}px, Theme: ${options.theme}, Shape: ${options.shape}`));
-
+      console.log(chalk.green(`\n✅ Avatar saved to ${outputPath}`));
+      console.log(chalk.gray(`   Try: github-avatar-frame suggest ${username}`));
     } catch (error: any) {
       if (error.response) {
         console.error(chalk.red(`❌ API Error: ${error.response.status} - ${error.response.statusText}`));
@@ -93,45 +121,54 @@ program
 
 program
   .command('themes')
-  .description('List available themes')
+  .description('List available themes grouped by vibe')
   .action(() => {
-    console.log(chalk.blue('Available themes:'));
-    const themes = [
-      'base', 'classic', 'darkmode', 'eternity', 'flamingo',
-      'gitblaze', 'macros', 'minimal', 'neon', 'ocean', 'starry'
-    ];
-    themes.forEach(theme => console.log(chalk.green(`  • ${theme}`)));
+    printHero('Available themes', 'Pick a vibe, then pass it with --theme');
+    Object.entries(THEME_GROUPS).forEach(([group, themes]) => {
+      console.log(chalk.yellow(`\n${group}`));
+      themes.forEach(theme => console.log(`  ${chalk.green('◆')} ${chalk.bold(theme)}`));
+    });
+  });
+
+program
+  .command('docs')
+  .description('Show API docs and useful links')
+  .option('-u, --url <url>', 'API base URL', DEFAULT_API_URL)
+  .action((options) => {
+    const baseUrl = normalizeBaseUrl(options.url);
+    printHero('Docs & links');
+    console.log(`${chalk.cyan('Swagger UI:')} ${baseUrl}/api-docs`);
+    console.log(`${chalk.cyan('Health:')}     ${baseUrl}/api/health`);
+    console.log(`${chalk.cyan('Themes:')}     ${baseUrl}/api/themes`);
+    console.log(chalk.gray('\nExample:'));
+    console.log(`  github-avatar-frame generate octocat --theme neon --canvas dark --emojis "🚀,💻"`);
   });
 
 program
   .command('info')
   .description('Show API information')
   .action(() => {
-    console.log(chalk.blue('GitHub Avatar Frame API CLI'));
-    console.log(chalk.gray('Generate custom framed avatars for GitHub users'));
-    console.log('');
-    console.log(chalk.yellow('API Endpoint: https://github-avatar-frame-api.onrender.com'));
-    console.log(chalk.yellow('Documentation: Check the main repository README'));
+    printHero('GitHub Avatar Frame API CLI', 'Generate custom framed avatars for GitHub users');
+    console.log(chalk.yellow(`API Endpoint: ${DEFAULT_API_URL}`));
+    console.log(chalk.yellow(`Documentation: ${DEFAULT_API_URL}/api-docs`));
     console.log('');
     console.log(chalk.gray('Commands:'));
     console.log(chalk.gray('  generate <username>  - Generate framed avatar'));
     console.log(chalk.gray('  suggest <username>   - Get AI-powered theme suggestions'));
     console.log(chalk.gray('  themes               - List available themes'));
+    console.log(chalk.gray('  docs                 - Show API docs links'));
     console.log(chalk.gray('  info                 - Show this information'));
-    console.log('');
-    console.log(chalk.gray('Use "github-avatar-frame <command> --help" for more details'));
   });
 
 program
   .command('suggest <username>')
   .description('Get AI-powered frame suggestions for a GitHub user')
-  .option('-u, --url <url>', 'API base URL', 'https://github-avatar-frame-api.onrender.com')
+  .option('-u, --url <url>', 'API base URL', DEFAULT_API_URL)
   .action(async (username, options) => {
     try {
-      console.log(chalk.blue(`🤖 Getting AI suggestions for ${username}...`));
+      printHero(`AI suggestions for ${username}`, 'Analyzing GitHub profile signals...');
 
-      // Make request to AI suggestion endpoint
-      const response = await axios.get(`${options.url}/api/ai-suggest/${username}`, {
+      const response = await axios.get(`${normalizeBaseUrl(options.url)}/api/ai-suggest/${encodeURIComponent(username)}`, {
         timeout: 30000,
       });
 
@@ -160,7 +197,6 @@ program
       console.log(chalk.blue(data.previewURL));
 
       console.log(chalk.gray('\n💡 Tip: Use this theme with the generate command!'));
-
     } catch (error: any) {
       if (error.response) {
         console.error(chalk.red(`❌ API Error: ${error.response.status} - ${error.response.statusText}`));
@@ -175,3 +211,5 @@ program
       process.exit(1);
     }
   });
+
+program.parse();

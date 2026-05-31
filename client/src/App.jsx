@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useMemo } from "react";
+import React, { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import AOS from 'aos';
 import 'aos/dist/aos.css';
@@ -27,11 +27,20 @@ import {
 } from "lucide-react";
 import ThemeSlider from "./components/ThemeSlider.jsx";
 
-// NOTE: Replace with your actual API URL or environment variable
+// Use an explicit Vite env override when provided; otherwise default to the
+// deployed API in production and the local API server during development.
 const API_BASE_URL =
-  process.env.NODE_ENV === "production"
+  import.meta.env.VITE_API_BASE_URL ||
+  (import.meta.env.PROD
     ? "https://github-avatar-frame-api.onrender.com"
-    : "http://localhost:3001";
+    : "http://localhost:3001");
+
+const STUDIO_NAV_ITEMS = [
+  { label: "Start", target: "#username-section" },
+  { label: "Customize", target: "#settings-section" },
+  { label: "Preview", target: "#preview-section" },
+  { label: "Docs", target: "/api-docs", external: true },
+];
 
 // Utility component for consistent button styling (Canvas and Shape)
 const ControlButton = ({ onClick, isSelected, children, isDark }) => (
@@ -395,7 +404,6 @@ function App() {
   const [themes, setThemes] = useState([]);
   const [selectedTheme, setSelectedTheme] = useState("base");
   const [customAccentColor, setCustomAccentColor] = useState(null);
-  const [originalThemeColor, setOriginalThemeColor] = useState(null);
   const [size, setSize] = useState(384);
   const [canvas, setCanvas] = useState("light");
   const [shape, setShape] = useState("circle");
@@ -423,6 +431,7 @@ function App() {
   const [previewKey, setPreviewKey] = useState(0);
   const [copied, setCopied] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
+  const [activeConfigTab, setActiveConfigTab] = useState("style");
   const [isCommunityModalOpen, setIsCommunityModalOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const [showToast, setShowToast] = useState(false);
@@ -443,7 +452,6 @@ function App() {
   const previewCanvasRef = useRef(null);
   const [previewLoading, setPreviewLoading] = useState(false);
   const [previewError, setPreviewError] = useState(null);
-  const [isPreviewUpdating, setIsPreviewUpdating] = useState(false);
 
   const maxRadius = useMemo(() => Math.floor(size / 2), [size]);
 
@@ -476,6 +484,19 @@ function App() {
     { num: 3, label: "Adjust Settings", icon: Zap },
     { num: 4, label: "Generate", icon: Frame },
   ];
+
+  const configTabs = [
+    { id: "style", label: "Style", helper: "Theme, color, size" },
+    { id: "text", label: "Text", helper: text.trim() || "Optional label" },
+    { id: "emoji", label: "Emoji", helper: emojis.trim() || "Optional flair" },
+  ];
+
+  const scrollToSection = (target) => {
+    const element = document.querySelector(target);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
 
   // Detect system preference and set up listener
   useEffect(() => {
@@ -679,7 +700,6 @@ function App() {
     setCurrentStep(3);
     // Reset custom color when selecting a new theme
     setCustomAccentColor(null);
-    setOriginalThemeColor(null);
   };
 
   const handleRandomTheme = () => {
@@ -702,7 +722,6 @@ function App() {
       showToastNotification("Surprise style loaded");
     }
     
-    setOriginalThemeColor(null);
     setCurrentStep(3);
   };
 
@@ -720,15 +739,14 @@ function App() {
 
   const resetToDefaultColor = () => {
     setCustomAccentColor(null);
-    setOriginalThemeColor(null);
   showToastNotification("Reset to default color");
   };
 
   const finalRadiusForDisplay = shape === "circle" ? maxRadius : radius;
 
   // Live Preview Functions
-  const fetchAvatar = async (username) => {
-    const avatarUrl = `https://avatars.githubusercontent.com/${username}?size=${size}`;
+  const fetchAvatar = useCallback(async (githubUsername) => {
+    const avatarUrl = `https://github.com/${encodeURIComponent(githubUsername)}.png?size=${size}`;
     const response = await fetch(avatarUrl, { cache: 'no-cache' });
     if (!response.ok) {
       if (response.status === 404) {
@@ -738,23 +756,21 @@ function App() {
     }
     const blob = await response.blob();
     return createImageBitmap(blob);
-  };
+  }, [size]);
 
-  const fetchFrame = async (theme) => {
-    const frameUrl = `${API_BASE_URL}/public/frames/${theme}/frame.png`;
+  const fetchFrame = useCallback(async (theme) => {
+    const frameUrl = `${API_BASE_URL}/frames/${encodeURIComponent(theme)}/frame.png`;
     const response = await fetch(frameUrl, { cache: 'no-cache' });
     if (!response.ok) throw new Error('Frame not found');
     const blob = await response.blob();
     return createImageBitmap(blob);
-  };
+  }, []);
 
-  const drawPreview = async () => {
+  const drawPreview = useCallback(async () => {
     if (!username.trim() || !previewCanvasRef.current) return;
 
     setPreviewLoading(true);
     setPreviewError(null);
-    setIsPreviewUpdating(true);
-
     try {
   const canvasEl = previewCanvasRef.current;
   const ctx = canvasEl.getContext('2d');
@@ -776,9 +792,9 @@ function App() {
       let avatarImage;
       try {
         avatarImage = await fetchAvatar(username);
-      } catch (error) {
+      } catch {
         // Use fallback if avatar not found
-        const fallbackUrl = `${API_BASE_URL}/public/not-found.png`;
+        const fallbackUrl = `${API_BASE_URL}/images/fallback.png`;
         const response = await fetch(fallbackUrl);
         const blob = await response.blob();
         avatarImage = await createImageBitmap(blob);
@@ -868,15 +884,31 @@ function App() {
       setPreviewError(error.message);
     } finally {
       setPreviewLoading(false);
-      setIsPreviewUpdating(false);
     }
-  };
+  }, [
+    canvas,
+    customAccentColor,
+    emojiPosition,
+    emojiSize,
+    emojis,
+    fetchAvatar,
+    fetchFrame,
+    finalRadiusForDisplay,
+    selectedTheme,
+    shape,
+    size,
+    text,
+    textColor,
+    textPosition,
+    textSize,
+    username,
+  ]);
 
   useEffect(() => {
     if (username.trim()) {
       drawPreview();
     }
-  }, [username, selectedTheme, size, canvas, shape, radius, customAccentColor, text, textColor, textSize, textPosition, emojis, emojiSize, emojiPosition]);
+  }, [drawPreview, username]);
 
   return (
     <BrowserRouter>
@@ -1037,6 +1069,29 @@ function App() {
           </div>
         </div>
 
+        <nav className="studio-navbar" data-aos="fade-up" aria-label="Avatar studio navigation">
+          <div className="studio-navbar__brand">
+            <span className="studio-navbar__spark">✦</span>
+            <div>
+              <strong>Avatar Studio</strong>
+              <small>Build • Preview • Share</small>
+            </div>
+          </div>
+          <div className="studio-navbar__links">
+            {STUDIO_NAV_ITEMS.map((item) =>
+              item.external ? (
+                <a key={item.label} href={`${API_BASE_URL}${item.target}`} target="_blank" rel="noopener noreferrer">
+                  {item.label}
+                </a>
+              ) : (
+                <button key={item.label} type="button" onClick={() => scrollToSection(item.target)}>
+                  {item.label}
+                </button>
+              )
+            )}
+          </div>
+        </nav>
+
         {/* --- 2. Progress Steps --- */}
         <div data-aos="fade-right" style={{ marginBottom: "32px" }}>
           <div
@@ -1088,8 +1143,9 @@ function App() {
       "#generate-section",
     ];
     const targetId = sectionIds[idx];
+    if (step.num === 3) setActiveConfigTab("style");
     const target = document.querySelector(targetId);
-    if (target) target.scrollIntoView({ behavior: "smooth" });
+    if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
   }}
   style={{
     width: "48px",
@@ -1156,25 +1212,26 @@ function App() {
   style={{
     display: "grid",
     gap: "24px",
-    /* Logic: Automatically fits as many 350px columns as possible. 
-       On mobile (~400px), only one fits, so they stack! */
-    gridTemplateColumns: "repeat(auto-fit, minmax(350px, 1fr))", 
-    alignItems: "start",
+    gridTemplateColumns: "1fr",
+    alignItems: "stretch",
     justifyContent: "center",
-    maxWidth: "1200px",
+    maxWidth: "1040px",
     margin: "0 auto",
     padding: "32px 16px",
   }}
 >
-  {/* Left: Configuration Panel (50%) */}
+  {/* Configuration Panel */}
   <div 
     id="username-section" 
     data-aos="flip-right"
     style={{
       background: colors.bgCard,
-      borderRadius: "12px",
+      borderRadius: "24px",
       border: `1px solid ${colors.border}`,
       padding: "32px",
+      backgroundImage: isDark
+        ? "radial-gradient(circle at top right, rgba(168, 85, 247, 0.18), transparent 34%)"
+        : "radial-gradient(circle at top right, rgba(168, 85, 247, 0.16), transparent 34%)",
       display: "flex",
       maxWidth: "100%",
       flexDirection: "column",
@@ -1302,6 +1359,52 @@ function App() {
         />
       </div>
     </div>
+
+    <div
+      className="interactive-tab-shell"
+      id="settings-section"
+      style={{
+        background: isDark ? "rgba(51, 65, 85, 0.55)" : "#f8fafc",
+        border: `1px solid ${colors.border}`,
+        borderRadius: "14px",
+        padding: "10px",
+        marginBottom: "18px",
+      }}
+    >
+      <div className="config-tab-list">
+        {configTabs.map((tab) => {
+          const isActiveTab = activeConfigTab === tab.id;
+          return (
+            <button
+              key={tab.id}
+              type="button"
+              onClick={() => setActiveConfigTab(tab.id)}
+              className="config-tab-button"
+              style={{
+                background: isActiveTab
+                  ? `linear-gradient(135deg, ${colors.accentPrimary}, ${colors.accentSecondary})`
+                  : colors.bgCard,
+                color: isActiveTab ? "white" : colors.textPrimary,
+                border: `1px solid ${isActiveTab ? "transparent" : colors.borderInput}`,
+                boxShadow: isActiveTab ? "0 12px 24px -14px rgba(124, 58, 237, 0.8)" : "none",
+              }}
+            >
+              <span>{tab.label}</span>
+              <small>{tab.helper}</small>
+            </button>
+          );
+        })}
+      </div>
+      <div className="config-summary-strip">
+        <span>{selectedTheme}</span>
+        <span>{canvas}</span>
+        <span>{shape === "circle" ? "circle" : `${finalRadiusForDisplay}px radius`}</span>
+        <span>{size}px</span>
+      </div>
+    </div>
+
+            {activeConfigTab === "style" && (
+              <>
             {/* Custom Color Picker and Random Theme Generator */}
             <div style={{ marginBottom: "16px" }}>
               <label
@@ -1658,8 +1761,12 @@ function App() {
               </div>
             )}
 
-            {/* Text Overlay Controls */}
-            <div style={{ marginBottom: "24px" }}>
+              </>
+            )}
+
+            {activeConfigTab === "text" && (
+            <div className="tab-panel" style={{ marginBottom: "24px" }}>
+              {/* Text Overlay Controls */}
               <label
                 style={{
                   display: "flex",
@@ -1764,8 +1871,11 @@ function App() {
               </div>
             </div>
 
-            {/* Emoji Overlay Controls */}
-            <div style={{ marginBottom: "24px" }}>
+            )}
+
+            {activeConfigTab === "emoji" && (
+            <div className="tab-panel" style={{ marginBottom: "24px" }}>
+              {/* Emoji Overlay Controls */}
               <label
                 style={{
                   display: "block",
@@ -1858,8 +1968,10 @@ function App() {
               </div>
             </div>
 
+            )}
+
             {/* Generate Button */}
-          <div id="generate-section"> 
+          <div id="generate-section" className="generate-action-bar"> 
              <button
               onClick={generateFramedAvatar}
               disabled={loading || !username.trim()}
@@ -1938,20 +2050,21 @@ function App() {
             </div>
           </div>
 
-          {/* Right: Preview Panel (50%) */}
-          <div data-aos="flip-left"
+          {/* Preview Panel */}
+          <div
+            id="preview-section"
+            data-aos="flip-left"
+            className="preview-panel-card"
             style={{
               background: colors.bgCard,
-              borderRadius: "12px",
+              borderRadius: "24px",
               border: `1px solid ${colors.border}`,
               padding: "32px",
               maxWidth: "100%",
               minWidth: "0",
-              
-              /* ADD THESE 3 LINES BELOW */
-              position: "sticky", 
-              top: "24px",       // Distance from the top of the screen when scrolling
-              zIndex: 10,        // Keeps it above other background elements
+              backgroundImage: isDark
+                ? "radial-gradient(circle at top left, rgba(236, 72, 153, 0.18), transparent 36%)"
+                : "radial-gradient(circle at top left, rgba(236, 72, 153, 0.14), transparent 36%)",
             }}
           >
             <div
