@@ -225,3 +225,124 @@ input:focus {
     flex-direction: column; /* Stacked top-to-bottom */
   }
 }
+
+/* Compact interactive editor: tabbed controls keep the page shorter while
+   the preview remains visible on desktop. */
+.interactive-tab-shell {
+  position: sticky;
+  top: 12px;
+  z-index: 4;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.config-tab-list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.config-tab-button {
+  width: 100%;
+  min-height: 58px;
+  border-radius: 12px;
+  padding: 10px 12px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 2px;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+  text-align: left;
+}
+
+.config-tab-button:hover {
+  transform: translateY(-2px);
+}
+
+.config-tab-button span {
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.config-tab-button small {
+  font-size: 11px;
+  font-weight: 600;
+  opacity: 0.76;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.config-summary-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.config-summary-strip span {
+  border-radius: 999px;
+  padding: 5px 10px;
+  font-size: 11px;
+  font-weight: 800;
+  color: #6d28d9;
+  background: rgba(124, 58, 237, 0.1);
+  border: 1px solid rgba(124, 58, 237, 0.16);
+}
+
+.tab-panel {
+  animation: panelFadeIn 180ms ease both;
+}
+
+.generate-action-bar {
+  position: sticky;
+  bottom: 16px;
+  z-index: 5;
+  padding-top: 8px;
+  background: linear-gradient(to top, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0));
+}
+
+@media (prefers-color-scheme: dark) {
+  .generate-action-bar {
+    background: linear-gradient(to top, rgba(30, 41, 59, 0.94), rgba(30, 41, 59, 0));
+  }
+
+  .config-summary-strip span {
+    color: #ddd6fe;
+    background: rgba(167, 139, 250, 0.14);
+    border-color: rgba(167, 139, 250, 0.2);
+  }
+}
+
+@media (min-width: 900px) {
+  .preview-panel-card {
+    max-height: calc(100vh - 48px);
+    overflow: auto;
+  }
+}
+
+@media (max-width: 640px) {
+  .interactive-tab-shell,
+  .generate-action-bar {
+    position: static;
+  }
+
+  .config-tab-list {
+    grid-template-columns: 1fr;
+  }
+}
+
+@keyframes panelFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
