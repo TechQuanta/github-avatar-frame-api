@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useMemo } from "react";
+import React, { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import AOS from 'aos';
 import 'aos/dist/aos.css';
@@ -27,11 +27,13 @@ import {
 } from "lucide-react";
 import ThemeSlider from "./components/ThemeSlider.jsx";
 
-// NOTE: Replace with your actual API URL or environment variable
+// Use an explicit Vite env override when provided; otherwise default to the
+// deployed API in production and the local API server during development.
 const API_BASE_URL =
-  process.env.NODE_ENV === "production"
+  import.meta.env.VITE_API_BASE_URL ||
+  (import.meta.env.PROD
     ? "https://github-avatar-frame-api.onrender.com"
-    : "http://localhost:3001";
+    : "http://localhost:3001");
 
 // Utility component for consistent button styling (Canvas and Shape)
 const ControlButton = ({ onClick, isSelected, children, isDark }) => (
@@ -395,7 +397,6 @@ function App() {
   const [themes, setThemes] = useState([]);
   const [selectedTheme, setSelectedTheme] = useState("base");
   const [customAccentColor, setCustomAccentColor] = useState(null);
-  const [originalThemeColor, setOriginalThemeColor] = useState(null);
   const [size, setSize] = useState(384);
   const [canvas, setCanvas] = useState("light");
   const [shape, setShape] = useState("circle");
@@ -443,7 +444,6 @@ function App() {
   const previewCanvasRef = useRef(null);
   const [previewLoading, setPreviewLoading] = useState(false);
   const [previewError, setPreviewError] = useState(null);
-  const [isPreviewUpdating, setIsPreviewUpdating] = useState(false);
 
   const maxRadius = useMemo(() => Math.floor(size / 2), [size]);
 
@@ -679,7 +679,6 @@ function App() {
     setCurrentStep(3);
     // Reset custom color when selecting a new theme
     setCustomAccentColor(null);
-    setOriginalThemeColor(null);
   };
 
   const handleRandomTheme = () => {
@@ -702,7 +701,6 @@ function App() {
       showToastNotification("Surprise style loaded");
     }
     
-    setOriginalThemeColor(null);
     setCurrentStep(3);
   };
 
@@ -720,15 +718,14 @@ function App() {
 
   const resetToDefaultColor = () => {
     setCustomAccentColor(null);
-    setOriginalThemeColor(null);
   showToastNotification("Reset to default color");
   };
 
   const finalRadiusForDisplay = shape === "circle" ? maxRadius : radius;
 
   // Live Preview Functions
-  const fetchAvatar = async (username) => {
-    const avatarUrl = `https://avatars.githubusercontent.com/${username}?size=${size}`;
+  const fetchAvatar = useCallback(async (githubUsername) => {
+    const avatarUrl = `https://github.com/${encodeURIComponent(githubUsername)}.png?size=${size}`;
     const response = await fetch(avatarUrl, { cache: 'no-cache' });
     if (!response.ok) {
       if (response.status === 404) {
@@ -738,23 +735,21 @@ function App() {
     }
     const blob = await response.blob();
     return createImageBitmap(blob);
-  };
+  }, [size]);
 
-  const fetchFrame = async (theme) => {
-    const frameUrl = `${API_BASE_URL}/public/frames/${theme}/frame.png`;
+  const fetchFrame = useCallback(async (theme) => {
+    const frameUrl = `${API_BASE_URL}/frames/${encodeURIComponent(theme)}/frame.png`;
     const response = await fetch(frameUrl, { cache: 'no-cache' });
     if (!response.ok) throw new Error('Frame not found');
     const blob = await response.blob();
     return createImageBitmap(blob);
-  };
+  }, []);
 
-  const drawPreview = async () => {
+  const drawPreview = useCallback(async () => {
     if (!username.trim() || !previewCanvasRef.current) return;
 
     setPreviewLoading(true);
     setPreviewError(null);
-    setIsPreviewUpdating(true);
-
     try {
   const canvasEl = previewCanvasRef.current;
   const ctx = canvasEl.getContext('2d');
@@ -776,9 +771,9 @@ function App() {
       let avatarImage;
       try {
         avatarImage = await fetchAvatar(username);
-      } catch (error) {
+      } catch {
         // Use fallback if avatar not found
-        const fallbackUrl = `${API_BASE_URL}/public/not-found.png`;
+        const fallbackUrl = `${API_BASE_URL}/images/fallback.png`;
         const response = await fetch(fallbackUrl);
         const blob = await response.blob();
         avatarImage = await createImageBitmap(blob);
@@ -868,15 +863,31 @@ function App() {
       setPreviewError(error.message);
     } finally {
       setPreviewLoading(false);
-      setIsPreviewUpdating(false);
     }
-  };
+  }, [
+    canvas,
+    customAccentColor,
+    emojiPosition,
+    emojiSize,
+    emojis,
+    fetchAvatar,
+    fetchFrame,
+    finalRadiusForDisplay,
+    selectedTheme,
+    shape,
+    size,
+    text,
+    textColor,
+    textPosition,
+    textSize,
+    username,
+  ]);
 
   useEffect(() => {
     if (username.trim()) {
       drawPreview();
     }
-  }, [username, selectedTheme, size, canvas, shape, radius, customAccentColor, text, textColor, textSize, textPosition, emojis, emojiSize, emojiPosition]);
+  }, [drawPreview, username]);
 
   return (
     <BrowserRouter>
